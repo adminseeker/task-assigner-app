@@ -9,10 +9,12 @@ connectToMongoDB();
 
 app.use(express.json());
 
+app.use("/api/users/",require("./routes/api/users"));
+
 app.get("/",(req,res)=>{
     res.json({"msg":"Welcome"});
 });
 
 app.listen(PORT,()=>{
     console.log("Server started on port "+PORT+"!");
-})
+});
