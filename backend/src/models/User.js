@@ -19,6 +19,14 @@ const UserSchema = new mongoose.Schema({
         type:Boolean,
         required:true
     },
+    teacher:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Teacher"
+    },
+    student:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Student"
+    },
     tokens:[{
         token:{
             type:String,
