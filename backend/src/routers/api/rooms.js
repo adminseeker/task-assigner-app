@@ -86,4 +86,20 @@ router.delete("/:id",auth,async (req,res)=>{
     }
 })
 
+router.delete("/:id/students/:id2",auth,async (req,res)=>{
+    try {
+        if(!req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{students:{_id:req.params.id2}}});
+        if(!room){
+            return res.status(404).json({"msg":"room not found!"});
+        }
+        res.json({"msg":"Student Deleted!"});
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+})
+
 module.exports = router;
