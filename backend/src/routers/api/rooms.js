@@ -36,7 +36,6 @@ router.post("/:id/students",auth,async (req,res)=>{
         const studentEmails = req.body.studentEmails.splice(",").map((studentEmail)=>studentEmail.trim());
         const studentsToAdd = await User.find({email:{$in:studentEmails}}).select("_id");
         const room = await Room.findOneAndUpdate({_id:req.params.id},{$addToSet:{students:studentsToAdd}},{new:true});
-
         if(!room){
             return res.status(404).json({"msg":"No room found!"});
         } 
@@ -69,11 +68,17 @@ router.delete("/:id",auth,async (req,res)=>{
     try {
         if(req.user.isTeacher){
             const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"room not found!"});
+            }
             await room.remove();
-            return res.json({"msg":"room deleted!"});
+            res.json({"msg":"room deleted!"});
         }else{
-            const rooms = await Room.updateOne({_id:req.params.id,"students":req.user.id},{$pull:{"students":req.user.id}});
-            return res.json({"msg":"left the room!"});
+            const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$pull:{students:{_id:req.user.id}}});
+            if(!room){
+                return res.status(404).json({"msg":"room not found!"});
+            }
+            res.json({"msg":"left the room!"});
         }
     } catch (error) {
         res.status(500).send("Server Error!");

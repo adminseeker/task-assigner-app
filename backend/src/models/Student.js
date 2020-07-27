@@ -6,11 +6,7 @@ const StudentSchema = new mongoose.Schema({
   },
   submissions:{
     type:[String]
-  },
-  rooms:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"Room"
-}    
+  },    
 });
 
 module.exports = mongoose.model("Student",StudentSchema);

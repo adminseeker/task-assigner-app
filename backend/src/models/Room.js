@@ -7,8 +7,10 @@ const RoomSchema = new mongoose.Schema({
         required:true
     },
     students:[{
+       student: {
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
+        }
     }],
     teacher:{
         type:mongoose.Schema.Types.ObjectId,
