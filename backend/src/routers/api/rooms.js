@@ -52,7 +52,7 @@ router.get("/",auth,async (req,res)=>{
         if(req.user.isTeacher){
             rooms = await Room.find({teacher:req.user.id});
         }else{
-            rooms = await Room.find({"students":req.user.id});
+            rooms = await Room.find({"students.student._id":req.user.id});
         }
         if(!rooms){
             return res.status(404).json({"msg":"Rooms not found!"});

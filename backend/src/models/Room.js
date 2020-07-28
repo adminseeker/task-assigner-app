@@ -22,19 +22,23 @@ const RoomSchema = new mongoose.Schema({
         default:Date.now
     },
     resources:{
-        type:{
-            teacher_id: mongoose.Schema.Types.ObjectId,
-            resources: [String]
-        }
+        resource: [{
+                resource :{
+                    type: String
+                }
+            }]
+        
     },
-    submissions:{
-        type:[
+    submissions:[
                 {
                     student_id: mongoose.Schema.Types.ObjectId,
-                    submissions: [String]
+                    submissions: [{
+                        submission:{
+                            type:String
+                        }
+                    }]
                 }
-            ]
-      },    
+            ]    
 });
 
 module.exports = mongoose.model("Room",RoomSchema);
