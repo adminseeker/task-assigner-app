@@ -15,6 +15,10 @@ const UserSchema = new mongoose.Schema({
         type:String,
         require:true
     },
+    mobile:{
+        type:Number,
+        require:true
+    },
     isTeacher:{
         type:Boolean,
         required:true
