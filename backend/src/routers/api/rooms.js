@@ -44,7 +44,7 @@ router.post("/:id/students",auth,async (req,res)=>{
         res.status(500).send("Server Error!");
         console.log(error);
     }
-})
+});
 
 router.get("/",auth,async (req,res)=>{
     try {
@@ -52,7 +52,7 @@ router.get("/",auth,async (req,res)=>{
         if(req.user.isTeacher){
             rooms = await Room.find({teacher:req.user.id});
         }else{
-            rooms = await Room.find({"students.student._id":req.user.id});
+            rooms = await Room.find({"students._id":req.user.id}).select("-submissions");
         }
         if(!rooms){
             return res.status(404).json({"msg":"Rooms not found!"});
@@ -62,7 +62,53 @@ router.get("/",auth,async (req,res)=>{
         res.status(500).send("Server Error!");
         console.log(error); 
     }
-})
+});
+
+router.get("/:id/submissions",auth,async (req,res)=>{
+    try {
+        if(req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }else{
+            const room = await Room.findOne({_id:req.params.id,"students._id":req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            const submissions = room.submissions.reduce((result,submission)=>{
+                if(submission.student_id==req.user.id){
+                    result.push(submission);
+                }
+                return result;
+            },[]);
+            res.json(submissions); 
+        }
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+router.get("/:id/submissions/:id2",auth,async (req,res)=>{
+    try {
+        if(!req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }else{
+            const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            const submissions = room.submissions.reduce((result,submission)=>{
+                if(submission.student_id==req.params.id2){
+                    result.push(submission);
+                }
+                return result;
+            },[]);
+            res.json(submissions); 
+        }
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
 
 router.delete("/:id",auth,async (req,res)=>{
     try {
@@ -84,7 +130,7 @@ router.delete("/:id",auth,async (req,res)=>{
         res.status(500).send("Server Error!");
         console.log(error);
     }
-})
+});
 
 router.delete("/:id/students/:id2",auth,async (req,res)=>{
     try {
@@ -100,6 +146,6 @@ router.delete("/:id/students/:id2",auth,async (req,res)=>{
         res.status(500).send("Server Error!");
         console.log(error);
     }
-})
+});
 
 module.exports = router;

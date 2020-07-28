@@ -42,7 +42,7 @@ router.post("/logout",auth,async (req,res)=>{
         res.status(500).send();
         console.log(error)
     }
-})
+});
 
 router.post("/logoutAll",auth,async (req,res)=>{
     try{
@@ -55,6 +55,6 @@ router.post("/logoutAll",auth,async (req,res)=>{
         res.status(500).send();
         console.log(error)
     }
-})
+});
 
 module.exports = router;

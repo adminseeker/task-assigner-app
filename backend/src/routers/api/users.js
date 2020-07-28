@@ -52,7 +52,7 @@ router.get("/me",auth,async (req,res)=>{
         res.status(500).send("Server Error!");
         console.log(error);
     }
-})
+});
 
 
 module.exports = router;

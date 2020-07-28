@@ -33,12 +33,12 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
                 res.status(500).json({ "msg":"error uploading files!" });
             } else {
                 if(req.user.isTeacher){
-                    const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$push:{"resources":data.Location}},{new:true});
+                    const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$push:{resources:{resource:data.Location}}},{new:true});
                     if(!room){
                         return res.status(404).json({"msg":"No room found!"});
                     }
                 }else{
-                    const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$push:{submissions:{student_id:req.user.id}}},{$push:{submissions:{submissions:data.Location}}},{new:true});
+                    const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$addToSet:{submissions:{student_id:req.user.id,submission:data.Location}}},{new:true});
                     if(!room){
                         return res.status(404).json({"msg":"No room found!"});
                     }   
@@ -51,5 +51,7 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
         console.log(error);
     }
 });
+
+router.delete("/:id/resources/:id")
 
 module.exports = router;
