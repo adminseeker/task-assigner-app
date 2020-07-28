@@ -15,12 +15,26 @@ const RoomSchema = new mongoose.Schema({
     teacher:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-        unique:false
+
     },
     date:{
         type:Date,
         default:Date.now
-    } 
+    },
+    resources:{
+        type:{
+            teacher_id: mongoose.Schema.Types.ObjectId,
+            resources: [String]
+        }
+    },
+    submissions:{
+        type:[
+                {
+                    student_id: mongoose.Schema.Types.ObjectId,
+                    submissions: [String]
+                }
+            ]
+      },    
 });
 
 module.exports = mongoose.model("Room",RoomSchema);
