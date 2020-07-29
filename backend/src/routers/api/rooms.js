@@ -1,4 +1,5 @@
 const express = require("express");
+const AWS = require("aws-sdk");
 
 const auth = require("../../middleware/auth");
 
@@ -8,6 +9,12 @@ const Student = require("../../models/Student");
 const Room = require("../../models/Room");
 
 const router = express.Router();
+
+const s3Bucket = new AWS.S3({
+    accessKeyId:process.env.AWS_ID,
+    secretAccessKey:process.env.AWS_SECRET,
+    region:process.env.AWS_REGION
+});
 
 router.post("/",auth,async (req,res)=>{
     try {
@@ -118,13 +125,31 @@ router.delete("/:id",auth,async (req,res)=>{
                 return res.status(404).json({"msg":"room not found!"});
             }
             await room.remove();
-            res.json({"msg":"room deleted!"});
+
+            const resources = room.resources.map((resource)=>{
+                    return {Key:resource.resource.toString().split("/").pop()};
+            });
+            const submissions = room.submissions.map((submission)=>{
+                return {Key:submission.submission.toString().split("/").pop()};
+            });
+            const objects = resources.concat(submissions);
+            const params = {
+                Bucket: process.env.AWS_BUCKET,
+                Delete: {
+                    Objects: objects
+                  }
+            }
+            s3Bucket.deleteObjects(params,async(error,data)=>{
+                if(error){
+                    return res.status(500).json({ "msg":"error deleting files!" });
+                }
+                res.json({"msg":"room deleted!"});
+            });
         }else{
             const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$pull:{students:{_id:req.user.id}}});
             if(!room){
                 return res.status(404).json({"msg":"room not found!"});
             }
-            res.json({"msg":"left the room!"});
         }
     } catch (error) {
         res.status(500).send("Server Error!");
