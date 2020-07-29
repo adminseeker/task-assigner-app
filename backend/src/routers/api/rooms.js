@@ -16,6 +16,12 @@ const s3Bucket = new AWS.S3({
     region:process.env.AWS_REGION
 });
 
+/* 
+    route : "/api/rooms/",
+    desc : "Create a Room",
+    auth : "Teacher",
+    method: "POST"
+*/
 router.post("/",auth,async (req,res)=>{
     try {
         const user = req.user;
@@ -33,6 +39,13 @@ router.post("/",auth,async (req,res)=>{
         console.log(error);
     }
 });
+
+/* 
+    route : "/api/rooms/room_id/students",
+    desc : "Teacher Adds Students",
+    auth : "Teacher",
+    method: "POST"
+*/
 
 router.post("/:id/students",auth,async (req,res)=>{
     try{
@@ -53,6 +66,13 @@ router.post("/:id/students",auth,async (req,res)=>{
     }
 });
 
+/* 
+    route : "/api/rooms/",
+    desc : "Get rooms",
+    auth : ["Teacher","Student"],
+    method: "GET"
+*/
+
 router.get("/",auth,async (req,res)=>{
     try {
         let rooms;
@@ -70,6 +90,13 @@ router.get("/",auth,async (req,res)=>{
         console.log(error); 
     }
 });
+
+/* 
+    route : "/api/rooms/room_id/submissions"
+    desc : "Student can See his Submissions",
+    auth : "Student",
+    method: "GET"
+*/
 
 router.get("/:id/submissions",auth,async (req,res)=>{
     try {
@@ -94,6 +121,13 @@ router.get("/:id/submissions",auth,async (req,res)=>{
     }
 });
 
+/* 
+    route : "/api/rooms/room_id/submissions/student_id",
+    desc : "Teacher views student's submissions by his id",
+    auth : "Teacher",
+    method: "GET"
+*/
+
 router.get("/:id/submissions/:id2",auth,async (req,res)=>{
     try {
         if(!req.user.isTeacher){
@@ -116,6 +150,13 @@ router.get("/:id/submissions/:id2",auth,async (req,res)=>{
         console.log(error);
     }
 });
+
+/* 
+    route : "/api/rooms/room_id/",
+    desc : "Teacher deletes room",
+    auth : "Teacher",
+    method: "DELETE"
+*/
 
 router.delete("/:id",auth,async (req,res)=>{
     try {
@@ -156,6 +197,13 @@ router.delete("/:id",auth,async (req,res)=>{
         console.log(error);
     }
 });
+
+/* 
+    route : "/api/rooms/room_id/students/student_id",
+    desc : "Teacher deletes student by his id",
+    auth : "Teacher",
+    method: "DELETE"
+*/
 
 router.delete("/:id/students/:id2",auth,async (req,res)=>{
     try {

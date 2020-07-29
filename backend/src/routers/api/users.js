@@ -10,9 +10,12 @@ const Student = require("../../models/Student");
 
 const router = express.Router();
 
-router.get("/protected",auth,(req,res)=>{
-    res.json({"secret":"Aravind A"})
-});
+/* 
+    route : "/api/users",
+    desc : "Register as Teacher or Student",
+    auth : "PUBLIC",
+    method: "POST"
+*/
 
 router.post("/",async (req,res)=>{
     try {
@@ -35,6 +38,13 @@ router.post("/",async (req,res)=>{
         res.status(400).send(error);   
     }
 });
+
+/* 
+    route : "/api/users/me",
+    desc : "Get User profile",
+    auth : ["Teacher","Student"],
+    method: "GET"
+*/
 
 router.get("/me",auth,async (req,res)=>{
     try {

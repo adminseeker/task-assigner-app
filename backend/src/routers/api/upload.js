@@ -18,6 +18,13 @@ const s3Bucket = new AWS.S3({
     region:process.env.AWS_REGION
 });
 
+/* 
+    route : "/api/upload/room_id",
+    desc : "Upload Resources and Submissions",
+    auth : ["Teacher","Student"],
+    method: "POST"
+*/
+
 router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
     try {
         const file = req.file;
@@ -69,6 +76,13 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
     }
 });
 
+/* 
+    route : "/api/upload/room_id/resources",
+    desc : "Delete Resources",
+    auth : ["Teacher"],
+    method: "DELETE"
+*/
+
 router.delete("/:id/resources/",auth,async (req,res)=>{
     try {
         if(!req.user.isTeacher){
@@ -101,6 +115,13 @@ router.delete("/:id/resources/",auth,async (req,res)=>{
     }
 });
 
+/* 
+    route : "/api/upload/room_id/submissions",
+    desc : "Student Can Delete His Own Submissions",
+    auth : ["Student"],
+    method: "DELETE"
+*/
+
 router.delete("/:id/submissions/",auth,async (req,res)=>{
     try {
         if(req.user.isTeacher){
@@ -132,6 +153,13 @@ router.delete("/:id/submissions/",auth,async (req,res)=>{
         console.log(error);   
     }
 });
+
+/* 
+    route : "/api/upload/room_id/submissions/student_id",
+    desc : "Teacher Can Delete Student Submissions By His ID",
+    auth : ["Teacher"],
+    method: "DELETE"
+*/
 
 router.delete("/:id/submissions/:id2",auth,async (req,res)=>{
     try {

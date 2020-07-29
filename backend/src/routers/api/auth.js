@@ -8,6 +8,13 @@ const User = require("../../models/User");
 
 const router = express.Router();
 
+/* 
+    route : "/api/auth/login",
+    desc : "Login user",
+    auth : "Public",
+    method: "POST"
+*/
+
 router.post("/login",async (req,res)=>{
     try {
         const user = await User.findOne({email:req.body.email});
@@ -29,6 +36,13 @@ router.post("/login",async (req,res)=>{
     }
 });
 
+/* 
+    route : "/api/auth/logout",
+    desc : "Logout user",
+    auth : ["Teacher","Student"],
+    method: "POST"
+*/
+
 router.post("/logout",auth,async (req,res)=>{
     try{
         req.user.tokens = req.user.tokens.filter((token)=>{
@@ -43,6 +57,13 @@ router.post("/logout",auth,async (req,res)=>{
         console.log(error)
     }
 });
+
+/* 
+    route : "/api/auth/logoutAll",
+    desc : "Logout user from all devices",
+    auth : ["Teacher","Student"],
+    method: "POST"
+*/
 
 router.post("/logoutAll",auth,async (req,res)=>{
     try{
