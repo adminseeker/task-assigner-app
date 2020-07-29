@@ -99,6 +99,38 @@ router.delete("/:id/resources/",auth,async (req,res)=>{
         res.status(500).send("Server Error!");
         console.log(error);   
     }
-})
+});
+
+router.delete("/:id/submissions/",auth,async (req,res)=>{
+    try {
+        if(req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id,"submissions.student_id":req.user.id},{$pull:{submissions:{submission:req.body.location,student_id:req.user.id}}});
+        if(!room){
+            return res.status(500).json({ "msg":"error deleting file!" });
+        }
+        const fileName = room.submissions.map((submission)=>{
+            if(submission.submission == req.body.location){
+                return submission.submission;
+            }
+        }).toString().split("/").pop();
+        const params = {
+            Bucket: process.env.AWS_BUCKET,
+            Key: fileName
+        }
+
+        s3Bucket.deleteObject(params,async(error,data)=>{
+            if(error){
+                return res.status(500).json({ "msg":"error deleting file!" });
+            }
+            res.json({"msg":"File Successfully Deleted!"});
+        })
+
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);   
+    }
+});
 
 module.exports = router;
