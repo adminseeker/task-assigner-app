@@ -1,0 +1,24 @@
+{
+  "name": "task-assigner-app",
+  "version": "1.0.0",
+  "description": "UNDER DEVELOPMENT",
+  "main": "index.js",
+  "scripts": {
+    "client":"npm start --prefix frontend",
+    "server":"npm run dev-server --prefix backend",
+    "dev": "concurrently \"npm run client\" \"npm run server\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adminseeker/task-assigner-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adminseeker/task-assigner-app/issues"
+  },
+  "homepage": "https://github.com/adminseeker/task-assigner-app#readme",
+  "devDependencies": {
+    "concurrently": "^5.2.0"
+  }
+}
