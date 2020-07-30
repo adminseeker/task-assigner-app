@@ -9,6 +9,31 @@ const User = require("../../models/User");
 const router = express.Router();
 
 /* 
+    route : "/api/auth/",
+    desc : "Get User profile",
+    auth : ["Teacher","Student"],
+    method: "GET"
+*/
+
+router.get("/",auth,async (req,res)=>{
+    try {
+        const user = req.user
+        if(!user){
+            return res.status(404).json({msg:"User Not Found"});
+        }
+        if(user.isTeacher){
+            await user.populate("teacher").execPopulate();
+        }else{
+            await user.populate("student").execPopulate();  
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+/* 
     route : "/api/auth/login",
     desc : "Login user",
     auth : "Public",

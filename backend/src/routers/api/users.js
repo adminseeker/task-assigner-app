@@ -39,31 +39,5 @@ router.post("/",async (req,res)=>{
     }
 });
 
-/* 
-    route : "/api/users/me",
-    desc : "Get User profile",
-    auth : ["Teacher","Student"],
-    method: "GET"
-*/
-
-router.get("/me",auth,async (req,res)=>{
-    try {
-        const user = req.user
-        if(!user){
-            return res.status(404).json({msg:"User Not Found"});
-        }
-        if(user.isTeacher){
-            await user.populate("teacher").execPopulate();
-        }else{
-            await user.populate("student").execPopulate();  
-        }
-        res.json(user);
-    } catch (error) {
-        res.status(500).send("Server Error!");
-        console.log(error);
-    }
-});
-
-
 module.exports = router;
 
