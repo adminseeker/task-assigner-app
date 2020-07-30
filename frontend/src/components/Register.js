@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import {register} from "../actions/auth";
+import {connect} from "react-redux";
 
-const Register = ()=>{
+const Register = (props)=>{
     const [formData,setFormData] = useState({
         name:"",
         email:"",
@@ -22,6 +24,7 @@ const Register = ()=>{
             setFormData({...formData, error:"Passwords do not match!"});
         }else{
             console.log(formData);
+            props.dispatch(register({name,email,password,isTeacher,phone}));
         }
     }
 
@@ -64,4 +67,4 @@ const Register = ()=>{
     )
 }
 
-export default Register;
+export default connect()(Register);
