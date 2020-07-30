@@ -1,3 +1,3 @@
-# task-assigner-app
+# Tasker
 
 UNDER DEVELOPMENT
