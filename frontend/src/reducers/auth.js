@@ -8,6 +8,15 @@ const initialState = {
 
 const authReducer = (state=initialState,action)=>{
     switch(action.type){
+
+        case "USER_LOADED":
+            return{
+                ...state,
+                isAuthenticated:true,
+                loading:false,
+                user:action.user
+            }
+
         case "REGISTER_SUCCESS":
             localStorage.setItem("token",action.token);
             return{
@@ -17,6 +26,7 @@ const authReducer = (state=initialState,action)=>{
                 loading:false
             }
         case "REGISTER_FAIL":
+        case "AUTH_ERROR":
             localStorage.removeItem("token");
             return{
                 ...state,

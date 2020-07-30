@@ -17,7 +17,7 @@ const router = express.Router();
 
 router.get("/",auth,async (req,res)=>{
     try {
-        const user = req.user
+        const user = await User.findById(req.user.id).select("-password -tokens")
         if(!user){
             return res.status(404).json({msg:"User Not Found"});
         }
