@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {register} from "../actions/auth";
 import {connect} from "react-redux";
+import {Redirect} from "react-router-dom";
 
 const Register = (props)=>{
     const [formData,setFormData] = useState({
@@ -13,6 +14,10 @@ const Register = (props)=>{
         error:""
     });
     const {name,email,password,password2,isTeacher,phone,error} = formData;
+
+    if(props.isAuthenticated){
+        return <Redirect to="/dashboard" />
+    }
 
     const onChange = (e)=>{
         setFormData({...formData , [e.target.name]:e.target.value})
@@ -67,4 +72,8 @@ const Register = (props)=>{
     )
 }
 
-export default connect()(Register);
+const mapStateToProps = (state,props)=>({
+    isAuthenticated:state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps)(Register);

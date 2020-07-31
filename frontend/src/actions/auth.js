@@ -16,6 +16,8 @@ const register = ({name,email,password,isTeacher,phone})=>{
                 type:"REGISTER_SUCCESS",
                 token:res.data.token
             });
+
+            dispatch(loadUser());
             
         } catch (err) {
             console.log(err);
@@ -25,6 +27,37 @@ const register = ({name,email,password,isTeacher,phone})=>{
         }
     }
 }
+
+const login = ({email,password})=>{
+    return async (dispatch)=>{
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+
+        const body = JSON.stringify({email,password});
+        try {
+            const res = await axios.post("/api/auth/login",body,config);
+            dispatch({
+                type:"LOGIN_SUCCESS",
+                token:res.data.token
+            });
+
+            dispatch(loadUser());
+            
+        } catch (err) {
+            console.log(err);
+            dispatch({
+                type:"LOGIN_FAIL"
+            })
+        }
+    }
+}
+
+const logout = ()=>({
+    type:"LOGOUT"
+})
 
 const loadUser= ()=>{
     return async (dispatch)=>{
@@ -46,4 +79,4 @@ const loadUser= ()=>{
     }
 }
 
-export {register,loadUser};
+export {register,loadUser,login,logout};
