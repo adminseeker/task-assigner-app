@@ -4,6 +4,7 @@ import configureStore from "./store/configureStore";
 import {Provider} from "react-redux";
 import setAuthToken from "./utils/setAuthToken";
 import {loadUser} from "./actions/auth";
+import Alert from "./components/Alert";
 
 const store = configureStore();
 
@@ -18,6 +19,7 @@ const App = ()=>{
   return(
     <div>
       <Provider store={store}>
+        <Alert />
         <AppRouter />
       </Provider>
     </div>

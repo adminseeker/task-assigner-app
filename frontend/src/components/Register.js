@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {register} from "../actions/auth";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
+import {setAlert} from "../actions/alert";
 
 const Register = (props)=>{
     const [formData,setFormData] = useState({
@@ -10,10 +11,9 @@ const Register = (props)=>{
         password:"",
         password2:"",
         isTeacher:"",
-        phone:"",
-        error:""
+        phone:""
     });
-    const {name,email,password,password2,isTeacher,phone,error} = formData;
+    const {name,email,password,password2,isTeacher,phone} = formData;
 
     if(props.isAuthenticated){
         return <Redirect to="/dashboard" />
@@ -26,7 +26,7 @@ const Register = (props)=>{
     const onSubmit = (e)=>{
         e.preventDefault();
         if(password!==password2){
-            setFormData({...formData, error:"Passwords do not match!"});
+            props.dispatch(setAlert("Passwords do not match!!","danger",6000));
         }else{
             console.log(formData);
             props.dispatch(register({name,email,password,isTeacher,phone}));
@@ -36,7 +36,6 @@ const Register = (props)=>{
     return(
         <div>
             <h1>Register Page!</h1>
-            {error && <h2>{error}</h2>}
             <form onSubmit={onSubmit}>
                 <div>
                     <label htmlFor="name">Name</label><br />
