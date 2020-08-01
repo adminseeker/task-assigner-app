@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-export const Alert = (props) => (
+const Alert = (props) => (
         props.alerts!==null && props.alerts.length >0 && props.alerts.map((alert)=>(
             <div key={alert.id}>
                 <h3>{alert.msg}</h3>

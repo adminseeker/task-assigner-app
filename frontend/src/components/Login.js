@@ -11,10 +11,6 @@ const Login = (props)=>{
     });
     const {email,password,error} = formData;
 
-    if(props.isAuthenticated){
-        return <Redirect to="/dashboard" />
-    }
-
     const onChange = (e)=>{
         setFormData({...formData , [e.target.name]:e.target.value})
     }
@@ -25,6 +21,10 @@ const Login = (props)=>{
             console.log(error);
         });
     }
+    if(props.isAuthenticated){
+        return <Redirect to="/dashboard" />
+    }
+
 
     return(
         <div>

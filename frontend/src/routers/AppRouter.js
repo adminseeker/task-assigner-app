@@ -5,6 +5,8 @@ import Landing from "../components/Landing";
 import Register from "../components/Register";
 import Login from "../components/Login";
 import Dashboard from "../components/Dashboard";
+import PrivateRoute from "./PrivateRoute";
+
 
 const history = createHistory();
 
@@ -13,9 +15,9 @@ const AppRouter = ()=>{
         <Router history={history}>
             <Switch>
                 <Route path="/" component={Landing} exact={true}/>
-                <Route path="/signup" component={Register} />
-                <Route path="/login" component={Login} />
-                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/signup" component={Register} exact={true}/>
+                <Route path="/login" component={Login} exact={true}/>
+                <PrivateRoute path="/dashboard" component={Dashboard} exact={true}/>
             </Switch>
         </Router>
     )
