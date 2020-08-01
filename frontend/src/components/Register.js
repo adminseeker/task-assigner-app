@@ -10,7 +10,7 @@ const Register = (props)=>{
         email:"",
         password:"",
         password2:"",
-        isTeacher:"",
+        isTeacher:false,
         phone:""
     });
     const {name,email,password,password2,isTeacher,phone} = formData;
@@ -28,7 +28,6 @@ const Register = (props)=>{
         if(password!==password2){
             props.dispatch(setAlert("Passwords do not match!!","danger",6000));
         }else{
-            console.log(formData);
             props.dispatch(register({name,email,password,isTeacher,phone}));
         }
     }

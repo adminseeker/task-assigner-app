@@ -2,8 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect, Route } from "react-router-dom";
 
-
-
 const PrivateRoute = ({component:Component, isAuthenticated,loading,...rest}) => {
     return (
         <Route {...rest} render={(props)=>(
