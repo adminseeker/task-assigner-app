@@ -55,9 +55,18 @@ const login = ({email,password})=>{
     }
 }
 
-const logout = ()=>({
-    type:"LOGOUT"
-})
+const logout = ()=>{
+    return async (dispatch)=>{
+        try {
+            await axios.post("/api/auth/logout");
+            dispatch({
+                type:"LOGOUT"
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 
 const loadUser= ()=>{
     return async (dispatch)=>{

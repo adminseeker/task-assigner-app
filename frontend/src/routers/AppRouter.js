@@ -6,6 +6,7 @@ import Register from "../components/Register";
 import Login from "../components/Login";
 import Dashboard from "../components/Dashboard";
 import PrivateRoute from "./PrivateRoute";
+import Room from "../components/Room";
 
 
 
@@ -20,6 +21,7 @@ const AppRouter = ()=>{
                 <Route path="/register" component={Register} />
                 <Route path="/login" component={Login} />
                 <PrivateRoute path="/dashboard" component={Dashboard} />
+                <PrivateRoute path="/rooms/:id" component={Room} />
             </Switch>
         </Router>
     )
