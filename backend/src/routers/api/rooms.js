@@ -92,6 +92,31 @@ router.get("/",auth,async (req,res)=>{
 });
 
 /* 
+    route : "/api/rooms/room_id",
+    desc : "Get room by id",
+    auth : ["Teacher","Student"],
+    method: "GET"
+*/
+
+router.get("/:id",auth,async (req,res)=>{
+    try {
+        let room;
+        if(req.user.isTeacher){
+            room = await Room.findOne({teacher:req.user.id,_id:req.params.id});
+        }else{
+            room = await Room.findOne({"students._id":req.user.id,_id:req.params.id}).select("-submissions");
+        }
+        if(!room){
+            return res.status(404).json({"msg":"Room not found!"});
+        }
+        res.json(room)
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error); 
+    }
+});
+
+/* 
     route : "/api/rooms/room_id/submissions"
     desc : "Student can See his Submissions",
     auth : "Student",

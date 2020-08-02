@@ -5,7 +5,7 @@ const Landing = ()=>{
     return(
         <div>
             <h1>Landing Page!</h1>
-            <Link to="/signup">Register</Link><br/>
+            <Link to="/register">Register</Link><br/>
             <Link to="/login">Login</Link>
         </div>
     )

@@ -5,6 +5,7 @@ import {Redirect} from "react-router-dom";
 import {setAlert} from "../actions/alert";
 
 const Register = (props)=>{
+
     const [formData,setFormData] = useState({
         name:"",
         email:"",
@@ -13,11 +14,15 @@ const Register = (props)=>{
         isTeacher:false,
         phone:""
     });
-    const {name,email,password,password2,isTeacher,phone} = formData;
 
     if(props.isAuthenticated){
         return <Redirect to="/dashboard" />
     }
+    
+
+    const {name,email,password,password2,isTeacher,phone} = formData;
+
+    
 
     const onChange = (e)=>{
         setFormData({...formData , [e.target.name]:e.target.value})

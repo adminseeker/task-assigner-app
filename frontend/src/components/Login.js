@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {login} from "../actions/auth";
 import {connect} from "react-redux";
 import { Redirect } from "react-router-dom";
+import GeneralModal from "./GeneralModal";
 
 const Login = (props)=>{
     const [formData,setFormData] = useState({
@@ -9,6 +10,9 @@ const Login = (props)=>{
         password:"",
         error:""
     });
+    const [showModal,setShowModal] = useState(false);
+    const [ModalText,setModalText] = useState("");
+
     const {email,password,error} = formData;
 
     const onChange = (e)=>{
@@ -17,7 +21,11 @@ const Login = (props)=>{
 
     const onSubmit = (e)=>{
         e.preventDefault();
-        props.dispatch(login({email,password})).catch((error)=>{
+        setShowModal(true);
+        setModalText("Logging In");
+        props.dispatch(login({email,password})).then(()=>{
+            setShowModal(false); 
+        }).catch((error)=>{
             console.log(error);
         });
     }
@@ -28,6 +36,13 @@ const Login = (props)=>{
 
     return(
         <div>
+            <GeneralModal 
+                modal = {"login_modal"}
+                loader_image={"51.gif"}
+                modal__title = {"login_modal__title"}
+                showModal={showModal} 
+                text={ModalText}
+            />
             <h1>Login Page!</h1>
             {error && <h2>{error}</h2>}
             <form onSubmit={onSubmit}>
@@ -47,7 +62,8 @@ const Login = (props)=>{
 }
 
 const mapStateToProps = (state,props)=>({
-    isAuthenticated:state.auth.isAuthenticated
+    isAuthenticated:state.auth.isAuthenticated,
+    loading:state.auth.loading
 })
 
 export default connect(mapStateToProps)(Login);

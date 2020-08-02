@@ -6,8 +6,7 @@ import Register from "../components/Register";
 import Login from "../components/Login";
 import Dashboard from "../components/Dashboard";
 import PrivateRoute from "./PrivateRoute";
-import TeacherTest from "../components/TeacherTest";
-import StudentTest from "../components/StudentTest";
+
 
 
 
@@ -18,11 +17,9 @@ const AppRouter = ()=>{
         <Router history={history}>
             <Switch>
                 <Route path="/" component={Landing} exact={true}/>
-                <Route path="/signup" component={Register} exact={true}/>
-                <Route path="/login" component={Login} exact={true}/>
-                <PrivateRoute path="/dashboard" component={Dashboard} exact={true}/>
-                <PrivateRoute path="/teacher" component={TeacherTest} exact={true}/>
-                <PrivateRoute path="/student" component={StudentTest} exact={true}/>
+                <Route path="/register" component={Register} />
+                <Route path="/login" component={Login} />
+                <PrivateRoute path="/dashboard" component={Dashboard} />
             </Switch>
         </Router>
     )
