@@ -7,6 +7,8 @@ import Login from "../components/Login";
 import Dashboard from "../components/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 import Room from "../components/Room";
+import Student from "../components/Student";
+import Teacher from "../components/Teacher";
 
 
 
@@ -22,6 +24,8 @@ const AppRouter = ()=>{
                 <Route path="/login" component={Login} />
                 <PrivateRoute path="/dashboard" component={Dashboard} />
                 <PrivateRoute path="/rooms/:id" component={Room} />
+                <PrivateRoute path="/profile/student/:id" component={Student} />
+                <PrivateRoute path="/profile/teacher/:id" component={Teacher} />
             </Switch>
         </Router>
     )

@@ -1,9 +1,10 @@
 const initialState = {
     rooms:[],
-    currentRoom:{},
-    loading:true,
+    teacher:{},
+    students:[],
+    loading_rooms:true,
+    loading_users:true,
     error:{}
-    
 }
 
 const roomsReducer = (state=initialState,action)=>{
@@ -12,25 +13,27 @@ const roomsReducer = (state=initialState,action)=>{
             return {
                 ...state,
                 rooms:action.rooms,
-                loading:false                
+                loading_rooms:false,
+                loading_users:true                
             }
         case "ROOMS_ERROR":
             return{
                 ...state,
                 error:action.error,
-                loading:false
+                loading_rooms:false
             }
-        case "GET_ROOM":
+        case "GET_ROOM_USERS":
             return {
                 ...state,
-                currentRoom:action.currentRoom,
-                loading:false                
+                teacher:action.teacher,
+                students:action.students,
+                loading_users:false                
             }
-        case "ROOM_ERROR":
+        case "ROOM_USERS_ERROR":
             return{
                 ...state,
                 error:action.error,
-                loading:false
+                loading_users:false
             }
         default :
             return state;

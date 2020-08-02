@@ -19,23 +19,24 @@ const getRooms = ()=>{
     }
 }
 
-const getRoom = (id)=>{
+const getRoomUsers = (id)=>{
     return async (dispatch)=>{
         try {
-            const res = await axios.get("/api/rooms/"+id);
+            const res = await axios.get("/api/rooms/"+id+"/users");
+            console.log(res.data);
             dispatch({
-                type:"GET_ROOM",
-                currentRoom:res.data
+                type:"GET_ROOM_USERS",
+                teacher:res.data.teacher,
+                students:res.data.students
             })
-            console.log(res);
         } catch (error) {
             console.log(error);
             dispatch({
-                type:"ROOM_ERROR",
+                type:"ROOM_USERS_ERROR",
                 error:{msg:error.response}
             })
-        }        
+        }
     }
 }
 
-export {getRooms,getRoom};
+export {getRooms,getRoomUsers};

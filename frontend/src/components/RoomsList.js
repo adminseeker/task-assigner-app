@@ -1,9 +1,11 @@
 import React from "react";
 import RoomListItem from "./RoomListItem";
 import { connect } from "react-redux";
+import LoadingPage from "./LoadingPage";
 
 const RoomsList = (props) => {
     return (
+        props.loading_rooms ? <LoadingPage /> :
         <div>
             {
                 props.rooms.length === 0 ?(
@@ -19,7 +21,8 @@ const RoomsList = (props) => {
 }
 
 const mapStateToProps= (state)=>({
-    rooms:state.rooms.rooms
+    rooms:state.rooms.rooms,
+    loading_rooms:state.rooms.loading_rooms
 })
 
 export default connect(mapStateToProps)(RoomsList);

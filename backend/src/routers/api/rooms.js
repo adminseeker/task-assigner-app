@@ -138,7 +138,7 @@ router.get("/:id/users",auth,async (req,res)=>{
         }
         students = await User.find({_id:{$in:room.students}}).select("name email");
         teacher = await User.find({_id:room.teacher}).select("name email");
-        return res.json({students,teacher});
+        return res.json({students,teacher:teacher[0]});
         
     } catch (error) {
         res.status(500).send("Server Error!");
