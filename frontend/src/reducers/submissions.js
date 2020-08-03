@@ -18,6 +18,18 @@ const submissionsReducer = (state=initialState,action)=>{
                 error:action.error,
                 loading_submissions:false
             }
+        case "DELETE_SUBMISSION":
+            return {
+                ...state,
+                submissions:state.submissions.filter((submission)=>((action.submission)!==(submission.submission))),
+                loading_submissions:false
+            }
+            case "DELETE_SUBMISSIONS_ERROR":
+                return{
+                    ...state,
+                    error:action.error,
+                    loading_submissions:false
+                }
         default:
             return state;
     }

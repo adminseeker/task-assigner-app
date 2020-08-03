@@ -19,4 +19,23 @@ const getSubmissions = (id)=>{
     }
 }
 
-export {getSubmissions}
+const deleteSubmission = (id,submission)=>{
+    return async (dispatch)=>{
+        try {
+            await axios.delete("/api/upload/"+id+"/submissions",{data:{location:submission}});
+            dispatch({
+                type:"DELETE_SUBMISSION",
+                submission
+            })
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"DELETE_SUBMISSION_ERROR",
+                error:{msg:error.response}
+            })
+        }
+        
+    }
+}
+
+export {getSubmissions,deleteSubmission};
