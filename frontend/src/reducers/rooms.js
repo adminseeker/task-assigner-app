@@ -27,13 +27,15 @@ const roomsReducer = (state=initialState,action)=>{
                 ...state,
                 teacher:action.teacher,
                 students:action.students,
-                loading_users:false                
+                loading_users:false,
+                                
             }
         case "ROOM_USERS_ERROR":
             return{
                 ...state,
                 error:action.error,
-                loading_users:false
+                loading_users:false,
+                
             }
         default :
             return state;

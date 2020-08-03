@@ -28,7 +28,7 @@ const s3Bucket = new AWS.S3({
 router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
     try {
         const file = req.file;
-        
+        const description = req.header("description");
         const params = {
             Bucket: process.env.AWS_BUCKET,
             Key: req.user.id+"_"+file.originalname,
@@ -54,12 +54,12 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
                 res.status(500).json({ "msg":"error uploading file!" });
             } else {
                 if(req.user.isTeacher){
-                    const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$addToSet:{resources:{resource:data.Location}}},{new:true});
+                    const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$addToSet:{resources:{resource:data.Location,description:description}}},{new:true});
                     if(!room){
                         return res.status(404).json({"msg":"No room found!"});
                     }
                 }else{
-                    const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$addToSet:{submissions:{student_id:req.user.id,submission:data.Location}}},{new:true});
+                    const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$addToSet:{submissions:{student_id:req.user.id,submission:data.Location,description:description}}},{new:true});
                     if(!room){
                         return res.status(404).json({"msg":"No room found!"});
                     }   

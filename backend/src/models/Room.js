@@ -25,6 +25,13 @@ const RoomSchema = new mongoose.Schema({
         resource :{
             type: String
         },
+        description:{
+            type:String
+        },
+        createdAt:{
+            type:Date,
+            default:Date.now
+        },
         _id:false
     }],
     submissions:[
@@ -32,8 +39,15 @@ const RoomSchema = new mongoose.Schema({
                     student_id: mongoose.Schema.Types.ObjectId,
                     submission:{
                         type:String
-                    }
-                    ,_id:false
+                    },
+                    description:{
+                        type:String
+                    },
+                    createdAt:{
+                        type:Date,
+                        default:Date.now
+                    },
+                    _id:false
                 }
             ]    
 });
