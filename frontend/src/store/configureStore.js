@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import authReducer from "../reducers/auth";
 import alertReducer from "../reducers/alert";
 import roomsReducer from "../reducers/rooms";
+import submissionsReducer from "../reducers/submissions";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -11,7 +12,8 @@ export default ()=>{
         combineReducers({
           auth: authReducer,
           alert:alertReducer,
-          rooms:roomsReducer
+          rooms:roomsReducer,
+          submissions:submissionsReducer
         }),
         composeEnhancers(applyMiddleware(thunk))
     )

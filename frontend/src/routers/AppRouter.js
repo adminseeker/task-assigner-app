@@ -9,6 +9,7 @@ import PrivateRoute from "./PrivateRoute";
 import Room from "../components/Room";
 import Student from "../components/Student";
 import Teacher from "../components/Teacher";
+import Submissions from "../components/Submissions";
 
 
 
@@ -23,9 +24,11 @@ const AppRouter = ()=>{
                 <Route path="/register" component={Register} />
                 <Route path="/login" component={Login} />
                 <PrivateRoute path="/dashboard" component={Dashboard} />
-                <PrivateRoute path="/rooms/:id" component={Room} />
+                <PrivateRoute path="/rooms/:id" component={Room} exact={true}/>
+                <PrivateRoute path="/rooms/:id/submissions" component={Submissions} />
                 <PrivateRoute path="/profile/student/:id" component={Student} />
                 <PrivateRoute path="/profile/teacher/:id" component={Teacher} />
+                
             </Switch>
         </Router>
     )

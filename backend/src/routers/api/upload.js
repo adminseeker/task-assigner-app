@@ -8,7 +8,7 @@ const auth = require("../../middleware/auth");
 const User = require("../../models/User");
 const Room = require("../../models/Room");
 
-const upload = multer({storage:multer.memoryStorage(),limits:{fileSize:1000000}});
+const upload = multer({storage:multer.memoryStorage(),limits:{fileSize:100000000}});
 
 const router = express.Router();
 

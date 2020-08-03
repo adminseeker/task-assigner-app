@@ -8,7 +8,6 @@ const getRooms = ()=>{
                 type:"GET_ROOMS",
                 rooms:res.data
             })
-            console.log(res);
         } catch (error) {
             console.log(error);
             dispatch({
@@ -23,7 +22,6 @@ const getRoomUsers = (id)=>{
     return async (dispatch)=>{
         try {
             const res = await axios.get("/api/rooms/"+id+"/users");
-            console.log(res.data);
             dispatch({
                 type:"GET_ROOM_USERS",
                 teacher:res.data.teacher,

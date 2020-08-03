@@ -4,8 +4,9 @@ import {getRoomUsers} from "../actions/rooms";
 import StudentListItem from "./StudentListItem";
 import LoadingPage from "./LoadingPage";
 import { Link } from "react-router-dom";
+import ResourcesList from "./ResourcesList";
 
-const Room = ({getRoomUsers,room:{className,_id},teacher,students,loading_users}) => {
+const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,loading_users,match:{params:{id}}}) => {
     useEffect(()=>{
         getRoomUsers(_id)
     },[getRoomUsers,_id]);
@@ -25,6 +26,11 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,loading_users}
                     ))
                 )
             }
+            <h3>Resources: </h3>
+            <ResourcesList url_id={id}/>
+            {
+                !isTeacher && <Link to={"/rooms/"+id+"/submissions"}>My Submissions</Link>
+            }
         </div>
     )
 }
@@ -33,6 +39,7 @@ const mapStateToProps = (state,props)=>({
     room: state.rooms.rooms.find((room)=>(room._id === props.match.params.id)),
     teacher:state.rooms.teacher,
     students:state.rooms.students,
+    isTeacher:state.auth.user.isTeacher,
     loading_users:state.rooms.loading_users
 })
 
