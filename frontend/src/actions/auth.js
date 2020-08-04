@@ -12,7 +12,7 @@ const register = ({name,email,password,isTeacher,phone})=>{
         const body = JSON.stringify({name,email,password,isTeacher,phone});
         try {
             const res = await axios.post("/api/users",body,config);
-            dispatch({
+            await  dispatch({
                 type:"REGISTER_SUCCESS",
                 token:res.data.token
             });
@@ -21,7 +21,7 @@ const register = ({name,email,password,isTeacher,phone})=>{
             
         } catch (err) {
             console.log(err);
-            dispatch({
+              dispatch({
                 type:"REGISTER_FAIL"
             })
         }
@@ -44,7 +44,7 @@ const login = ({email,password})=>{
                 token:res.data.token
             });
 
-            await dispatch(loadUser());
+             dispatch(loadUser());
             
         } catch (err) {
             console.log(err);

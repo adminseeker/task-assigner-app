@@ -233,8 +233,8 @@ router.get("/:id/submissions/:id2",auth,async (req,res)=>{
 
 /* 
     route : "/api/rooms/room_id/",
-    desc : "Teacher deletes room",
-    auth : "Teacher",
+    desc : "Teacher deletes room, student leaves the room",
+    auth : ["Teacher","Student"],
     method: "DELETE"
 */
 
@@ -260,7 +260,7 @@ router.delete("/:id",auth,async (req,res)=>{
                     Objects: objects
                   }
             }
-            s3Bucket.deleteObjects(params,async(error,data)=>{
+            s3Bucket.deleteObjects(params,(error,data)=>{
                 if(error){
                     return res.status(500).json({ "msg":"error deleting files!" });
                 }
@@ -271,7 +271,26 @@ router.delete("/:id",auth,async (req,res)=>{
             if(!room){
                 return res.status(404).json({"msg":"room not found!"});
             }
-            res.json({"msg":"Student left the room!"});
+            const submissions = room.submissions.reduce((result,submission)=>{
+                if(submission.student_id==req.user.id){
+                    result.push({Key:submission.submission.toString().split("/").pop()});
+                }
+                return result;
+            },[]);
+            const objects = submissions;
+            const params = {
+                Bucket: process.env.AWS_BUCKET,
+                Delete: {
+                    Objects: objects
+                  }
+            }
+            if(submissions.length!==0){
+                s3Bucket.deleteObjects(params,()=>{
+    
+                });
+            }
+            
+            return res.json({"msg":"Student left the room!"});
         }
     } catch (error) {
         res.status(500).send("Server Error!");
@@ -291,11 +310,31 @@ router.delete("/:id/students/:id2",auth,async (req,res)=>{
         if(!req.user.isTeacher){
             return res.status(401).json({"msg":"Authorization denied!"});
         }
-        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{students:{_id:req.params.id2}}});
+        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{students:{_id:req.params.id2},submissions:{student_id:req.params.id2}}});
         if(!room){
             return res.status(404).json({"msg":"room not found!"});
         }
-        res.json({"msg":"Student Deleted!"});
+        const submissions = room.submissions.reduce((result,submission)=>{
+            if(submission.student_id==req.params.id2){
+                result.push({Key:submission.submission.toString().split("/").pop()});
+            }
+            return result;
+        },[]);
+        const objects = submissions;
+        console.log(objects);
+
+        const params = {
+            Bucket: process.env.AWS_BUCKET,
+            Delete: {
+                Objects: objects
+              }
+        }
+        if(submissions.length!==0){
+            s3Bucket.deleteObjects(params,()=>{
+
+            });
+        }
+        return res.json({"msg":"room deleted!"});
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);

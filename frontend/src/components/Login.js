@@ -19,15 +19,12 @@ const Login = (props)=>{
         setFormData({...formData , [e.target.name]:e.target.value})
     }
 
-    const onSubmit = (e)=>{
+    const onSubmit = async (e)=>{
         e.preventDefault();
         setShowModal(true);
         setModalText("Logging In");
-        props.dispatch(login({email,password})).then(()=>{
-            setShowModal(false); 
-        }).catch((error)=>{
-            console.log(error);
-        });
+        await props.dispatch(login({email,password}))
+        setShowModal(false); 
     }
     if(props.isAuthenticated){
         return <Redirect to="/dashboard" />

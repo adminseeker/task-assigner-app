@@ -14,9 +14,8 @@ const Dashboard = ({getRooms,logout,isTeacher})=>{
             <h1>Dashboard Page!</h1>
             <button onClick={(e)=>{
                 logout();
-            }}>Logout</button><br/>            
-            <RoomsList />
-            <br />
+            }}>Logout</button>            
+            <RoomsList /><br/>
             {
                 isTeacher && <AddRoom />
             }
@@ -26,6 +25,7 @@ const Dashboard = ({getRooms,logout,isTeacher})=>{
 
 const mapStateToProps = (state)=>({
     isTeacher:state.auth.user.isTeacher
+    
 })
 
 export default connect(mapStateToProps,{getRooms,logout})(Dashboard);

@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const setAuthToken = (token)=>{
+const setAuthToken =  (token)=>{
     if(token){
-        axios.defaults.headers["x-auth-token"] = token;
+       axios.defaults.headers["x-auth-token"] = token;
     }else{
         delete axios.defaults.headers["x-auth-token"];
     }
