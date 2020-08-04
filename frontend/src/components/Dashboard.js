@@ -16,6 +16,7 @@ const Dashboard = ({getRooms,logout,isTeacher})=>{
                 logout();
             }}>Logout</button><br/>            
             <RoomsList />
+            <br />
             {
                 isTeacher && <AddRoom />
             }

@@ -28,6 +28,7 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
                     ))
                 )
             }
+
             {
                 isTeacher && <AddStudents room_id={_id}/>
             }
