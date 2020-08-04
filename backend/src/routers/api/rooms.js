@@ -59,7 +59,7 @@ router.post("/:id/students",auth,async (req,res)=>{
         if(!room){
             return res.status(404).json({"msg":"No room found!"});
         } 
-        res.json(room);
+        res.json(room.students);
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);
@@ -185,16 +185,16 @@ router.get("/:id/submissions",auth,async (req,res)=>{
 
 router.get("/:id/resources",auth,async (req,res)=>{
     try {
+        let room;
         if(!req.user.isTeacher){
-            return res.status(401).json({"msg":"Authorization denied!"});
+            room = await Room.findOne({_id:req.params.id,"students._id":req.user.id});
         }else{
-            const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+            room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
             if(!room){
                 return res.status(404).json({"msg":"No room found!"});
             }
-            const resources = room.resources;
-            res.json(resources); 
         }
+        res.json(room.resources); 
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);

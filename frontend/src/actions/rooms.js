@@ -41,7 +41,6 @@ const getTeacherResources = (id)=>{
     return async (dispatch)=>{
         try {
             const res = await axios.get("/api/rooms/"+id+"/resources");
-            console.log(res.data);
             dispatch({
                 type:"GET_RESOURCES",
                 resources:res.data
