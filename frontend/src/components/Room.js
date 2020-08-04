@@ -5,6 +5,7 @@ import StudentListItem from "./StudentListItem";
 import LoadingPage from "./LoadingPage";
 import { Link } from "react-router-dom";
 import ResourcesList from "./ResourcesList";
+import Uploader from "./Uploader";
 
 const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,loading_users,match:{params:{id}}}) => {
     useEffect(()=>{
@@ -29,8 +30,11 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
             <h3>Resources: </h3>
             <ResourcesList url_id={id}/>
             {
-                !isTeacher && <Link to={"/rooms/"+id+"/submissions"}>My Submissions</Link>
+                !isTeacher ? <Link to={"/rooms/"+id+"/submissions"}>My Submissions</Link> :
+
+                <Uploader room_id={id} isTeacher={isTeacher}/>
             }
+
         </div>
     )
 }

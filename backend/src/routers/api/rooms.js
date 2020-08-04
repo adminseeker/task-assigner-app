@@ -77,7 +77,7 @@ router.get("/",auth,async (req,res)=>{
     try {
         let rooms;
         if(req.user.isTeacher){
-            rooms = await Room.find({teacher:req.user.id});
+            rooms = await Room.find({teacher:req.user.id}).select("-resources -submissions");
         }else{
             rooms = await Room.find({"students._id":req.user.id}).select("-submissions");
         }
@@ -169,6 +169,31 @@ router.get("/:id/submissions",auth,async (req,res)=>{
                 return result;
             },[]);
             res.json(submissions); 
+        }
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+/* 
+    route : "/api/rooms/room_id/resources"
+    desc : "Teacher gets the resources",
+    auth : "Teacher",
+    method: "GET"
+*/
+
+router.get("/:id/resources",auth,async (req,res)=>{
+    try {
+        if(!req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }else{
+            const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            const resources = room.resources;
+            res.json(resources); 
         }
     } catch (error) {
         res.status(500).send("Server Error!");

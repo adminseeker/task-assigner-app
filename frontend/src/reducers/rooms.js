@@ -2,8 +2,10 @@ const initialState = {
     rooms:[],
     teacher:{},
     students:[],
+    resources:[],
     loading_rooms:true,
     loading_users:true,
+    loading_resources:true,
     error:{}
 }
 
@@ -37,6 +39,30 @@ const roomsReducer = (state=initialState,action)=>{
                 loading_users:false,
                 
             }
+        case "GET_RESOURCES":
+            return {
+                ...state,
+                resources:action.resources,     
+                loading_resources:false         
+            }
+        case "GET_RESOURCES_ERROR":
+            return{
+                ...state,
+                error:action.error,
+                loading_resources:false         
+            }
+        case "DELETE_RESOURCE":
+            return {
+                ...state,
+                resources:state.resources.filter((resource)=>((action.resource)!==(resource.resource))),
+                loading_resources:false
+            }
+            case "DELETE_RESOURCE_ERROR":
+                return{
+                    ...state,
+                    error:action.error,
+                    loading_resources:false
+                }
         default :
             return state;
     }

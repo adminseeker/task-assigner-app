@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import axios from "axios"; 
 import { connect } from "react-redux";
 import { getSubmissions } from "../actions/submissions";
+import { getTeacherResources } from "../actions/rooms";
   
 const Uploader = (props)=> { 
     const [selectedFile,setSelectedFile] = useState(null);
@@ -21,7 +22,12 @@ const Uploader = (props)=> {
         formData.append( "file",selectedFile); 
        await axios.post("/api/upload/"+props.room_id, formData,config); 
        console.log("File Uploaded");
-       props.dispatch(getSubmissions(props.room_id));
+       if(props.isTeacher){
+        props.dispatch(getTeacherResources(props.room_id));
+      }else{
+        props.dispatch(getSubmissions(props.room_id));
+      }
+       
        
     }; 
     const fileData = () => { 

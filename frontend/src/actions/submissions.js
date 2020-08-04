@@ -4,7 +4,6 @@ const getSubmissions = (id)=>{
     return async (dispatch)=>{
         try {
             const res = await axios.get("/api/rooms/"+id+"/submissions");
-            console.log(res.data);
             dispatch({
                 type:"GET_SUBMISSIONS",
                 submissions:res.data
