@@ -271,6 +271,7 @@ router.delete("/:id",auth,async (req,res)=>{
             if(!room){
                 return res.status(404).json({"msg":"room not found!"});
             }
+            res.json({"msg":"Student left the room!"});
         }
     } catch (error) {
         res.status(500).send("Server Error!");

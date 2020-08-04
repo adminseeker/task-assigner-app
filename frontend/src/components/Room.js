@@ -24,7 +24,7 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
                     <h3>No Students</h3>
                 ) : (
                     students.map((student)=>(
-                        <StudentListItem key={student._id} student={student}/>
+                        <StudentListItem key={student._id} student={student} room_id={_id}/>
                     ))
                 )
             }

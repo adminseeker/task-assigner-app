@@ -17,7 +17,7 @@ const register = ({name,email,password,isTeacher,phone})=>{
                 token:res.data.token
             });
 
-            dispatch(loadUser());
+            await dispatch(loadUser());
             
         } catch (err) {
             console.log(err);
@@ -44,7 +44,7 @@ const login = ({email,password})=>{
                 token:res.data.token
             });
 
-            dispatch(loadUser());
+            await dispatch(loadUser());
             
         } catch (err) {
             console.log(err);

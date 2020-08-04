@@ -3,8 +3,9 @@ import {logout} from "../actions/auth";
 import {connect} from "react-redux";
 import {getRooms} from "../actions/rooms";
 import RoomsList from "./RoomsList";
+import AddRoom from "./AddRoom";
 
-const Dashboard = ({getRooms,logout,auth:{auth},rooms:{rooms}})=>{
+const Dashboard = ({getRooms,logout,isTeacher})=>{
     useEffect(()=>{
         getRooms();
       },[getRooms]);
@@ -15,13 +16,15 @@ const Dashboard = ({getRooms,logout,auth:{auth},rooms:{rooms}})=>{
                 logout();
             }}>Logout</button><br/>            
             <RoomsList />
+            {
+                isTeacher && <AddRoom />
+            }
         </div>
     )
 }
 
 const mapStateToProps = (state)=>({
-    auth:state.auth,
-    rooms:state.rooms
+    isTeacher:state.auth.user.isTeacher
 })
 
 export default connect(mapStateToProps,{getRooms,logout})(Dashboard);
