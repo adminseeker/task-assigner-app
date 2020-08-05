@@ -117,8 +117,8 @@ router.delete("/:id/resources/",auth,async (req,res)=>{
 
 /* 
     route : "/api/upload/room_id/submissions",
-    desc : "Student Can Delete His Own Submissions",
-    auth : ["Student"],
+    desc : "Student Can Delete His Own Submissions, Teacher can delete student Submissions",
+    auth : ["Student, Teacher"],
     method: "DELETE"
 */
 

@@ -17,9 +17,8 @@ const RoomListItem = (props)=>{
                     <span>{moment(props.room.date).format('MMMM Do, YYYY')}</span>
                 </div>
             </Link>
-            {
-                props.isTeacher && <button onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Remove</button>
-            }
+            {props.isTeacher && <button onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Remove</button>}
+            {!props.isTeacher && <button onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Leave This Class Room</button>}
         </div>
     
     )
