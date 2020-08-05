@@ -18,10 +18,28 @@ const getSubmissions = (id)=>{
     }
 }
 
-const deleteSubmission = (id,submission)=>{
+const getSubmissionsByTeacher = (room_id,student_id)=>{
     return async (dispatch)=>{
         try {
-            await axios.delete("/api/upload/"+id+"/submissions",{data:{location:submission}});
+            const res = await axios.get("/api/rooms/"+room_id+"/submissions/"+student_id);
+            dispatch({
+                type:"GET_SUBMISSIONS",
+                submissions:res.data
+            })
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"GET_SUBMISSIONS_ERROR",
+                error:{msg:error.response}
+            })
+        }
+    }
+}
+
+const deleteSubmission = (id,submission,student_id="")=>{
+    return async (dispatch)=>{
+        try {
+            await axios.delete("/api/upload/"+id+"/submissions",{data:{location:submission,student_id}});
             dispatch({
                 type:"DELETE_SUBMISSION",
                 submission
@@ -37,4 +55,4 @@ const deleteSubmission = (id,submission)=>{
     }
 }
 
-export {getSubmissions,deleteSubmission};
+export {getSubmissions,deleteSubmission,getSubmissionsByTeacher};

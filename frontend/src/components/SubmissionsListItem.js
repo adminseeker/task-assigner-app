@@ -11,7 +11,7 @@ const SubmissionsListItem = (props)=>(
         </div>
         </a>
         <button onClick={(e)=>{
-            props.dispatch(deleteSubmission(props.room_id,props.submission.submission))
+            props.dispatch(deleteSubmission(props.room_id,props.submission.submission,props.student_id))
         }}>
                 Delete
         </button>

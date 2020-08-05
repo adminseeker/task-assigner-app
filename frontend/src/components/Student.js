@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { getSubmissionsByTeacher } from "../actions/submissions";
+import SubmissionsList from "./SubmissionsList";
 
-const Student = (props) => {
+const Student = ({student,getSubmissionsByTeacher,room_id,isTeacher}) => {
+    useEffect(()=>{
+        getSubmissionsByTeacher(room_id,student._id);
+    },[getSubmissionsByTeacher,room_id,student._id])
     return (
         <div>
-            <h3>Name: {props.student.name}</h3>
-            <h3>Email: {props.student.email}</h3>
+            <h3>Name: {student.name}</h3>
+            <h3>Email: {student.email}</h3>
+            {
+                isTeacher && <SubmissionsList room_id={room_id} student_id={student._id}/>
+            }
         </div>
     )
 }
 
 const mapStateToProps = (state,props)=>({
     student: state.rooms.students.find((student)=>(student._id === props.match.params.id)),
-    isTeacher:state.auth.user.isTeacher
+    isTeacher:state.auth.user.isTeacher,
+    room_id:state.rooms.current_room_id
 })
 
-export default connect(mapStateToProps)(Student);
+export default connect(mapStateToProps,{getSubmissionsByTeacher})(Student);

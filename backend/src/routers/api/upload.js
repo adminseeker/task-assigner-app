@@ -124,10 +124,13 @@ router.delete("/:id/resources/",auth,async (req,res)=>{
 
 router.delete("/:id/submissions/",auth,async (req,res)=>{
     try {
+        let room;
         if(req.user.isTeacher){
-            return res.status(401).json({"msg":"Authorization denied!"});
+            room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id,"submissions.student_id":req.body.student_id},{$pull:{submissions:{submission:req.body.location,student_id:req.body.student_id}}});
+
+        }else{
+             room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id,"submissions.student_id":req.user.id},{$pull:{submissions:{submission:req.body.location,student_id:req.user.id}}});
         }
-        const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id,"submissions.student_id":req.user.id},{$pull:{submissions:{submission:req.body.location,student_id:req.user.id}}});
         if(!room){
             return res.status(500).json({ "msg":"error deleting file!" });
         }

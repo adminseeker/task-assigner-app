@@ -25,7 +25,8 @@ const getRoomUsers = (id)=>{
             dispatch({
                 type:"GET_ROOM_USERS",
                 teacher:res.data.teacher,
-                students:res.data.students
+                students:res.data.students,
+                current_room_id:id
             })
         } catch (error) {
             console.log(error);

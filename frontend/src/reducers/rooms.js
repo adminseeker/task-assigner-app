@@ -1,5 +1,6 @@
 const initialState = {
     rooms:[],
+    current_room_id:"",
     teacher:{},
     students:[],
     resources:[],
@@ -29,6 +30,7 @@ const roomsReducer = (state=initialState,action)=>{
                 ...state,
                 teacher:action.teacher,
                 students:action.students,
+                current_room_id:action.current_room_id,
                 loading_users:false,
                                 
             }
