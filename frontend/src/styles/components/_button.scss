@@ -1,0 +1,45 @@
+.button {
+  background: $blue;
+  border: none;
+  color: white;
+  display: inline-block;
+  font-size: $font-size-large;
+  font-weight: 300;
+  line-height: 1;
+  padding: $s-size;
+  text-decoration: none;
+ 
+  
+}
+
+.pos_right{
+  position: relative;
+  left: 692px;
+}
+
+.button--link {
+  background: none;
+}
+
+.button--secondary {
+  //background: #888;
+  background: red;
+}
+
+.button-load-intrusions{
+  position: relative;
+  left: 50px;
+  height: 49.6px;
+  float: inherit;
+  background: green;
+}
+
+.view-buttons{
+  display: flex;
+  justify-content: space-around;
+  
+}
+
+.not-found-button{
+  margin-top: 50px;
+}

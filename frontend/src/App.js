@@ -5,6 +5,7 @@ import {Provider} from "react-redux";
 import setAuthToken from "./utils/setAuthToken";
 import {loadUser} from "./actions/auth";
 import Alert from "./components/Alert";
+import "./styles/styles.scss";
 
 const store = configureStore();
 

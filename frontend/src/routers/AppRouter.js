@@ -10,6 +10,7 @@ import Room from "../components/Room";
 import Student from "../components/Student";
 import Teacher from "../components/Teacher";
 import Submissions from "../components/Submissions";
+import Header from "../components/Header";
 
 
 
@@ -19,6 +20,7 @@ const history = createHistory();
 const AppRouter = ()=>{
     return(
         <Router history={history}>
+            <Header />
             <Switch>
                 <Route path="/" component={Landing} exact={true}/>
                 <Route path="/register" component={Register} />

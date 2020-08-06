@@ -1,0 +1,50 @@
+.box-layout {
+  align-items: center;
+  background: url("/images/bg.jpg");
+  background-size: cover;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  width: 100vw;
+}
+
+.box-layout__box {
+  border-radius: 3px;
+  padding: $l-size $m-size;
+  text-align: center;
+  width: 35rem;
+  background: #fffaf6;
+    border-radius: 4px;
+    color: #7e7975;
+    box-shadow:
+        0 2px 2px rgba(0,0,0,0.2),        
+        0 1px 5px rgba(0,0,0,0.2),        
+        0 0 0 12px rgba(255,255,255,0.4); 
+  
+}
+
+.box-layout__title {
+  margin: 0 0 $m-size 0;
+  line-height: 1;
+}
+
+// input[type=password] {
+//   width: 100%;
+//   padding: 12px 20px;
+//   margin: 8px 0;
+//   box-sizing: border-box;
+//   border-radius: 3px;
+//   background: #fffaf6;
+//   //background-color: #3CBC8D;
+//   color: black;
+// }
+
+.not-found{
+  background: url("/images/404.jpg");
+  background-size: cover;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  
+  justify-content: center;
+}

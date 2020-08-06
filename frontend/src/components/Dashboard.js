@@ -4,12 +4,15 @@ import {connect} from "react-redux";
 import {getRooms} from "../actions/rooms";
 import RoomsList from "./RoomsList";
 import AddRoom from "./AddRoom";
+import LoadingPage from "./LoadingPage";
 
-const Dashboard = ({getRooms,logout,isTeacher})=>{
+const Dashboard = ({getRooms,logout,user})=>{
     useEffect(()=>{
         getRooms();
       },[getRooms]);
-    return(
+      return (
+      user==null ? <LoadingPage/>        
+    :(
         <div>
             <h1>Dashboard Page!</h1>
             <button onClick={(e)=>{
@@ -17,15 +20,15 @@ const Dashboard = ({getRooms,logout,isTeacher})=>{
             }}>Logout</button>            
             <RoomsList /><br/>
             {
-                isTeacher && <AddRoom />
+                user.isTeacher && <AddRoom />
             }
         </div>
     )
+      )
 }
 
 const mapStateToProps = (state)=>({
-    isTeacher:state.auth.user.isTeacher
-    
+    user:state.auth.user
 })
 
 export default connect(mapStateToProps,{getRooms,logout})(Dashboard);
