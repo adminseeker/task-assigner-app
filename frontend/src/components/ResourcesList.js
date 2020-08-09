@@ -10,7 +10,7 @@ const ResourcesList = ({room:{_id},getTeacherResources,resources,loading_resourc
     },[getTeacherResources,_id])
     return (
         loading_resources ? <LoadingPage /> : 
-        <div>
+        <div className="left-align">
             {
                 resources.length === 0 ?(
                     <h3>No Resources</h3>

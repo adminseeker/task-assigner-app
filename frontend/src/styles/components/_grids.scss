@@ -1,11 +1,43 @@
+.rooms-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    gap: 20px;
+    justify-content: space-around;
+
+}
+
+.rooms-grid-item{
+    padding: 20px 20px;
+    height: 250px;
+       
+}
+
 .room-grid{
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
     gap: 20px;
+    text-align: center;
+    justify-content: space-around;
+    grid-column-end: -1;
 
 }
 
 .room-grid-item{
-    padding: 20px;
-    height: 250px;
+    padding: 20px 20px;
+    
+}
+
+.room-grid-item-students-flex{
+    display: flex;
+    text-align: left;
+}
+
+.margin_0-students{
+   margin: 0;
+   padding-right: 10px;
+}
+
+.room-grid-main-item{
+    padding: 20px 20px;
+    height: fit-content;
 }

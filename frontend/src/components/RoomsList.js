@@ -7,7 +7,7 @@ import AddRoom from "./AddRoom";
 const RoomsList = (props) => {
     return (
         props.loading_rooms ? <LoadingPage /> :
-        <div className="room-grid">
+        <div className="rooms-grid">
             {
                 props.rooms.length === 0 ?(
                     <h3>No Classrooms</h3>

@@ -14,32 +14,44 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
     },[getRoomUsers,_id]);
     return (
             loading_users ? <LoadingPage /> :
-        <div>
-            
-            <h3>ClassRoom: {className}</h3>
-            <h3>Teacher: <Link to={"/profile/teacher/"+teacher._id}>{teacher.name}</Link></h3>
-            <h3>Students: </h3>
-            {
-                students.length === 0 ?(
-                    <h3>No Students</h3>
-                ) : (
-                    students.map((student)=>(
-                        <StudentListItem key={student._id} student={student} room_id={_id}/>
-                    ))
-                )
-            }
+        <div className="container">
+            <div className="content-container">
+                <h3>ClassRoom: {className}</h3>
+                <h3>Teacher: <Link to={"/profile/teacher/"+teacher._id}>{teacher.name}</Link></h3>
+                <div className="room-grid">
+                    <div className="room-grid-item-students-flex">
+                        <div>
+                        <h3>Students: </h3>
+                        {
+                            students.length === 0 ?(
+                                <h3>No Students</h3>
+                            ) : (
+                                students.map((student)=>(
+                                    <StudentListItem key={student._id} student={student} room_id={_id}/>
+                                ))
+                            )
+                        }
+                        
+                        {  
+                            isTeacher && <AddStudents room_id={_id}/>
+                        }
+                        </div>
+                    </div>
+                    <div className="room-grid-item content-container-item">
+                        <h3>Resources: </h3>
+                        <ResourcesList url_id={id}/>
+                        {
+                            !isTeacher ? <Link to={"/rooms/"+id+"/submissions"}>My Submissions</Link> :
 
-            {
-                isTeacher && <AddStudents room_id={_id}/>
-            }
-            <h3>Resources: </h3>
-            <ResourcesList url_id={id}/>
-            {
-                !isTeacher ? <Link to={"/rooms/"+id+"/submissions"}>My Submissions</Link> :
-
-                <Uploader room_id={id} isTeacher={isTeacher}/>
-            }
-
+                            <Uploader room_id={id} isTeacher={isTeacher}/>
+                        }
+                    </div>
+                        
+                    <div className="room-grid-item">
+                        <h1>Extra Stuff!</h1>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

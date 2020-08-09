@@ -11,7 +11,7 @@ const RoomListItem = (props)=>{
     }
     return(
         <div >
-        <div className="content-container-item room-grid-item">
+        <div className="content-container-item rooms-grid-item">
             <Link  to={"/rooms/"+props.room._id}>
                 <div>
                     <h3>{props.room.className}</h3>

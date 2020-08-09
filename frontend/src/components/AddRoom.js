@@ -15,16 +15,17 @@ const AddRoom = (props) => {
         await axios.post("/api/rooms/",body,config);
     }
     return (
-        <div className="content-container-item room-grid-item">
-            <div className="add-room">
+        <div className="content-container-item rooms-grid-item">
+            <form className="add-room">  
                 <input type="text" value={className} placeholder="Enter Class Room name" onChange={(e)=>{
                     setClassName(e.target.value);
                 }}/><br />
-                <button onClick={async (e)=>{
+                <button type="submit" onClick={async (e)=>{
+                    e.preventDefault();
                     await addRoom();
                     await props.dispatch(getRooms());
                 }}>Create Classroom</button>
-            </div>
+            </form>
         </div>
     )
 }

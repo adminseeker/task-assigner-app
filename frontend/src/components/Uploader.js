@@ -55,9 +55,9 @@ const Uploader = (props)=> {
     return ( 
     <div> 
         <div>
-            <h3>Enter file description: </h3> 
-            <input type="text" value={description} onChange={(e)=>(setDescription(e.target.value))}/><br /><br />
+            <br />
             <input type="file" onChange={onFileChange} /> 
+            <input type="text" value={description} placeholder="Enter file description" onChange={(e)=>(setDescription(e.target.value))}/><br /><br />
             <button onClick={onFileUpload}> 
                 Upload! 
             </button> 
