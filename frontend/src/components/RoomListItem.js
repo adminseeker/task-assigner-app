@@ -10,22 +10,28 @@ const RoomListItem = (props)=>{
         await axios.delete("/api/rooms/"+props.room._id);
     }
     return(
-        <div>
-            <Link to={"/rooms/"+props.room._id}>
+        <div >
+        <div className="content-container-item room-grid-item">
+            <Link  to={"/rooms/"+props.room._id}>
                 <div>
                     <h3>{props.room.className}</h3>
-                    <span>{moment(props.room.date).format('MMMM Do, YYYY')}</span>
+                    <p>Created on {moment(props.room.date).format('MMMM Do, YYYY')}</p>
+                    <p>students:{props.room.students.length}</p>
+                    {props.isTeacher && <p>Teacher:{props.user.name}</p>}
                 </div>
-            </Link>
+            </Link><br></br>
             {props.isTeacher && <button onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Remove</button>}
             {!props.isTeacher && <button onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Leave This Class Room</button>}
+        </div>
+            
         </div>
     
     )
 };
 
 const mapStateToProps = (state)=>({
-    isTeacher:state.auth.user.isTeacher 
+    isTeacher:state.auth.user.isTeacher,
+     
 })
 
 export default connect(mapStateToProps)(RoomListItem);

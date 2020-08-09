@@ -260,12 +260,16 @@ router.delete("/:id",auth,async (req,res)=>{
                     Objects: objects
                   }
             }
-            s3Bucket.deleteObjects(params,(error,data)=>{
-                if(error){
-                    return res.status(500).json({ "msg":"error deleting files!" });
-                }
+            if(objects.length!==0){
+                s3Bucket.deleteObjects(params,(error,data)=>{
+                    if(error){
+                        return res.status(500).json({ "msg":"error deleting files!" });
+                    }
+                     res.json({"msg":"room deleted!"});
+                });
+            }else{
                 res.json({"msg":"room deleted!"});
-            });
+            }
         }else{
             const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$pull:{students:{_id:req.user.id}}});
             if(!room){

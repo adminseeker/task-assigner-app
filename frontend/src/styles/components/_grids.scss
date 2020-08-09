@@ -1,0 +1,11 @@
+.room-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    gap: 20px;
+
+}
+
+.room-grid-item{
+    padding: 20px;
+    height: 250px;
+}

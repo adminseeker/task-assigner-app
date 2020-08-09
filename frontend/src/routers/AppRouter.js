@@ -11,6 +11,7 @@ import Student from "../components/Student";
 import Teacher from "../components/Teacher";
 import Submissions from "../components/Submissions";
 import Header from "../components/Header";
+import Logout from "../components/Logout";
 
 
 
@@ -30,6 +31,7 @@ const AppRouter = ()=>{
                 <PrivateRoute path="/rooms/:id/submissions" component={Submissions} />
                 <PrivateRoute path="/profile/student/:id" component={Student} />
                 <PrivateRoute path="/profile/teacher/:id" component={Teacher} />
+                <PrivateRoute path="/logout" component={Logout} />
                 
             </Switch>
         </Router>

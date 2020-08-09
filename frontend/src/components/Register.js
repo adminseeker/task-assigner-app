@@ -69,7 +69,7 @@ const Register = (props)=>{
                     <input type="number" name="phone" value={phone} id="phone" onChange={onChange}/>
                 </div>
                 <br />
-                <button type="submit">Submit</button>
+                <button type="submit">Register</button>
             </form>
         </div>
     )

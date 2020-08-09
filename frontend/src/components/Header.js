@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../actions/auth";
+import { getRooms } from "../actions/rooms";
+import LoadingPage from "./LoadingPage";
 
-const Header = (props) => {
-    return (
+const Header = ({user,isAuthenticated,logout}) => {
+    useEffect(()=>{
+        getRooms()
+    },[]);
+    
+    return user==null && isAuthenticated ? <LoadingPage/> : (
             <nav className="header">
                 <div className="header__container">
-                {!props.isAuthenticated && <h1>{<Link to="/">Tasker</Link>}</h1>}
-                {props.isAuthenticated && <h1>{<Link to="/dashboard">Tasker</Link>}</h1>}
+                {!isAuthenticated && <h1>{<Link to="/">Tasker</Link>}</h1>}
+                {isAuthenticated && <h1>{<Link to="/dashboard">Tasker</Link>}</h1>}
                 <ul>
-                    {!props.isAuthenticated && <li className="header__content">{<Link to="/login">Login</Link>}</li>}
-                    {!props.isAuthenticated && <li className="header__content">{<Link to="/Register">Register</Link>}</li>}
-                    {props.isAuthenticated && <li className="header__content"><button onClick={(e)=>{
-                        props.dispatch(logout());
-                    }}>Logout</button></li>}
+                    {!isAuthenticated && <li className="header__content">{<Link to="/login">Login</Link>}</li>}
+                    {!isAuthenticated && <li className="header__content">{<Link to="/Register">Register</Link>}</li>}
+                    {isAuthenticated && <li className="header__content__name">{<Link to="/dashboard">{user.name}</Link>}</li>}
+                    {isAuthenticated && <li className="header__content"><Link to="/logout">Logout</Link></li>}
                 </ul>
                 </div>
             </nav>
@@ -22,7 +27,8 @@ const Header = (props) => {
 }
 
 const mapStateToProps = (state)=>({
-    isAuthenticated:state.auth.isAuthenticated
+    isAuthenticated:state.auth.isAuthenticated,
+    user:state.auth.user
 })
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps,{logout})(Header);
