@@ -11,11 +11,14 @@ const Submissions = ({getSubmissions, room_id,loading_submissions,isTeacher}) =>
     },[getSubmissions,room_id]);
     return (
         loading_submissions ? <LoadingPage /> :
+        <div className="container">
         <div>
             <h3>My Submissions:</h3>
             <SubmissionsList room_id={room_id}/>
-            <h3>Upload: </h3>
+            <div>
             <Uploader room_id={room_id} isTeacher={isTeacher}/>
+            </div>
+        </div>
         </div>
     )
 }

@@ -15,7 +15,7 @@ const StudentListItem = (props)=>{
         <div className="room-grid-item-students-flex">
             <div className="flex-child">
             <Link className="link-blue-style" to={"/profile/student/"+props.student._id}>
-                <p className="margin_0-students">{props.student.name}</p>
+                <p className="margin_0-submissions">{props.student.name}</p>
             </Link>
             </div>
             <div className="flex-child">

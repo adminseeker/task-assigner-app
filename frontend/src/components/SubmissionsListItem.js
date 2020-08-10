@@ -4,17 +4,22 @@ import { connect } from "react-redux";
 import { deleteSubmission } from "../actions/submissions";
 
 const SubmissionsListItem = (props)=>(
-    <div>
-        <a href={props.submission.submission} target="_blank" rel="noopener noreferrer">
-        <div>
-            <h3>{props.submission.description} - {moment(props.submission.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</h3>
-        </div>
-        </a>
+    <div className={props.isTeacher ? "submissions-flex" : "student-submissions-flex"}>
+        <div className="flex-child">
+        
+            {props.isTeacher && <h4><a className="link-blue-style margin_0-submissions" href={props.submission.submission} target="_blank" rel="noopener noreferrer">{props.submission.description}</a> - {moment(props.submission.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</h4>}
+            </div>
+            <div>
+            {!props.isTeacher && <h4><a className="link-blue-style-center margin_0-submissions" href={props.submission.submission} target="_blank" rel="noopener noreferrer">{props.submission.description}</a> - {moment(props.submission.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</h4>}
+            </div>
+        
+        <div className="flex-child">
         <button onClick={(e)=>{
             props.dispatch(deleteSubmission(props.room_id,props.submission.submission,props.student_id))
         }}>
                 Delete
         </button>
+        </div>
     </div>
 );
 

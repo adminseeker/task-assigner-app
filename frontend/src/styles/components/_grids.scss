@@ -27,15 +27,26 @@
     
 }
 
-.room-grid-item-students-flex{
+.room-grid-item-students-flex, .submissions-flex{
     display: flex;
     text-align: left;
+}
+
+.student-submissions-flex{
+    display: flex;
+    
 }
 
 .margin_0-students{
    margin: 0;
    padding-right: 10px;
+   
 }
+
+.margin_0-submissions{
+    margin: 0 !important;
+    padding: 0;
+ }
 
 .room-grid-main-item{
     padding: 20px 20px;

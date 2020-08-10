@@ -41,7 +41,7 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
                         <h3>Resources: </h3>
                         <ResourcesList url_id={id}/>
                         {
-                            !isTeacher ? <Link to={"/rooms/"+id+"/submissions"}>My Submissions</Link> :
+                            !isTeacher ? <Link className="link-blue-style" to={"/rooms/"+id+"/submissions"}>My Submissions</Link> :
 
                             <Uploader room_id={id} isTeacher={isTeacher}/>
                         }
