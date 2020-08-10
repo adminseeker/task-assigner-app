@@ -19,7 +19,7 @@ app.use("/api/upload/",require("./routers/api/upload"));
     console.log(__dirname);
     app.use(express.static(path.join(__dirname ,"..","/..","/frontend","/build")));
 
-    app.get("/",(req,res)=>{
+    app.get("*",(req,res)=>{
         console.log(path.join(__dirname,"..","..","frontend","build","index.html"));
         res.sendFile(path.join(__dirname,"..","..","frontend","build","index.html"));
     })
