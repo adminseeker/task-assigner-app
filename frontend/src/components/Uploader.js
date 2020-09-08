@@ -37,10 +37,6 @@ const Uploader = (props)=> {
               <h2>File Details:</h2> 
               <p>File Name: {selectedFile.name}</p> 
               <p>File Type: {selectedFile.type}</p> 
-              <p> 
-                Last Modified:{" "} 
-                {selectedFile.lastModifiedDate.toDateString()} 
-              </p> 
             </div> 
           ); 
         } else { 
