@@ -77,6 +77,55 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
 });
 
 /* 
+    route : "/api/upload/room_id/materials",
+    desc : "Upload materials",
+    auth : ["Teacher"],
+    method: "POST"
+*/
+
+router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
+    try {
+        const file = req.file;
+        const description = req.header("description");
+        const params = {
+            Bucket: process.env.AWS_BUCKET,
+            Key: req.user.id+"_"+file.originalname,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+            ACL: "public-read"
+        }
+
+        if(req.user.isTeacher){
+            const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            s3Bucket.upload(params,async (error,data)=>{
+                if (error) {
+                    res.status(500).json({ "msg":"error uploading file!" });
+                } else {
+                    
+                        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$addToSet:{materials:{material:data.Location,description:description}}},{new:true});
+                        if(!room){
+                            return res.status(404).json({"msg":"No room found!"});
+                        }
+                    
+                    res.json({location:data.Location});
+                }
+            })
+        }else{
+            return res.status(401).json({"msg":"Authorizaion error!"})
+        }
+    } catch (error) {
+        if(error instanceof mongoose.CastError){
+            return res.status(404).json({"msg":"No room found!"});
+        }
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+/* 
     route : "/api/upload/room_id/resources",
     desc : "Delete Resources",
     auth : ["Teacher"],
@@ -95,6 +144,45 @@ router.delete("/:id/resources/",auth,async (req,res)=>{
         const fileName = room.resources.map((resource)=>{
             if(resource.resource == req.body.location){
                 return resource.resource;
+            }
+        }).toString().split("/").pop();
+        const params = {
+            Bucket: process.env.AWS_BUCKET,
+            Key: fileName
+        }
+
+        s3Bucket.deleteObject(params,async(error,data)=>{
+            if(error){
+                return res.status(500).json({ "msg":"error deleting file!" });
+            }
+            res.json({"msg":"File Successfully Deleted!"});
+        })
+
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);   
+    }
+});
+
+/* 
+    route : "/api/upload/room_id/materials",
+    desc : "Delete Materials",
+    auth : ["Teacher"],
+    method: "DELETE"
+*/
+
+router.delete("/:id/materials/",auth,async (req,res)=>{
+    try {
+        if(!req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{materials:{material:req.body.location}}});
+        if(!room){
+            return res.status(500).json({ "msg":"error deleting file!" });
+        }
+        const fileName = room.materials.map((material)=>{
+            if(material.material == req.body.location){
+                return material.material;
             }
         }).toString().split("/").pop();
         const params = {

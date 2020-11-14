@@ -7,6 +7,9 @@ const User = require("../../models/User");
 const Teacher = require("../../models/Teacher");
 const Student = require("../../models/Student");
 const Room = require("../../models/Room");
+const Invite = require("../../models/Invite");
+
+const mailer = require("../../mailer/mailer");
 
 const router = express.Router();
 
@@ -41,25 +44,79 @@ router.post("/",auth,async (req,res)=>{
 });
 
 /* 
-    route : "/api/rooms/room_id/students",
-    desc : "Teacher Adds Students",
+    route : "/api/rooms/room_id/students/invite",
+    desc : "Teacher Invites Students",
     auth : "Teacher",
     method: "POST"
 */
 
-router.post("/:id/students",auth,async (req,res)=>{
+router.post("/:id/students/invite",auth,async (req,res)=>{
     try{
         const user = req.user;
         if(!user.isTeacher){
             return res.status(401).json({"msg":"Authorization denied!"});
         }
+        const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+        if(!room){
+            res.status(404).json({"msg":"Room not found!"})
+        }
         const studentEmails = req.body.studentEmails.splice(",").map((studentEmail)=>studentEmail.trim());
-        const studentsToAdd = await User.find({email:{$in:studentEmails}}).select("_id");
-        const room = await Room.findOneAndUpdate({_id:req.params.id},{$addToSet:{students:studentsToAdd}},{new:true});
+        // let emailString = studentEmails.join();
+        // let room_id = String(room._id);
+        let emailHTML = "<h2>Teacher "+req.user.name+" is inviting you to join classroom "+room.className+".</h2>\n <p>Your invite code is:</p> ";
+        let invites=[]
+        for(let i=0;i<studentEmails.length;i++){
+            invites.push({user_email:studentEmails[i],classroom_id:req.params.id,invite_id:Math.floor(100000 + Math.random() * 900000)})
+        }
+        await Invite.insertMany(invites); 
+        invites.forEach(async (invite)=>{
+            await mailer(invite.user_email,text="",html=emailHTML+"<h1>"+invite.invite_id+"</h1>")
+        })
         if(!room){
             return res.status(404).json({"msg":"No room found!"});
         } 
-        res.json(room.students);
+        res.json({"msg":"Invite Sent"});
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+/* 
+    route : "/api/rooms/students/join",
+    desc : "Student joins the classroom using invite_id",
+    auth : "Student",
+    method: "POST"
+*/
+
+router.post("/students/join",auth,async (req,res)=>{
+    try{
+        const user = req.user;
+        if(user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        const invite_id = req.body.invite_id;
+        const invites = await Invite.find({user_email:user.email,invite_id});
+        if(invites.length===0){
+            return res.json({"msg":"Invalid invite id or you are not invited!!"});
+        }
+        let found=false;
+        let students = [];
+        students.push({_id:user._id});
+        invites.forEach(async (invite)=>{
+            if(invite.invite_id==invite_id){
+                found=true;
+                const room = await Room.findOneAndUpdate({_id:invite.classroom_id},{$addToSet:{students}},{new:true});
+                if(!room){
+                    res.json({"msg":"No classroom Found!"});
+                }
+                await Invite.deleteMany({user_email:user.email,classroom_id:room.id});
+            }
+        })
+        if(!found){
+            return res.json({"msg":"Invalid invite id or you are not invited!"});
+        }
+        return res.json({"msg":"join successfull!"});
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);

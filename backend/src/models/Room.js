@@ -49,7 +49,21 @@ const RoomSchema = new mongoose.Schema({
                     },
                     _id:false
                 }
-            ]    
+            ],
+            
+    materials: [{
+        material :{
+            type: String
+        },
+        description:{
+            type:String
+        },
+        createdAt:{
+            type:Date,
+            default:Date.now
+        },
+        _id:false
+    }]
 });
 
 module.exports = mongoose.model("Room",RoomSchema);
