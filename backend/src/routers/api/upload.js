@@ -19,7 +19,7 @@ const s3Bucket = new AWS.S3({
 });
 
 /* 
-    route : "/api/upload/room_id",
+    route : "/api/upload/room_id",                          
     desc : "Upload Resources and Submissions",
     auth : ["Teacher","Student"],
     method: "POST"
@@ -28,6 +28,7 @@ const s3Bucket = new AWS.S3({
 router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
     try {
         const file = req.file;
+        const resource_id = req.header("resource_id");
         const description = req.header("description");
         const params = {
             Bucket: process.env.AWS_BUCKET,
@@ -59,7 +60,7 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
                         return res.status(404).json({"msg":"No room found!"});
                     }
                 }else{
-                    const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$addToSet:{submissions:{student_id:req.user.id,submission:data.Location,description:description}}},{new:true});
+                    const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$addToSet:{submissions:{student_id:req.user.id,resource_id,submission:data.Location,description:description}}},{new:true});
                     if(!room){
                         return res.status(404).json({"msg":"No room found!"});
                     }   
@@ -75,6 +76,31 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
         console.log(error);
     }
 });
+
+/* 
+    route : "/api/upload/room_id/resource_id/deadline",
+    desc : "Add/update deadline",
+    auth : ["Teacher"],
+    method: "POST"
+*/
+
+router.post("/:id1/:id2/deadline",auth,async (req,res)=>{
+    try {
+        if(!req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        const deadline = req.body.deadline;
+        const results = await Room.findOneAndUpdate({_id:req.params.id1,teacher:req.user.id,"resources._id":req.params.id2},{"resources.$.deadline":deadline},{new:true});
+        if(!results){
+            return res.json({"msg":"No room found"});
+        }
+        return res.json({"msg":"deadline updated"});
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+
+})
 
 /* 
     route : "/api/upload/room_id/materials",
@@ -126,23 +152,24 @@ router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
 });
 
 /* 
-    route : "/api/upload/room_id/resources",
+    route : "/api/upload/room_id/resources/resource_id",
     desc : "Delete Resources",
     auth : ["Teacher"],
     method: "DELETE"
 */
 
-router.delete("/:id/resources/",auth,async (req,res)=>{
+router.delete("/:id1/resources/:id2",auth,async (req,res)=>{
     try {
         if(!req.user.isTeacher){
             return res.status(401).json({"msg":"Authorization denied!"});
         }
-        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{resources:{resource:req.body.location}}});
+        const room = await Room.findOneAndUpdate({_id:req.params.id1,teacher:req.user.id},{$pull:{resources:{_id:req.params.id2},submissions:{resource_id:req.params.id2}}});
         if(!room){
             return res.status(500).json({ "msg":"error deleting file!" });
         }
+
         const fileName = room.resources.map((resource)=>{
-            if(resource.resource == req.body.location){
+            if(resource._id == req.params.id2){
                 return resource.resource;
             }
         }).toString().split("/").pop();
@@ -204,7 +231,7 @@ router.delete("/:id/materials/",auth,async (req,res)=>{
 });
 
 /* 
-    route : "/api/upload/room_id/submissions",
+    route : "/api/upload/room_id/submissions",     
     desc : "Student Can Delete His Own Submissions, Teacher can delete student Submissions",
     auth : ["Student, Teacher"],
     method: "DELETE"

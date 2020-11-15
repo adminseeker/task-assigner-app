@@ -17,12 +17,14 @@ const RoomSchema = new mongoose.Schema({
         ref:"User",
 
     },
-    date:{
-        type:Date,
-        default:Date.now
-    },
+    announcements:[{
+        announcement: {
+         type:mongoose.Schema.Types.ObjectId,
+         ref:"Announcement"
+         }
+     }],
     resources: [{
-        resource :{
+        resource :{                                 // resources === assignment
             type: String
         },
         description:{
@@ -32,11 +34,15 @@ const RoomSchema = new mongoose.Schema({
             type:Date,
             default:Date.now
         },
-        _id:false
+        deadline:{
+            type:Date,
+            default:Date.now
+        }
     }],
     submissions:[
                 {
                     student_id: mongoose.Schema.Types.ObjectId,
+                    resource_id:mongoose.Schema.Types.ObjectId,
                     submission:{
                         type:String
                     },
@@ -63,7 +69,11 @@ const RoomSchema = new mongoose.Schema({
             default:Date.now
         },
         _id:false
-    }]
+    }],
+    date:{
+        type:Date,
+        default:Date.now
+    }
 });
 
 module.exports = mongoose.model("Room",RoomSchema);

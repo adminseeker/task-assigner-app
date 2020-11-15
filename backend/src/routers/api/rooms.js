@@ -8,6 +8,7 @@ const Teacher = require("../../models/Teacher");
 const Student = require("../../models/Student");
 const Room = require("../../models/Room");
 const Invite = require("../../models/Invite");
+const Announcement = require("../../models/Announcement");
 
 const mailer = require("../../mailer/mailer");
 
@@ -44,6 +45,32 @@ router.post("/",auth,async (req,res)=>{
 });
 
 /* 
+    route : "/api/rooms/room_id/announcements",
+    desc : "Create a announcement",
+    auth : "Teacher",
+    method: "POST"
+*/
+router.post("/:id/announcements",auth,async (req,res)=>{
+    try {
+        const user = req.user;
+        if(!user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        const announcement = new Announcement({
+            teacher_id:user.id,
+            content:req.body.content
+        });
+        await announcement.save();
+        let announcements = [announcement];
+        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$addToSet:{announcements}},{new:true});
+        res.json({"msg":"Created Announcement!"});
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+/* 
     route : "/api/rooms/room_id/students/invite",
     desc : "Teacher Invites Students",
     auth : "Teacher",
@@ -72,9 +99,6 @@ router.post("/:id/students/invite",auth,async (req,res)=>{
         invites.forEach(async (invite)=>{
             await mailer(invite.user_email,text="",html=emailHTML+"<h1>"+invite.invite_id+"</h1>")
         })
-        if(!room){
-            return res.status(404).json({"msg":"No room found!"});
-        } 
         res.json({"msg":"Invite Sent"});
     } catch (error) {
         res.status(500).send("Server Error!");
@@ -101,8 +125,7 @@ router.post("/students/join",auth,async (req,res)=>{
             return res.json({"msg":"Invalid invite id or you are not invited!!"});
         }
         let found=false;
-        let students = [];
-        students.push({_id:user._id});
+        let students = [{_id:user._id}];
         invites.forEach(async (invite)=>{
             if(invite.invite_id==invite_id){
                 found=true;
@@ -142,6 +165,32 @@ router.get("/",auth,async (req,res)=>{
             return res.status(404).json({"msg":"Rooms not found!"});
         }
         res.json(rooms)
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error); 
+    }
+});
+
+/* 
+    route : "/api/rooms/room_id/announcements",
+    desc : "Get announcements",
+    auth : ["Teacher","Student"],
+    method: "GET"
+*/
+
+router.get("/:id/announcements",auth,async (req,res)=>{
+    try {
+        let room;
+        if(req.user.isTeacher){
+            room = await Room.findOne({_id:req.params.id,teacher:req.user.id}).select("-resources -submissions");
+        }else{
+            room = await Room.findOne({_id:req.params.id,"students._id":req.user.id}).select("-submissions");
+        }
+        if(!room){
+            return res.status(404).json({"msg":"Room not found!"});
+        }
+        const announcements = await Announcement.find({_id:{$in:room.announcements}});
+        res.json(announcements);
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error); 
@@ -234,8 +283,38 @@ router.get("/:id/submissions",auth,async (req,res)=>{
 });
 
 /* 
+    route : "/api/rooms/room_id/resource_id/submissions"
+    desc : "Student can See his Submissions for a resource",
+    auth : "Student",
+    method: "GET"
+*/
+
+router.get("/:id1/:id2/submissions",auth,async (req,res)=>{
+    try {
+        if(req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }else{
+            const room = await Room.findOne({_id:req.params.id1,"students._id":req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            const submissions = room.submissions.reduce((result,submission)=>{
+                if(submission.student_id==req.user.id && submission.resource_id==req.params.id2){
+                    result.push(submission);
+                }
+                return result;
+            },[]);
+            res.json(submissions); 
+        }
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+/* 
     route : "/api/rooms/room_id/resources"
-    desc : "Teacher gets the resources",
+    desc : "Teacher gets the resources",        
     auth : "Teacher",
     method: "GET"
 */
@@ -287,6 +366,37 @@ router.get("/:id/submissions/:id2",auth,async (req,res)=>{
         console.log(error);
     }
 });
+
+/* 
+    route : "/api/rooms/room_id/submissions/student_id/resource_id",
+    desc : "Teacher views student's submissions by his id for a resource",
+    auth : "Teacher",
+    method: "GET"
+*/
+
+router.get("/:id/submissions/:id2/:id3",auth,async (req,res)=>{
+    try {
+        if(!req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }else{
+            const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            const submissions = room.submissions.reduce((result,submission)=>{
+                if(submission.student_id==req.params.id2 && submission.resource_id==req.params.id3){
+                    result.push(submission);
+                }
+                return result;
+            },[]);
+            res.json(submissions); 
+        }
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
 
 /* 
     route : "/api/rooms/room_id/",
@@ -396,6 +506,31 @@ router.delete("/:id/students/:id2",auth,async (req,res)=>{
             });
         }
         return res.json({"msg":"room deleted!"});
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error);
+    }
+});
+
+/* 
+    route : "/api/rooms/room_id/announcements/announcemnet_id",
+    desc : "Teacher deletes an announcemnet by id",
+    auth : "Teacher",
+    method: "DELETE"
+*/
+
+router.delete("/:id1/announcements/:id2",auth,async (req,res)=>{
+    try {
+        if(!req.user.isTeacher){
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        const room = await Room.findOneAndUpdate({_id:req.params.id1,teacher:req.user.id,"announcements._id":req.params.id2},{$pull:{announcements:{_id:req.params.id2}}});
+        if(!room){
+            return res.status(404).json({"msg":"room not found!"});
+        }
+        const announcement = await Announcement.findOne({_id:req.params.id2});
+        await announcement.remove();
+        return res.json({"msg":"Announcement deleted!"});
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);
