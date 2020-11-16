@@ -1,5 +1,48 @@
 import axios from "axios";
 
+const addAnnouncement = (contentString,id)=>{
+    return async (dispatch)=>{
+        try {
+            const body = JSON.stringify({"content":contentString});
+            const config = {
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            }
+            const res = await axios.post("/api/rooms/"+id+"/announcements",body,config);
+            await dispatch(getAnnouncements(id));
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"GET_ANNOUNCEMENTS_ERROR"
+            })
+        }
+    }
+
+}
+
+const updateDeadline = (id1,id2,deadline)=>{
+    return async (dispatch)=>{
+        try {
+            const body = JSON.stringify({deadline});
+            const config = {
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            }
+            const res = await axios.post("/api/upload/"+id1+"/"+id2+"/deadline",body,config);
+            await dispatch(getTeacherResources(id1));
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"GET_ANNOUNCEMENTS_ERROR"
+            })
+        }
+    }
+
+}
+
+
 const getRooms = ()=>{
     return async (dispatch)=>{
         try {
@@ -38,6 +81,24 @@ const getRoomUsers = (id)=>{
     }
 }
 
+const getAnnouncements= (id)=>{
+    return async (dispatch)=>{
+        try {
+            const res = await axios.get("/api/rooms/"+id+"/announcements");
+            dispatch({
+                type:"GET_ANNOUNCEMENTS",
+                announcements:res.data
+            })
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"ROOM_ANNOUNCEMENTS_ERROR",
+                error:{msg:error.response}
+            })
+        }
+    }
+}
+
 const getTeacherResources = (id)=>{
     return async (dispatch)=>{
         try {
@@ -56,14 +117,11 @@ const getTeacherResources = (id)=>{
     }
 }
 
-const deleteResource = (id,resource)=>{
+const deleteResource = (id1,id2)=>{
     return async (dispatch)=>{
         try {
-            await axios.delete("/api/upload/"+id+"/resources",{data:{location:resource}});
-            dispatch({
-                type:"DELETE_RESOURCE",
-                resource
-            })
+            await axios.delete("/api/upload/"+id1+"/resources/"+id2);
+            await dispatch(getTeacherResources(id1));
         } catch (error) {
             console.log(error);
             dispatch({
@@ -74,4 +132,20 @@ const deleteResource = (id,resource)=>{
         
     }
 }
-export {getRooms,getRoomUsers,getTeacherResources,deleteResource};
+
+const deleteAnnouncement = (id1,id2)=>{
+    return async (dispatch)=>{
+        try {
+            await axios.delete("/api/rooms/"+id1+"/announcements/"+id2);
+            await dispatch(getAnnouncements(id1));
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"GET_ANNOUNCEMENTS_ERROR",
+                error:{msg:error.response}
+            })
+        }
+        
+    }
+}
+export {addAnnouncement,getRooms,getRoomUsers,getAnnouncements,getTeacherResources,deleteResource,deleteAnnouncement,updateDeadline};

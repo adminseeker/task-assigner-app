@@ -274,7 +274,7 @@ router.delete("/:id/submissions/",auth,async (req,res)=>{
 
 /* 
     route : "/api/upload/room_id/submissions/student_id",
-    desc : "Teacher Can Delete Student Submissions By His ID",
+    desc : "Teacher Can Delete Student Submissions By His submission ID",
     auth : ["Teacher"],
     method: "DELETE"
 */
@@ -284,12 +284,12 @@ router.delete("/:id/submissions/:id2",auth,async (req,res)=>{
         if(!req.user.isTeacher){
             return res.status(401).json({"msg":"Authorization denied!"});
         }
-        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{submissions:{submission:req.body.location,student_id:req.params.id2}}});
+        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{submissions:{_id:req.params.id2}}});
         if(!room){
             return res.status(500).json({ "msg":"error deleting file!" });
         }
         const fileName = room.submissions.map((submission)=>{
-            if(submission.submission == req.body.location){
+            if(submission._id == req.params.id2){
                 return submission.submission;
             }
         }).toString().split("/").pop();

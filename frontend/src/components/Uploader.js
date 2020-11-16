@@ -19,16 +19,23 @@ const Uploader = (props)=> {
                 "description": description
             }
         } 
-        formData.append( "file",selectedFile); 
-       await axios.post("/api/upload/"+props.room_id, formData,config); 
-       console.log("File Uploaded");
-       if(props.isTeacher){
-        props.dispatch(getTeacherResources(props.room_id));
-      }else{
-        props.dispatch(getSubmissions(props.room_id));
-      }
-       
-       
+        formData.append( "file",selectedFile);
+        console.log(formData)
+        if(!selectedFile){
+          alert("choose file!");
+        }else{
+          if(description==""){
+            alert("Enter Description!");
+          }else{ 
+            await axios.post("/api/upload/"+props.room_id, formData,config); 
+            console.log("File Uploaded");
+            if(props.isTeacher){
+            props.dispatch(getTeacherResources(props.room_id));
+            }else{
+              props.dispatch(getSubmissions(props.room_id));
+            }
+          }
+        }
     }; 
     const fileData = () => { 
         if (selectedFile) { 
@@ -53,7 +60,7 @@ const Uploader = (props)=> {
         <div>
             <br />
             <input type="file" onChange={onFileChange} /> 
-            <input type="text" value={description} placeholder="Enter file description" onChange={(e)=>(setDescription(e.target.value))}/><br /><br />
+            <input type="text" value={description} placeholder="Enter Assignment description" onChange={(e)=>(setDescription(e.target.value))}/><br /><br />
             <button onClick={onFileUpload}> 
                 Upload! 
             </button> 

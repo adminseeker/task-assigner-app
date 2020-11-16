@@ -4,9 +4,11 @@ const initialState = {
     teacher:{},
     students:[],
     resources:[],
+    announcements:[],
     loading_rooms:true,
     loading_users:true,
     loading_resources:true,
+    loading_announcements:true,
     error:{}
 }
 
@@ -64,6 +66,25 @@ const roomsReducer = (state=initialState,action)=>{
                     ...state,
                     error:action.error,
                     loading_resources:false
+                }
+
+            case "GET_ANNOUNCEMENTS":
+                return {
+                    ...state,
+                    announcements:action.announcements,
+                    loading_announcements:false
+                                    
+                }
+            case "ROOM_ANNOUNCEMENTS_ERROR":
+                return{
+                    ...state,
+                    error:action.error,
+                    loading_announcements:false
+                    
+                }
+            case "ERROR":
+                return{
+                    ...state
                 }
         default :
             return state;

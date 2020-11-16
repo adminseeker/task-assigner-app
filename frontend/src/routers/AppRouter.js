@@ -12,6 +12,11 @@ import Teacher from "../components/Teacher";
 import Submissions from "../components/Submissions";
 import Header from "../components/Header";
 import Logout from "../components/Logout";
+import StudentList from "../components/StudentList";
+import InviteStudents from "../components/InviteStudents";
+import ResourcesList from "../components/ResourcesList";
+import AssignmentView from "../components/AssignmentView";
+import SubmissionsList from "../components/SubmissionsList";
 
 
 
@@ -24,14 +29,19 @@ const AppRouter = ()=>{
             <Header />
             <Switch>
                 <Route path="/" component={Landing} exact={true}/>
-                <Route path="/register" component={Register} />
-                <Route path="/login" component={Login} />
+                <Route path="/register" component={Register} exact={true}/>
+                <Route path="/login" component={Login} exact={true}/>
                 <PrivateRoute path="/dashboard" component={Dashboard} />
                 <PrivateRoute path="/rooms/:id" component={Room} exact={true}/>
-                <PrivateRoute path="/rooms/:id/submissions" component={Submissions} />
-                <PrivateRoute path="/profile/student/:id" component={Student} />
-                <PrivateRoute path="/profile/teacher/:id" component={Teacher} />
-                <PrivateRoute path="/logout" component={Logout} />
+                <PrivateRoute path="/rooms/:id/submissions" component={Submissions} exact={true}/>
+                <PrivateRoute path="/rooms/:id/students" component={StudentList} exact={true}/>
+                <PrivateRoute path="/rooms/:id/students/invite" component={InviteStudents} exact={true}/>
+                <PrivateRoute path="/rooms/:id/assignments/" component={ResourcesList} exact={true}/>
+                <PrivateRoute path="/rooms/:id1/assignments/:id2" component={AssignmentView} exact={true}/>
+                <PrivateRoute path="/rooms/:id1/assignments/:id2/submissions/:id3" component={SubmissionsList} exact={true}/>
+                <PrivateRoute path="/profile/student/:id" component={Student} exact={true}/>
+                <PrivateRoute path="/profile/teacher/:id" component={Teacher} exact={true}/>
+                <PrivateRoute path="/logout" component={Logout} exact={true}/>
                 
             </Switch>
         </Router>

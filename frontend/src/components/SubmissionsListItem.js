@@ -14,8 +14,8 @@ const SubmissionsListItem = (props)=>(
             </div>
         
         <div className="flex-child">
-        <button onClick={(e)=>{
-            props.dispatch(deleteSubmission(props.room_id,props.submission.submission,props.student_id))
+        <button onClick={async(e)=>{
+            await props.dispatch(deleteSubmission(props.room_id,props.submission._id,props.submission))
         }}>
                 Delete
         </button>

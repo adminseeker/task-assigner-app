@@ -11,18 +11,20 @@ const StudentListItem = (props)=>{
         console.log("deleted student!");
     }
     return(
-        props.loading_users ? <LoadingPage /> :
-        <div className="room-grid-item-students-flex">
-            <div className="flex-child">
+        props.loading_users ? <LoadingPage /> : 
+        <div>
+            { !props.assignment &&
             <Link className="link-blue-style" to={"/profile/student/"+props.student._id}>
                 <p className="margin_0-submissions">{props.student.name}</p>
             </Link>
-            </div>
-            <div className="flex-child">
-            {
-                props.isTeacher && <button onClick={async (e)=>{await removeStudent(); await props.dispatch(getRoomUsers(props.room_id));}}>Remove</button>
             }
-            </div>
+             {props.isTeacher && !props.assignment && <button onClick={async (e)=>{await removeStudent(); await props.dispatch(getRoomUsers(props.room_id));}}>Remove</button>}
+            {
+                props.assignment && 
+                <Link className="link-blue-style" to={"/rooms/"+props.room_id+"/assignments/"+props.resource_id+"/submissions/"+props.student._id}>
+                <p className="margin_0-submissions">{props.student.name}</p>
+                </Link>
+            }    
         </div>
     )
 };

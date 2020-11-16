@@ -242,9 +242,44 @@ router.get("/:id/users",auth,async (req,res)=>{
         if(!room){
             return res.status(404).json({"msg":"Room not found!"});
         }
-        students = await User.find({_id:{$in:room.students}}).select("name email");
+        if(req.user.teacher){
+            students = await User.find({_id:{$in:room.students}}).select("name email phone");
+        }else{
+            students = await User.find({_id:{$in:room.students}}).select("name email");
+        }
         teacher = await User.find({_id:room.teacher}).select("name email");
         return res.json({students,teacher:teacher[0]});
+        
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error); 
+    }
+});
+
+/* 
+    route : "/api/rooms/room_id/users",
+    desc : "Get users in the classroom by id's",
+    auth : ["Teacher"],
+    method: "POST"
+*/
+
+router.post("/:id/users",auth,async (req,res)=>{
+    try {
+        let room;
+        let students;
+        let teacher;
+        let ids = req.body.ids;
+        if(req.user.isTeacher){
+            room = await Room.findOne({teacher:req.user.id,_id:req.params.id});
+        }else{
+            return res.status(401).json({"msg":"Authorization denied!"});
+        }
+        if(!room){
+            return res.status(404).json({"msg":"Room not found!"});
+        }
+     
+        students = await User.find({_id:{$in:ids}}).select("name email phone");
+        return res.json(students);
         
     } catch (error) {
         res.status(500).send("Server Error!");
@@ -262,7 +297,11 @@ router.get("/:id/users",auth,async (req,res)=>{
 router.get("/:id/submissions",auth,async (req,res)=>{
     try {
         if(req.user.isTeacher){
-            return res.status(401).json({"msg":"Authorization denied!"});
+            const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            return res.json(room.submissions);
         }else{
             const room = await Room.findOne({_id:req.params.id,"students._id":req.user.id});
             if(!room){
@@ -274,7 +313,7 @@ router.get("/:id/submissions",auth,async (req,res)=>{
                 }
                 return result;
             },[]);
-            res.json(submissions); 
+            return res.json(submissions); 
         }
     } catch (error) {
         res.status(500).send("Server Error!");
@@ -292,7 +331,17 @@ router.get("/:id/submissions",auth,async (req,res)=>{
 router.get("/:id1/:id2/submissions",auth,async (req,res)=>{
     try {
         if(req.user.isTeacher){
-            return res.status(401).json({"msg":"Authorization denied!"});
+            const room = await Room.findOne({_id:req.params.id1,teacher:req.user.id});
+            if(!room){
+                return res.status(404).json({"msg":"No room found!"});
+            }
+            const submissions = room.submissions.reduce((result,submission)=>{
+                if(submission.resource_id==req.params.id2){
+                    result.push(submission);
+                }
+                return result;
+            },[]);
+            res.json(submissions); 
         }else{
             const room = await Room.findOne({_id:req.params.id1,"students._id":req.user.id});
             if(!room){
@@ -412,8 +461,6 @@ router.delete("/:id",auth,async (req,res)=>{
             if(!room){
                 return res.status(404).json({"msg":"room not found!"});
             }
-            await room.remove();
-
             const resources = room.resources.map((resource)=>{
                     return {Key:resource.resource.toString().split("/").pop()};
             });
@@ -427,6 +474,7 @@ router.delete("/:id",auth,async (req,res)=>{
                     Objects: objects
                   }
             }
+            await room.remove();
             if(objects.length!==0){
                 s3Bucket.deleteObjects(params,(error,data)=>{
                     if(error){
