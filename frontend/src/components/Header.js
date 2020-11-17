@@ -20,7 +20,7 @@ const Header = ({user,isAuthenticated,logout}) => {
                     {!isAuthenticated && <li className="header__content">{<Link to="/Register">Register</Link>}</li>}
                     {isAuthenticated && <li className="header__content"><Link to="/logout">Logout</Link></li>}
                     {isAuthenticated && <li className="header__content">{<Link to="/dashboard">{user.name}</Link>}</li>}
-                    {isAuthenticated && <li className="header__content">{<Link to="/join">Join Classroom</Link>}</li>}
+                    {isAuthenticated && !user.isTeacher && <li className="header__content">{<Link to="/join">Join Classroom</Link>}</li>}
                 </ul>
                 </div>
             </nav>

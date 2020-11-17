@@ -86,6 +86,10 @@ const roomsReducer = (state=initialState,action)=>{
                 return{
                     ...state
                 }
+            case "LOGOUT":
+                return{
+                    ...initialState
+                }
         default :
             return state;
     }

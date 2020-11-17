@@ -63,6 +63,13 @@ router.post("/:id/announcements",auth,async (req,res)=>{
         await announcement.save();
         let announcements = [announcement];
         const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$addToSet:{announcements}},{new:true});
+        let ids = room.students.map((student)=>(student._id));
+        ids.push(req.user._id);
+        let Emails = await User.find({_id:{$in:ids}}).select("email -_id");
+        Emails = Emails.map(({email})=>(email));
+        let HTMLText = "<h2>classroom "+room.className+"</h2>"+"\n<h3>"+announcement.content+"</h3>";
+        let subject = "Tasker Announcement from Instructor "+user.name;
+        await mailer(Emails,"",HTMLText,subject);
         res.json({"msg":"Created Announcement!"});
     } catch (error) {
         res.status(500).send("Server Error!");
@@ -91,13 +98,14 @@ router.post("/:id/students/invite",auth,async (req,res)=>{
         // let emailString = studentEmails.join();
         // let room_id = String(room._id);
         let emailHTML = "<h2>Teacher "+req.user.name+" is inviting you to join classroom "+room.className+".</h2>\n <p>Your invite code is:</p> ";
+        let subject = "Invite Code for tasker classroom";
         let invites=[]
         for(let i=0;i<studentEmails.length;i++){
             invites.push({user_email:studentEmails[i],classroom_id:req.params.id,invite_id:Math.floor(100000 + Math.random() * 900000)})
         }
         await Invite.insertMany(invites); 
         invites.forEach(async (invite)=>{
-            await mailer(invite.user_email,text="",html=emailHTML+"<h1>"+invite.invite_id+"</h1>")
+            await mailer(invite.user_email,text="",html=emailHTML+"<h1>"+invite.invite_id+"</h1>",subject)
         })
         res.json({"msg":"Invite Sent"});
     } catch (error) {

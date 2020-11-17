@@ -37,6 +37,10 @@ const submissionsReducer = (state=initialState,action)=>{
                     error:action.error,
                     loading_submissions:false
                 }
+            case "LOGOUT":
+                return{
+                    ...initialState
+                }
         default:
             return state;
     }

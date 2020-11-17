@@ -6,6 +6,10 @@ const alertReducer = (state=initialState,action)=>{
             return [...state, action.alert];
         case "REMOVE_ALERT":
             return state.filter((alert)=>(alert.id!==action.id));
+        case "LOGOUT":
+            return{
+                ...initialState
+            }
         default:
             return state;
     }

@@ -11,15 +11,16 @@ var transporter =nodemailer.createTransport({
   var mailOptions = {
     from: process.env.LOGIN_EMAIL,               
     to: "",
-    subject: "Invite Code for tasker classroom",
+    subject:"",
     text: "",
     html:""
   };
 
-  const mailer = async (toEmail,text="",html="")=>{
+  const mailer = async (toEmail,text="",html="",subject="")=>{
     mailOptions.to=toEmail;
     mailOptions.text=text;
     mailOptions.html=html;
+    mailOptions.subject=subject;
     await transporter.sendMail(mailOptions);
   }
 

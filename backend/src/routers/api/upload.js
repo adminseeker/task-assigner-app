@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const moment = require("moment");
 const multer = require("multer");
 const AWS = require("aws-sdk");
 
@@ -7,6 +8,8 @@ const auth = require("../../middleware/auth");
 
 const User = require("../../models/User");
 const Room = require("../../models/Room");
+
+const mailer = require("../../mailer/mailer");
 
 const upload = multer({storage:multer.memoryStorage(),limits:{fileSize:100000000}});
 
@@ -86,14 +89,23 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
 
 router.post("/:id1/:id2/deadline",auth,async (req,res)=>{
     try {
+        user=req.user;
         if(!req.user.isTeacher){
             return res.status(401).json({"msg":"Authorization denied!"});
         }
         const deadline = req.body.deadline;
-        const results = await Room.findOneAndUpdate({_id:req.params.id1,teacher:req.user.id,"resources._id":req.params.id2},{"resources.$.deadline":deadline},{new:true});
-        if(!results){
+        const room = await Room.findOneAndUpdate({_id:req.params.id1,teacher:req.user.id,"resources._id":req.params.id2},{"resources.$.deadline":deadline},{new:true});
+        if(!room){
             return res.json({"msg":"No room found"});
         }
+        const resource = room.resources.find((resource)=>(resource._id==req.params.id2))
+        let ids = room.students.map((student)=>(student._id));
+        ids.push(req.user._id);
+        let Emails = await User.find({_id:{$in:ids}}).select("email -_id");
+        Emails = Emails.map(({email})=>(email));
+        let HTMLText = "<h2>classroom "+room.className+"</h2>"+"\n<h3>Deadline for "+resource.description+" set to "+moment(deadline).format('MMMM Do YYYY, h:mm:ss a')+"</h3>";
+        let subject = "Tasker Deadline details from Instructor "+user.name;
+        await mailer(Emails,"",HTMLText,subject);
         return res.json({"msg":"deadline updated"});
     } catch (error) {
         res.status(500).send("Server Error!");
