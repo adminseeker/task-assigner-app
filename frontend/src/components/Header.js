@@ -18,8 +18,9 @@ const Header = ({user,isAuthenticated,logout}) => {
                 <ul>
                     {!isAuthenticated && <li className="header__content">{<Link to="/login">Login</Link>}</li>}
                     {!isAuthenticated && <li className="header__content">{<Link to="/Register">Register</Link>}</li>}
-                    {isAuthenticated && <li className="header__content__name">{<Link to="/dashboard">{user.name}</Link>}</li>}
                     {isAuthenticated && <li className="header__content"><Link to="/logout">Logout</Link></li>}
+                    {isAuthenticated && <li className="header__content">{<Link to="/dashboard">{user.name}</Link>}</li>}
+                    {isAuthenticated && <li className="header__content">{<Link to="/join">Join Classroom</Link>}</li>}
                 </ul>
                 </div>
             </nav>

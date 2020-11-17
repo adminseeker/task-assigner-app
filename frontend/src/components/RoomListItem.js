@@ -17,7 +17,6 @@ const RoomListItem = (props)=>{
                     <h3>{props.room.className}</h3>
                     <p>Created on {moment(props.room.date).format('MMMM Do, YYYY')}</p>
                     <p>students:{props.room.students.length}</p>
-                    {props.isTeacher && <p>Teacher:{props.user.name}</p>}
                 </div>
             </Link><br></br>
             {props.isTeacher && <button onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Remove</button>}
@@ -30,8 +29,8 @@ const RoomListItem = (props)=>{
 };
 
 const mapStateToProps = (state)=>({
-    isTeacher:state.auth.user.isTeacher,
-     
+    isTeacher:state.auth.user.isTeacher
+
 })
 
 export default connect(mapStateToProps)(RoomListItem);

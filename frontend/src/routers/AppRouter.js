@@ -17,6 +17,7 @@ import InviteStudents from "../components/InviteStudents";
 import ResourcesList from "../components/ResourcesList";
 import AssignmentView from "../components/AssignmentView";
 import SubmissionsList from "../components/SubmissionsList";
+import JoinStudents from "../components/JoinStudents";
 
 
 
@@ -31,7 +32,8 @@ const AppRouter = ()=>{
                 <Route path="/" component={Landing} exact={true}/>
                 <Route path="/register" component={Register} exact={true}/>
                 <Route path="/login" component={Login} exact={true}/>
-                <PrivateRoute path="/dashboard" component={Dashboard} />
+                <PrivateRoute path="/dashboard" component={Dashboard} exact={true}/>
+                <PrivateRoute path="/join" component={JoinStudents} exact={true}/>
                 <PrivateRoute path="/rooms/:id" component={Room} exact={true}/>
                 <PrivateRoute path="/rooms/:id/submissions" component={Submissions} exact={true}/>
                 <PrivateRoute path="/rooms/:id/students" component={StudentList} exact={true}/>

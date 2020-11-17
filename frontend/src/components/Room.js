@@ -21,6 +21,8 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
                 <h3>Teacher: <Link to={"/profile/teacher/"+teacher._id}>{teacher.name}</Link></h3>
                 {isTeacher && <Link to={"/rooms/"+_id+"/students"}>Mangage Students</Link>}
                 {isTeacher && <Link to={"/rooms/"+_id+"/assignments"}>Mangage Assignments</Link>}
+                {!isTeacher && <Link to={"/rooms/"+_id+"/students"}>View Students</Link>}
+                {!isTeacher && <Link to={"/rooms/"+_id+"/assignments"}>View Assignments</Link>}
                 <h2>Announcements</h2>
                 {<AnnouncementsList room_id={_id}/>}
                 {isTeacher &&

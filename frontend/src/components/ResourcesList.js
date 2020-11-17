@@ -21,8 +21,8 @@ const ResourcesList = ({room:{_id},getTeacherResources,resources,loading_resourc
                     ))
                 )
             }
-            <h2>Add Assignments</h2>
-            <Uploader room_id={_id} isTeacher={isTeacher}/>
+            {isTeacher && <h2>Add Assignments</h2>}
+            {isTeacher && <Uploader room_id={_id} isTeacher={isTeacher}/>}
         </div>
     )
 }

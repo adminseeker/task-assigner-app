@@ -4,9 +4,6 @@ import { getSubmissionsByTeacher } from "../actions/submissions";
 import SubmissionsList from "./SubmissionsList";
 
 const Student = ({student,getSubmissionsByTeacher,room_id,isTeacher,phone}) => {
-    useEffect(()=>{
-        getSubmissionsByTeacher(room_id,student._id);
-    },[getSubmissionsByTeacher,room_id,student._id])
     return (
         <div className="container">
             <div>

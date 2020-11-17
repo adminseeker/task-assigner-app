@@ -1,7 +1,7 @@
 import React,{useState} from "react"; 
 import axios from "axios"; 
 import { connect } from "react-redux";
-import { getSubmissions } from "../actions/submissions";
+import { getSubmissions, getSubmissionsByTeacher } from "../actions/submissions";
 import { getTeacherResources } from "../actions/rooms";
   
 const Uploader = (props)=> { 
@@ -14,11 +14,6 @@ const Uploader = (props)=> {
     
     const onFileUpload = async () => { 
         const formData = new FormData();
-        const config = {
-            headers: {
-                "description": description
-            }
-        } 
         formData.append( "file",selectedFile);
         console.log(formData)
         if(!selectedFile){
@@ -26,13 +21,26 @@ const Uploader = (props)=> {
         }else{
           if(description==""){
             alert("Enter Description!");
-          }else{ 
-            await axios.post("/api/upload/"+props.room_id, formData,config); 
+          }else{
+            
             console.log("File Uploaded");
             if(props.isTeacher){
-            props.dispatch(getTeacherResources(props.room_id));
+              let config = {
+                headers: {
+                    "description": description
+                }
+            }
+            await axios.post("/api/upload/"+props.room_id, formData,config); 
+            await props.dispatch(getTeacherResources(props.room_id));
             }else{
-              props.dispatch(getSubmissions(props.room_id));
+              let config = {
+                headers: {
+                    "description": description,
+                    "resource_id": props.resource_id
+                }
+            }
+              await axios.post("/api/upload/"+props.room_id, formData,config);
+              await props.dispatch(getSubmissionsByTeacher(props.room_id,props.resource_id));
             }
           }
         }
@@ -60,7 +68,7 @@ const Uploader = (props)=> {
         <div>
             <br />
             <input type="file" onChange={onFileChange} /> 
-            <input type="text" value={description} placeholder="Enter Assignment description" onChange={(e)=>(setDescription(e.target.value))}/><br /><br />
+            <input type="text" value={description} placeholder="Enter description" onChange={(e)=>(setDescription(e.target.value))}/><br /><br />
             <button onClick={onFileUpload}> 
                 Upload! 
             </button> 

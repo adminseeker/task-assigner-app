@@ -323,8 +323,8 @@ router.get("/:id/submissions",auth,async (req,res)=>{
 
 /* 
     route : "/api/rooms/room_id/resource_id/submissions"
-    desc : "Student can See his Submissions for a resource",
-    auth : "Student",
+    desc : "Student can See his Submissions for a resource, Teacher gets student submissions for a resource",
+    auth : "Student,Teacher",
     method: "GET"
 */
 

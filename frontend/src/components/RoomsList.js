@@ -13,7 +13,7 @@ const RoomsList = (props) => {
                     <h3>No Classrooms</h3>
                 ) : (
                     props.rooms.map((room)=>(
-                        <RoomListItem key={room._id} room={room} user={props.user}/>
+                        <RoomListItem key={room._id} room={room} user={props.user} teacher={props.teacher}/>
                     ))
                 )
             }

@@ -55,6 +55,27 @@ const login = ({email,password})=>{
     }
 }
 
+const joinStudent = ({invite_id})=>{
+    return async (dispatch)=>{
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+
+        const body = JSON.stringify({invite_id});
+        try {
+            const res = await axios.post("/api/rooms/students/join",body,config);
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            dispatch({
+                type:"ERROR"
+            })
+        }
+    }
+}
+
 const logout = ()=>{
     return async (dispatch)=>{
         try {
@@ -88,4 +109,4 @@ const loadUser= ()=>{
     }
 }
 
-export {register,loadUser,login,logout};
+export {register,loadUser,login,logout,joinStudent};

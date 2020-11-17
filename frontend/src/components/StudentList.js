@@ -10,7 +10,7 @@ const StudentList = (props) => {
     return (
         props.loading_rooms ? <LoadingPage /> :
         <div>
-            <Link to={"/rooms/"+props.room_id+"/students/invite"}>Invite Students</Link>
+            {props.isTeacher && <Link to={"/rooms/"+props.room_id+"/students/invite"}>Invite Students</Link>}
             {
                 
                 props.students.length === 0 ?(
@@ -28,7 +28,8 @@ const StudentList = (props) => {
 const mapStateToProps= (state,props)=>({
     students:state.rooms.students,
     user:state.auth.user,
-    room_id:props.match.params.id
+    room_id:props.match.params.id,
+    isTeacher:state.auth.user.isTeacher
 })
 
 export default connect(mapStateToProps)(StudentList);
