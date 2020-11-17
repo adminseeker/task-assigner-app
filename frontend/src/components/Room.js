@@ -23,6 +23,9 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
                 {isTeacher && <Link to={"/rooms/"+_id+"/assignments"}>Mangage Assignments</Link>}
                 {!isTeacher && <Link to={"/rooms/"+_id+"/students"}>View Students</Link>}
                 {!isTeacher && <Link to={"/rooms/"+_id+"/assignments"}>View Assignments</Link>}
+                {isTeacher && <Link to={"/rooms/"+_id+"/materials"}>Mangage Materials</Link>}
+                {!isTeacher && <Link to={"/rooms/"+_id+"/materials"}>View Materials</Link>}
+              
                 <h2>Announcements</h2>
                 {<AnnouncementsList room_id={_id}/>}
                 {isTeacher &&

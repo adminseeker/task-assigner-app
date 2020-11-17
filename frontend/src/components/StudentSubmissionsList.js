@@ -8,7 +8,7 @@ const StudentSubmissionsList = (props) => {
         !props.isTeacher && 
         props.loading_submissions ? <LoadingPage /> :
         <div>
-            {
+            { !props.isTeacher &&
                 props.submissions.length === 0 ?(
                     <h3>No Submissions</h3>
                 ) : (

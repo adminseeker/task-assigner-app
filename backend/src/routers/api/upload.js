@@ -204,23 +204,23 @@ router.delete("/:id1/resources/:id2",auth,async (req,res)=>{
 });
 
 /* 
-    route : "/api/upload/room_id/materials",
-    desc : "Delete Materials",
+    route : "/api/upload/room_id/materials/material_id",
+    desc : "Delete Materials by id",
     auth : ["Teacher"],
     method: "DELETE"
 */
 
-router.delete("/:id/materials/",auth,async (req,res)=>{
+router.delete("/:id/materials/:id2",auth,async (req,res)=>{
     try {
         if(!req.user.isTeacher){
             return res.status(401).json({"msg":"Authorization denied!"});
         }
-        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{materials:{material:req.body.location}}});
+        const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$pull:{materials:{_id:req.params.id2}}});
         if(!room){
             return res.status(500).json({ "msg":"error deleting file!" });
         }
         const fileName = room.materials.map((material)=>{
-            if(material.material == req.body.location){
+            if(material._id == req.params.id2){
                 return material.material;
             }
         }).toString().split("/").pop();

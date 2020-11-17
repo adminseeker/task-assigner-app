@@ -10,10 +10,7 @@ import StudentSubmissionsList from "./StudentSubmissionsList";
 import Uploader from "./Uploader";
 
 const AssignmentView = ({resource:{_id,resource,createdAt,deadline,description,loading_submissions},isTeacher,room_id,submissions,getSubmissionsByTeacher,submittedStudentids,getSubmittedStudents,students,user,submittedStudents})=>{
-    useEffect(()=>{
-        getSubmissionsByTeacher(room_id,_id);
-        
-    },[getSubmissionsByTeacher,room_id,_id]);
+    
     const [clicked,setClicked] = useState(false);
     return loading_submissions ? <LoadingPage /> :
     (   
@@ -26,7 +23,7 @@ const AssignmentView = ({resource:{_id,resource,createdAt,deadline,description,l
             {isTeacher && clicked && submittedStudents.length===0 ? <h2>No submissions Yet</h2> : submittedStudents.map((student)=>(
                 <StudentListItem key={student._id} resource_id={_id} student={student} room_id={room_id} assignment={true}/>
             ))}
-            {!isTeacher && clicked && submissions.length===0 ? <h2>No submissions Yet</h2> : <StudentSubmissionsList room_id={room_id} resource_id={_id} student_id={user._id}/>}
+            {!isTeacher &&  clicked && submissions.length===0 ? <h2>No submissions Yet</h2> : <StudentSubmissionsList room_id={room_id} resource_id={_id} student_id={user._id}/>}
             {!isTeacher && <h2>Add Submissions</h2>}
             {!isTeacher && <Uploader room_id={room_id} isTeacher={isTeacher} resource_id={_id}/>}
 

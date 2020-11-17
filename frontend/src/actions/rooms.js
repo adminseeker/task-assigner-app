@@ -117,6 +117,25 @@ const getTeacherResources = (id)=>{
     }
 }
 
+const getMaterials = (id)=>{
+    return async (dispatch)=>{
+        try {
+            const res = await axios.get("/api/rooms/"+id+"/materials");
+            dispatch({
+                type:"GET_MATERIALS",
+                materials:res.data
+            });
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"GET_MATERIALS_ERROR",
+                error:{msg:error.response}
+            })
+        }
+    }
+}
+
+
 const deleteResource = (id1,id2)=>{
     return async (dispatch)=>{
         try {
@@ -126,6 +145,22 @@ const deleteResource = (id1,id2)=>{
             console.log(error);
             dispatch({
                 type:"DELETE_RESOURCE_ERROR",
+                error:{msg:error.response}
+            })
+        }
+        
+    }
+}
+
+const deleteMaterial = (id1,id2)=>{
+    return async (dispatch)=>{
+        try {
+            await axios.delete("/api/upload/"+id1+"/materials/"+id2);
+            await dispatch(getMaterials(id1));
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type:"DELETE_MATERIAL_ERROR",
                 error:{msg:error.response}
             })
         }
@@ -148,4 +183,4 @@ const deleteAnnouncement = (id1,id2)=>{
         
     }
 }
-export {addAnnouncement,getRooms,getRoomUsers,getAnnouncements,getTeacherResources,deleteResource,deleteAnnouncement,updateDeadline};
+export {addAnnouncement,getRooms,getRoomUsers,getAnnouncements,getTeacherResources,deleteResource,deleteAnnouncement,updateDeadline,getMaterials,deleteMaterial};

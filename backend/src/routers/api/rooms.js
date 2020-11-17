@@ -265,6 +265,31 @@ router.get("/:id/users",auth,async (req,res)=>{
 });
 
 /* 
+    route : "/api/rooms/room_id/materials",
+    desc : "Get materials by room id",
+    auth : ["Teacher","Student"],
+    method: "GET"
+*/
+
+router.get("/:id/materials",auth,async (req,res)=>{
+    try {
+        let room;
+        if(req.user.isTeacher){
+            room = await Room.findOne({teacher:req.user.id,_id:req.params.id});
+        }else{
+            room = await Room.findOne({"students._id":req.user.id,_id:req.params.id}).select("-submissions");
+        }
+        if(!room){
+            return res.status(404).json({"msg":"Room not found!"});
+        }
+        return res.json(room.materials);
+    } catch (error) {
+        res.status(500).send("Server Error!");
+        console.log(error); 
+    }
+});
+
+/* 
     route : "/api/rooms/room_id/users",
     desc : "Get users in the classroom by id's",
     auth : ["Teacher"],
@@ -475,7 +500,11 @@ router.delete("/:id",auth,async (req,res)=>{
             const submissions = room.submissions.map((submission)=>{
                 return {Key:submission.submission.toString().split("/").pop()};
             });
-            const objects = resources.concat(submissions);
+            const materials = room.materials.map((material)=>{
+                return {Key:material.material.toString().split("/").pop()};
+        });
+            let objects = resources.concat(submissions);
+            objects = objects.concat(materials);
             const params = {
                 Bucket: process.env.AWS_BUCKET,
                 Delete: {

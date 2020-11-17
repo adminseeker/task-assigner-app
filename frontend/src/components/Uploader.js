@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import axios from "axios"; 
 import { connect } from "react-redux";
 import { getSubmissions, getSubmissionsByTeacher } from "../actions/submissions";
-import { getTeacherResources } from "../actions/rooms";
+import { getTeacherResources, getMaterials } from "../actions/rooms";
   
 const Uploader = (props)=> { 
     const [selectedFile,setSelectedFile] = useState(null);
@@ -24,23 +24,35 @@ const Uploader = (props)=> {
           }else{
             
             console.log("File Uploaded");
-            if(props.isTeacher){
+            if(props.isMaterial){
               let config = {
                 headers: {
                     "description": description
                 }
             }
-            await axios.post("/api/upload/"+props.room_id, formData,config); 
-            await props.dispatch(getTeacherResources(props.room_id));
+              await axios.post("/api/upload/"+props.room_id+"/materials", formData,config); 
+              await props.dispatch(getMaterials(props.room_id));
             }else{
-              let config = {
-                headers: {
-                    "description": description,
-                    "resource_id": props.resource_id
-                }
-            }
-              await axios.post("/api/upload/"+props.room_id, formData,config);
-              await props.dispatch(getSubmissionsByTeacher(props.room_id,props.resource_id));
+
+            
+              if(props.isTeacher){
+                let config = {
+                  headers: {
+                      "description": description
+                  }
+              }
+                await axios.post("/api/upload/"+props.room_id, formData,config); 
+                await props.dispatch(getTeacherResources(props.room_id));
+              }else{
+                let config = {
+                  headers: {
+                      "description": description,
+                      "resource_id": props.resource_id
+                  }
+              }
+                await axios.post("/api/upload/"+props.room_id, formData,config);
+                await props.dispatch(getSubmissionsByTeacher(props.room_id,props.resource_id));
+              }
             }
           }
         }

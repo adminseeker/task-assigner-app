@@ -5,10 +5,12 @@ const initialState = {
     students:[],
     resources:[],
     announcements:[],
+    materials:[],
     loading_rooms:true,
     loading_users:true,
     loading_resources:true,
     loading_announcements:true,
+    loading_materials:true,
     error:{}
 }
 
@@ -61,12 +63,36 @@ const roomsReducer = (state=initialState,action)=>{
                 resources:state.resources.filter((resource)=>((action.resource)!==(resource.resource))),
                 loading_resources:false
             }
-            case "DELETE_RESOURCE_ERROR":
-                return{
-                    ...state,
-                    error:action.error,
-                    loading_resources:false
-                }
+        case "DELETE_RESOURCE_ERROR":
+            return{
+                ...state,
+                error:action.error,
+                loading_resources:false
+            }
+        case "GET_MATERIALS":
+            return {
+                ...state,
+                materials:action.materials,     
+                loading_materials:false         
+    }
+        case "GET_MATERIALS_ERROR":
+            return{
+                ...state,
+                error:action.error,
+                loading_materials:false         
+            }
+        case "DELETE_MATERIAL":
+            return {
+                ...state,
+                materials:state.materials.filter((material)=>((action.material)!==(material.material))),
+                loading_materials:false
+            }
+        case "DELETE_MATERIAL_ERROR":
+            return{
+                ...state,
+                error:action.error,
+                loading_materials:false
+            }
 
             case "GET_ANNOUNCEMENTS":
                 return {
