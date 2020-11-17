@@ -2,6 +2,7 @@ const initialState = {
     submissions:[],
     submittedStudents:[],
     loading_submissions:true,
+    loading_submittedStudents:true,
     error:""
 };
 
@@ -11,19 +12,27 @@ const submissionsReducer = (state=initialState,action)=>{
             return {
                 ...state,
                 submissions:action.submissions,
-                loading_submissions:false               
+                loading_submissions:false,
+                loading_submittedStudents:true               
             }
         case "GET_SUBMITTED_STUDENTS":
             return {
                 ...state,
                 submittedStudents:action.submittedStudents,
-                loading_submissions:false               
+                loading_submittedStudents:false               
             }
         case "GET_SUBMISSIONS_ERROR":
             return{
                 ...state,
                 error:action.error,
-                loading_submissions:false
+                loading_submittedStudents:false,
+                loading_submittedStudents:true               
+            }
+        case "GET_SUBMITTED_STUDENTS_ERROR":
+            return{
+                ...state,
+                error:action.error,
+                loading_submittedStudents:false
             }
         case "DELETE_SUBMISSION":
             return {

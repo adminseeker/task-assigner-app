@@ -28,14 +28,14 @@ const getSubmittedStudents = (id,ids)=>{
             }
         try {
             const res = await axios.post("/api/rooms/"+id+"/users",body,config);
-            dispatch({
+            await dispatch({
                 type:"GET_SUBMITTED_STUDENTS",
                 submittedStudents:res.data
             })
         } catch (error) {
             console.log(error);
             dispatch({
-                type:"GET_SUBMISSIONS_ERROR",
+                type:"GET_SUBMITTED_STUDENTS_ERROR",
                 error:{msg:error.response}
             })
         }
