@@ -40,17 +40,24 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
             ContentType: file.mimetype,
             ACL: "public-read"
         }
-
         if(req.user.isTeacher){
             const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
             if(!room){
                 return res.status(404).json({"msg":"No room found!"});
+            }
+            let result = room.resources.filter((resource)=>(resource.resource.split("/").pop()==params.Key));
+            if(result.length!==0){
+                return res.json({"msg":"File already exists with that name!"});
             }
         }else{
             const room = await Room.findOne({_id:req.params.id,"students._id":req.user.id});
             if(!room){
                 return res.status(404).json({"msg":"No room found!"});
             }   
+            let result = room.submissions.filter((submission)=>(submission.submission.split("/").pop()==params.Key));
+            if(result.length!==0){
+                return res.json({"msg":"File already exists with that name!"});
+            }
         }
 
         s3Bucket.upload(params,async (error,data)=>{
@@ -68,7 +75,7 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
                         return res.status(404).json({"msg":"No room found!"});
                     }   
                 }
-                res.json({location:data.Location});
+                res.json({"msg":"File uploaded Successfully!",location:data.Location});
             }
         })
     } catch (error) {
@@ -127,7 +134,7 @@ router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
         const description = req.header("description");
         const params = {
             Bucket: process.env.AWS_BUCKET,
-            Key: req.user.id+"_"+file.originalname,
+            Key: req.user.id+"_m_"+file.originalname,
             Body: file.buffer,
             ContentType: file.mimetype,
             ACL: "public-read"
@@ -137,6 +144,10 @@ router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
             const room = await Room.findOne({_id:req.params.id,teacher:req.user.id});
             if(!room){
                 return res.status(404).json({"msg":"No room found!"});
+            }
+            let result = room.materials.filter((material)=>(material.material.split("/").pop()==params.Key));
+            if(result.length!==0){
+                return res.json({"msg":"File already exists with that name!"});
             }
             s3Bucket.upload(params,async (error,data)=>{
                 if (error) {
@@ -148,7 +159,7 @@ router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
                             return res.status(404).json({"msg":"No room found!"});
                         }
                     
-                    res.json({location:data.Location});
+                    res.json({"msg":"File uploaded Successfully!",location:data.Location});
                 }
             })
         }else{

@@ -22,7 +22,7 @@ const Submissions = ({getSubmittedStudents, room_id,resource_id,submissions,load
             
             {!isTeacher && submissions.length===0 ? <h2>No submissions Yet</h2> : <StudentSubmissionsList room_id={room_id} resource_id={resource_id} student_id={user._id}/>}
             {!isTeacher && <h2>Add Submissions</h2>}
-            {!isTeacher && <Uploader room_id={room_id} isTeacher={isTeacher} resource_id={resource_id}/>}
+            {!isTeacher && <Uploader room_id={room_id} isTeacher={isTeacher} resource_id={resource_id} submittedIDs={submittedIDs}/>}
         </div>
     )
 }

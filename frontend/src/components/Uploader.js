@@ -1,7 +1,7 @@
 import React,{useState} from "react"; 
 import axios from "axios"; 
 import { connect } from "react-redux";
-import { getSubmissions, getSubmissionsByTeacher } from "../actions/submissions";
+import { getSubmissions, getSubmissionsByTeacher, getSubmittedStudents } from "../actions/submissions";
 import { getTeacherResources, getMaterials } from "../actions/rooms";
   
 const Uploader = (props)=> { 
@@ -22,15 +22,14 @@ const Uploader = (props)=> {
           if(description==""){
             alert("Enter Description!");
           }else{
-            
-            console.log("File Uploaded");
             if(props.isMaterial){
               let config = {
                 headers: {
                     "description": description
                 }
             }
-              await axios.post("/api/upload/"+props.room_id+"/materials", formData,config); 
+              const result = await axios.post("/api/upload/"+props.room_id+"/materials", formData,config); 
+              alert(result.data.msg);
               await props.dispatch(getMaterials(props.room_id));
             }else{
 
@@ -41,7 +40,8 @@ const Uploader = (props)=> {
                       "description": description
                   }
               }
-                await axios.post("/api/upload/"+props.room_id, formData,config); 
+                const result = await axios.post("/api/upload/"+props.room_id, formData,config); 
+                alert(result.data.msg);
                 await props.dispatch(getTeacherResources(props.room_id));
               }else{
                 let config = {
@@ -50,8 +50,10 @@ const Uploader = (props)=> {
                       "resource_id": props.resource_id
                   }
               }
-                await axios.post("/api/upload/"+props.room_id, formData,config);
+                const result = await axios.post("/api/upload/"+props.room_id, formData,config);
+                alert(result.data.msg);
                 await props.dispatch(getSubmissionsByTeacher(props.room_id,props.resource_id));
+                await props.dispatch(getSubmittedStudents(props.room_id,props.submittedIDs));
               }
             }
           }
