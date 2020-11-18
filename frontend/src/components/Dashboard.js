@@ -3,11 +3,12 @@ import {connect} from "react-redux";
 import {getRooms} from "../actions/rooms";
 import RoomsList from "./RoomsList";
 import LoadingPage from "./LoadingPage";
+import useSWR from "swr";
 
 const Dashboard = ({getRooms,user})=>{
     useEffect(()=>{
         getRooms();
-      },[getRooms]);
+      },[getRooms,user]);
       return (
       user==null ? <LoadingPage/>        
     :(

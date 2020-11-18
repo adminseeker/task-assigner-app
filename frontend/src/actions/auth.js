@@ -47,6 +47,9 @@ const login = ({email,password})=>{
              dispatch(loadUser());
             
         } catch (err) {
+            if(err.response.status=="400"){
+                return "error"
+            }
             console.log(err);
             dispatch({
                 type:"LOGIN_FAIL"

@@ -2,7 +2,6 @@ import React from "react";
 import {Router, Route, Switch} from "react-router-dom";
 import createHistory from "history/createBrowserHistory"
 import Landing from "../components/Landing";
-import Register from "../components/Register";
 import Login from "../components/Login";
 import Dashboard from "../components/Dashboard";
 import PrivateRoute from "./PrivateRoute";
@@ -19,6 +18,8 @@ import AssignmentView from "../components/AssignmentView";
 import SubmissionsList from "../components/SubmissionsList";
 import JoinStudents from "../components/JoinStudents";
 import MaterialsList from "../components/MaterialsList";
+import RegisterStudent from "../components/RegisterStudent";
+import RegisterTeacher from "../components/RegisterTeacher";
 
 
 
@@ -31,7 +32,8 @@ const AppRouter = ()=>{
             <Header />
             <Switch>
                 <Route path="/" component={Landing} exact={true}/>
-                <Route path="/register" component={Register} exact={true}/>
+                <Route path="/register/student" component={RegisterStudent} exact={true}/>
+                <Route path="/register/teacher" component={RegisterTeacher} exact={true}/>
                 <Route path="/login" component={Login} exact={true}/>
                 <PrivateRoute path="/dashboard" component={Dashboard} exact={true}/>
                 <PrivateRoute path="/join" component={JoinStudents} exact={true}/>

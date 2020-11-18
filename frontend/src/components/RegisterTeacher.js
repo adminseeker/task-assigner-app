@@ -4,14 +4,14 @@ import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
 import {setAlert} from "../actions/alert";
 
-const Register = (props)=>{
+const RegisterTeacher = (props)=>{
 
     const [formData,setFormData] = useState({
         name:"",
         email:"",
         password:"",
         password2:"",
-        isTeacher:false,
+        isTeacher:true,
         phone:""
     });
 
@@ -39,7 +39,7 @@ const Register = (props)=>{
 
     return(
         <div>
-            <h1>Register Page!</h1>
+            <h1>Teacher Register Page!</h1>
             <form onSubmit={onSubmit}>
                 <div>
                     <label htmlFor="name">Name</label><br />
@@ -58,13 +58,6 @@ const Register = (props)=>{
                     <input type="password" name="password2" value={password2} id="password2" onChange={onChange}/>
                 </div>
                 <div>
-                    <label htmlFor="isTeacher">Profession</label><br />
-                    <select name="isTeacher" id="isTeacher" value={isTeacher} onChange={onChange}>
-                        <option value={true}>Teacher</option>
-                        <option value={false}>Student</option>
-                    </select>
-                </div>
-                <div>
                     <label htmlFor="phone">Phone</label><br />
                     <input type="number" name="phone" value={phone} id="phone" onChange={onChange}/>
                 </div>
@@ -79,4 +72,4 @@ const mapStateToProps = (state,props)=>({
     isAuthenticated:state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps)(Register);
+export default connect(mapStateToProps)(RegisterTeacher);
