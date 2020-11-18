@@ -19,6 +19,11 @@ const router = express.Router();
 
 router.post("/",async (req,res)=>{
     try {
+        
+        const check = await User.find({email:req.body.email});
+        if(check.length!==0){
+            return res.json({"msg":"Email already registered!"})
+        }
         const user = new User(req.body);
         generateAuthToken(user.id,(token)=>{
             user.tokens =user.tokens.concat({token})

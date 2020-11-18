@@ -142,14 +142,14 @@ const Header = ({user,isAuthenticated,logout,history}) => {
                     Dashboard
                 </Box>
               </Button>
-              <Button
+             { !user.isTeacher && <Button
                 onClick={handleJoinClassroom}
                 color="inherit"
               >
               <Box fontSize={12}>
                     Join Classroom
                 </Box>
-              </Button>
+              </Button>}
               <Button
                 aria-label="User Account"
                 aria-controls="menu-appbar"

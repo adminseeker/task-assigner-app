@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  resize:{
+      fontSize:16
+  }
 }));
 
 const Login = (props)=> {
@@ -87,8 +90,8 @@ if(props.isAuthenticated){
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          <Typography component="h1" variant="h4">
+            Log in
           </Typography>
           <form className={classes.form} onSubmit={onSubmit}>
             <TextField
@@ -101,8 +104,14 @@ if(props.isAuthenticated){
               name="email"
               onChange={onChange}
               autoComplete="email"
-              autoFocus
+              autoFocus={true}
               error={error}
+              InputProps={{
+                classes: {
+                  input: classes.resize
+                },
+              }}
+     
             />
             <TextField
               variant="outlined"
@@ -116,6 +125,11 @@ if(props.isAuthenticated){
               onChange={onChange}
               autoComplete="current-password"
               error={error}
+              InputProps={{
+                classes: {
+                  input: classes.resize
+                },
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -128,7 +142,10 @@ if(props.isAuthenticated){
               color="primary"
               className={classes.submit}
             >
-              Sign In
+            <Box fontSize={16}>
+             Log In
+
+            </Box>
             </Button>
           </form>
         </div>

@@ -12,13 +12,18 @@ const register = ({name,email,password,isTeacher,phone})=>{
         const body = JSON.stringify({name,email,password,isTeacher,phone});
         try {
             const res = await axios.post("/api/users",body,config);
-            await  dispatch({
-                type:"REGISTER_SUCCESS",
-                token:res.data.token
-            });
-
-            await dispatch(loadUser());
-            
+            if(res.data.msg){
+                await dispatch({
+                    type:"REGISTER_FAIL"
+                })
+                return res.data.msg;
+            }else{
+                await  dispatch({
+                    type:"REGISTER_SUCCESS",
+                    token:res.data.token
+                });
+                await dispatch(loadUser());
+            }
         } catch (err) {
             console.log(err);
               dispatch({

@@ -4,72 +4,235 @@ import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
 import {setAlert} from "../actions/alert";
 
-const RegisterTeacher = (props)=>{
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 
-    const [formData,setFormData] = useState({
-        name:"",
-        email:"",
-        password:"",
-        password2:"",
-        isTeacher:true,
-        phone:""
-    });
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+  resize:{
+    fontSize:16
+}
+}));
 
-    if(props.isAuthenticated){
-        return <Redirect to="/dashboard" />
-    }
-    
+const RegisterStudent = (props)=>{
+  const classes = useStyles();
 
-    const {name,email,password,password2,isTeacher,phone} = formData;
+  const [formData,setFormData] = useState({
+    firstName:"",
+    lastName:"",
+    email:"",
+    password:"",
+    password2:"",
+    isTeacher:true,
+    phone:""
+});
 
-    
+const [emailError,setEmailError] = useState("")
+const [passwordError,setPasswordError] = useState("")
 
-    const onChange = (e)=>{
-        setFormData({...formData , [e.target.name]:e.target.value})
-    }
+if(props.isAuthenticated){
+    return <Redirect to="/dashboard" />
+}
 
-    const onSubmit = (e)=>{
-        e.preventDefault();
-        if(password!==password2){
-            props.dispatch(setAlert("Passwords do not match!!","danger",6000));
-        }else{
-            props.dispatch(register({name,email,password,isTeacher,phone}));
+
+const {firstName,lastName,email,password,password2,isTeacher,phone} = formData;
+
+
+
+const onChange = (e)=>{
+    setFormData({...formData , [e.target.name]:e.target.value})
+}
+
+const onSubmit = async (e)=>{
+    e.preventDefault();
+    if(password!==password2){
+        setPasswordError("Passwords do not match");
+    }else{
+        const res = await props.dispatch(register({name:firstName+" "+lastName,email,password,isTeacher,phone}));
+        if(res=="Email already registered!"){
+            setEmailError(res);
         }
     }
+}
 
-    return(
-        <div>
-            <h1>Teacher Register Page!</h1>
-            <form onSubmit={onSubmit}>
-                <div>
-                    <label htmlFor="name">Name</label><br />
-                    <input type="text" name="name" value={name} id="name" onChange={onChange}/>
-                </div>
-                <div>
-                    <label htmlFor="email">Email</label><br />
-                    <input type="email" name="email" value={email} id="email" onChange={onChange}/>
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label><br />
-                    <input type="password" name="password" value={password} id="password" onChange={onChange}/>
-                </div>
-                <div>
-                    <label htmlFor="password2">Confirm Password</label><br />
-                    <input type="password" name="password2" value={password2} id="password2" onChange={onChange}/>
-                </div>
-                <div>
-                    <label htmlFor="phone">Phone</label><br />
-                    <input type="number" name="phone" value={phone} id="phone" onChange={onChange}/>
-                </div>
-                <br />
-                <button type="submit">Register</button>
-            </form>
-        </div>
-    )
+  return (
+    <Container component="main" maxWidth="xs">
+
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Register As Teacher
+        </Typography>
+        <form className={classes.form} onSubmit={onSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="fname"
+                name="firstName"
+                variant="outlined"
+                required
+                fullWidth
+                id="firstName"
+                label="First Name"
+                autoFocus
+                onChange={onChange}
+                InputProps={{
+                    classes: {
+                      input: classes.resize
+                    },
+                  }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                name="lastName"
+                autoComplete="lname"
+                onChange={onChange}
+                InputProps={{
+                    classes: {
+                      input: classes.resize
+                    },
+                  }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                onChange={onChange}
+                error={!!emailError}
+                helperText={!!emailError ? "Email Already Registered!" : ""}
+                InputProps={{
+                    classes: {
+                      input: classes.resize
+                    },
+                  }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={onChange}
+                error={!!passwordError}
+                helperText={!!passwordError ? "Passwords Do not Match!" : ""}
+                InputProps={{
+                    classes: {
+                      input: classes.resize
+                    },
+                  }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+                <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password2"
+                label="Confirm Password"
+                type="password"
+                id="password2"
+                autoComplete="current-password"
+                onChange={onChange}
+                error={!!passwordError}
+                helperText={!!passwordError ? "Passwords Do not Match!" : ""}
+                InputProps={{
+                    classes: {
+                      input: classes.resize
+                    },
+                  }}
+                />
+          </Grid>
+          <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="phone"
+                label="Phone"
+                name="phone"
+                autoComplete="phone"
+                onChange={onChange}
+                InputProps={{
+                    classes: {
+                      input: classes.resize
+                    },
+                  }}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+          <Box fontSize={16}>
+          Register
+
+         </Box>
+          </Button>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link href="/login" variant="h6">
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Container>
+  );
 }
 
 const mapStateToProps = (state,props)=>({
     isAuthenticated:state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps)(RegisterTeacher);
+export default connect(mapStateToProps)(RegisterStudent);
