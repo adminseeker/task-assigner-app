@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "UNDER DEVELOPMENT",
   "main": "index.js",
+  "prettier":{
+    "tabWidth": 4
+  },
   "scripts": {
-    "client":"npm start --prefix frontend",
-    "dev-server":"npm run dev-server --prefix backend",
-    "server":"npm run server --prefix backend",
+    "client": "npm start --prefix frontend",
+    "dev-server": "npm run dev-server --prefix backend",
+    "server": "npm run server --prefix backend",
     "dev": "concurrently \"npm run client\" \"npm run dev-server\" ",
-    "start":"npm run server",
-    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
+    "start": "npm run server",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
