@@ -4,6 +4,7 @@ import {getRooms} from "../actions/rooms";
 import RoomsList from "./RoomsList";
 import LoadingPage from "./LoadingPage";
 import useSWR from "swr";
+import { Grid, Container, Typography } from "@material-ui/core";
 
 const Dashboard = ({getRooms,user})=>{
     useEffect(()=>{
@@ -13,13 +14,13 @@ const Dashboard = ({getRooms,user})=>{
       user==null ? <LoadingPage/>        
     :(
         <div>
-            <h1 className="header__classrooms">Your Classrooms</h1>
-            <div className="container">
-                <div className="content-container">           
-                    <RoomsList /><br/>
-                    
-                </div>
-            </div>
+            <Typography variant="h2" align="center">
+                Classrooms
+            </Typography>
+            <Container >
+            <RoomsList />
+            </Container>
+                
         </div>
     )
       )

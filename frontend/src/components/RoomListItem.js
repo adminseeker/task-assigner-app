@@ -32,6 +32,7 @@ const RoomListItem = (props)=>{
     return(
         <Card className={classes.root}>
         <CardActionArea>
+        <Link  to={"/rooms/"+props.room._id}>
         <CardMedia
           component="img"
           alt={props.room._id}
@@ -39,7 +40,6 @@ const RoomListItem = (props)=>{
           image="/images/classroom.jpg"
           title={props.room.className}
         />
-        <Link  to={"/rooms/"+props.room._id}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2" color="primary">
           {props.room.className}
@@ -48,14 +48,14 @@ const RoomListItem = (props)=>{
           </Typography>
           </Typography>
           <Typography gutterBottom variant="h5" component="h5" color="textPrimary">
-          students:{props.room.students.length}
+          {props.room.students.length===1 ? "1 Student" : props.room.students.length + " Students"  } 
           </Typography>
         </CardContent>
         </Link>
       </CardActionArea>
       <CardActions>
       {props.isTeacher && <Button size="small" color="secondary" onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Remove</Button>}
-      {!props.isTeacher && <Button size="small" color="secondary" onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Leave This Class Room</Button>}
+      {!props.isTeacher && <Button size="small" color="secondary" onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Leave</Button>}
       </CardActions>
         </Card>
         

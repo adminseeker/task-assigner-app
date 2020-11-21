@@ -3,39 +3,160 @@ import { connect } from "react-redux";
 import {getRoomUsers,getAnnouncements,addAnnouncement} from "../actions/rooms";
 import StudentListItem from "./StudentListItem";
 import LoadingPage from "./LoadingPage";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import ResourcesList from "./ResourcesList";
 import Uploader from "./Uploader";
 import AnnouncementsList from "./AnnouncementsList";
+import { Container, Paper, Typography,Link, Toolbar, TextField, Button } from "@material-ui/core";
+
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { makeStyles } from '@material-ui/core/styles'
+import { Add } from "@material-ui/icons";
+
+const useStyles = makeStyles(theme => ({
+  marginAutoContainer: {
+    width: 500,
+    height: 80,
+    display: 'flex',
+    backgroundColor: 'gold',
+  },
+  marginAutoItem: {
+    margin: 'auto'
+  },
+  alignItemsAndJustifyContent: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection:"column",
+    justifyContent: 'center',
+    width:"40%",
+  },
+  '@media (max-width: 768px)': {
+    alignItemsAndJustifyContent: {
+        width:"100%"
+    }
+},
+  paper1:{
+      marginTop:"5rem",
+      width:"100%",
+      height:"18rem",
+      backgroundImage: `url(${"/images/classroom_dark.jpg"})`,
+      display:"flex",
+      flexDirection:"column",
+      justifyContent: 'center',
+      padding:"2rem"
+  },
+  paper2:{
+    marginTop:"1rem",
+    width:"100%",
+    display:"flex",
+    flexDirection:"column",
+    justifyContent: 'center',
+    padding:"5rem",
+    backgroundColor:"#f0f0f0"
+},
+
+  heading:{
+      color:"white"
+  },
+  teacherLink:{
+    color:"#abf",
+    fontSize:"2rem"
+},
+linkBar: {
+    backgroundColor: theme.palette.background.paper,
+    width:"100%",
+    },
+linkBarContainer:{
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"space-between",
+},
+resize:{
+    fontSize:20,
+    padding:"1rem",
+    lineHeight:"2.4rem"
+}
+}))
 
 const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,loading_users,loading_announcements,getAnnouncements,addAnnouncement,match:{params:{id}}}) => {
+    const classes = useStyles();
     useEffect(()=>{
         getRoomUsers(_id);
         getAnnouncements(_id);
     },[getRoomUsers,getAnnouncements,_id]);
     const [content, setContent] = useState("");
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };  
     return (
             loading_users ? <LoadingPage /> :
-             <div>
-                <h3>ClassRoom: {className}</h3>
-                <h3>Teacher: <Link to={"/profile/teacher/"+teacher._id}>{teacher.name}</Link></h3>
-                {isTeacher && <Link to={"/rooms/"+_id+"/students"}>Mangage Students</Link>}
-                {isTeacher && <Link to={"/rooms/"+_id+"/assignments"}>Mangage Assignments</Link>}
-                {!isTeacher && <Link to={"/rooms/"+_id+"/students"}>View Students</Link>}
-                {!isTeacher && <Link to={"/rooms/"+_id+"/assignments"}>View Assignments</Link>}
-                {isTeacher && <Link to={"/rooms/"+_id+"/materials"}>Mangage Materials</Link>}
-                {!isTeacher && <Link to={"/rooms/"+_id+"/materials"}>View Materials</Link>}
-              
-                <h2>Announcements</h2>
-                {<AnnouncementsList room_id={_id}/>}
+             <div >
+             <Container className={classes.alignItemsAndJustifyContent} xs={12}>
+                <Paper className={classes.paper1}>
+                <Typography variant="h3" className={classes.heading}>
+                {className}
+                </Typography>
+                <Typography variant="p">
+                <Link to={"/profile/teacher/"+teacher._id} className={classes.teacherLink} component={RouterLink}>{teacher.name}</Link>
+                </Typography>
+                </Paper>
+                <div className={classes.linkBar}>
+                    <AppBar position="static" color="default" >
+                        <Toolbar>
+                        <Container className={classes.linkBarContainer}>
+                        <Link component={RouterLink} to={"/rooms/"+_id+"/students"}>Students</Link>
+                        <Link component={RouterLink} to={"/rooms/"+_id+"/assignments"}>Assignments</Link>
+                        <Link component={RouterLink} to={"/rooms/"+_id+"/materials"}>Materials</Link>
+                        </Container>
+                        </Toolbar>
+                        
+                        
+                    </AppBar>
+                    </div>
+                <Paper className={classes.paper2}>
                 {isTeacher &&
-                     <form onSubmit={async (e)=>{
-                         e.preventDefault();
-                         await addAnnouncement(content,_id);
-                     }}>
-                        <input type="text" name="content" placeholder="Announcement" value={content} onChange={(e)=>{setContent(e.target.value)}}></input>
-                        <button type="submit">Add Announcement</button>
-                     </form>}
+                    <form onSubmit={async (e)=>{
+                        e.preventDefault();
+                        await addAnnouncement(content,_id);
+                    }}>
+                    {/*<input type="text" name="content" placeholder="Announcement" value={content} onChange={(e)=>{setContent(e.target.value)}}></input>*/}
+                    <TextField
+                    type="text"
+                    name="content"
+                    placeholder="Announcement"
+                    value={content}
+                    multiline
+                    rows={4}
+                    style={{width:"100%",background:"white"}}
+                    InputProps={{
+                        classes: {
+                          input: classes.resize
+                        },
+                      }}
+                    onChange={(e)=>{setContent(e.target.value)}}
+                    variant="outlined"
+                    >
+
+                    </TextField>
+                       <Button
+                       type="submit"
+                       variant="contained"
+                       color="primary"
+                       style={{marginTop:"2rem",float:"right"}}
+                       startIcon={<Add />}
+                       >Add</Button>
+
+            
+            
+                       </form>}
+                {<AnnouncementsList room_id={_id}/>}
+                
+                     </Paper>
+                     </Container>
             </div>
     )
 }

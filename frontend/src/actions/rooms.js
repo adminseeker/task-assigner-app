@@ -87,7 +87,7 @@ const getAnnouncements= (id)=>{
             const res = await axios.get("/api/rooms/"+id+"/announcements");
             dispatch({
                 type:"GET_ANNOUNCEMENTS",
-                announcements:res.data
+                announcements:res.data.reverse()
             })
         } catch (error) {
             console.log(error);

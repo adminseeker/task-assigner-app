@@ -2,18 +2,34 @@ import React from "react";
 import moment from "moment";
 import { connect } from "react-redux";
 import { deleteAnnouncement} from "../actions/rooms";
-
-const AnnouncementListItem = (props)=>(
-    <div>
-       <h3>{props.announcement.content}</h3> 
-       <p>Announced on {moment(props.announcement.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
-        {props.isTeacher && <button onClick={(e)=>{
+import { Typography, Button } from "@material-ui/core";
+import {Delete} from "@material-ui/icons"
+ 
+const AnnouncementListItem = (props)=>{
+    console.log(props.announcement.content)
+    return (
+    <div style={{padding:"2rem"}}>
+        <Typography variant="h4" >
+       {props.announcement.content.split("\n").map((content)=>(
+           <div>
+           {content}
+           </div>
+       ))} 
+        </Typography>
+        <Typography variant="p" style={{width:"auto"}} color="secondary">
+        {moment(props.announcement.createdAt).format('MMM DD, h:mm a')}
+        </Typography>
+        {props.isTeacher && <Button style={{float:"right"}} 
+        variant="contained"
+        color="secondary"
+        startIcon={<Delete />}
+        onClick={(e)=>{
             props.dispatch(deleteAnnouncement(props.room_id,props.announcement._id));
         }}>
                 Delete
-        </button>}
+        </Button>}
     </div>
-);
-
+    )
+};
 
 export default connect()(AnnouncementListItem);
