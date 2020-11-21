@@ -171,8 +171,8 @@ const Landing = (props) => {
                                 component={e.pic}
                                 title="Paella dish"
                             />
-                            <CardContent className={classes.cardContent}>
-                                <Typography variant="h4" component="h2">
+                            <CardContent >
+                                <Typography variant="h4" component="h2"className={classes.cardContent}>
                                     {e.header}
                                 </Typography>
                                 <Typography variant="h5" component="p">
