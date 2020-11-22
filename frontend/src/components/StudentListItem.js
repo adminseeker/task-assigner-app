@@ -16,6 +16,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import { IconButton, Container } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
+import SubmissionsList from "./SubmissionsList";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,7 @@ const StudentListItem = (props)=>{
     return(
         props.loading_users ? <LoadingPage /> : 
         <div>
-        {!props.assignment &&
+        {
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -73,7 +74,7 @@ const StudentListItem = (props)=>{
         </div>
         </AccordionSummary>
         <AccordionDetails>
-            <div style={{display:"flex",flexDirection:"column",justifyContent:"center"}}>
+           { !props.assignment && <div style={{display:"flex",flexDirection:"column",justifyContent:"center"}}>
           <Typography>
             Email : {props.student.email}
           </Typography>
@@ -81,7 +82,14 @@ const StudentListItem = (props)=>{
             {props.isTeacher && "Phone : " + props.student.phone}
           </Typography>
           
-          </div>
+          </div>}
+          {
+              props.assignment && 
+              <Typography>
+              
+              <SubmissionsList resource_id={props.resource_id}  room_id={props.room_id} student_id={props.student._id}/>
+              </Typography>
+          }
         </AccordionDetails>
       </Accordion>
         }

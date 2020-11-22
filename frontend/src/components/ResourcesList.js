@@ -1,27 +1,76 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import ResorcesListItem from "./ResourcesListItem";
 import { connect } from "react-redux";
 import LoadingPage from "./LoadingPage";
 import { getTeacherResources } from "../actions/rooms";
+import { getSubmissionsByTeacher } from "../actions/submissions";
 import Uploader from "./Uploader";
 
-const ResourcesList = ({room:{_id},getTeacherResources,resources,loading_resources,isTeacher}) => {
+import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+  alignItemsAndJustifyContent: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection:"column",
+    justifyContent: 'center',
+    width:"40%",
+  },
+  '@media (max-width: 768px)': {
+    alignItemsAndJustifyContent: {
+        width:"100%"
+        }
+    },
+    studentsContainer:{
+        marginTop:"5rem",
+        width:"100%",
+        display:"flex",
+        flexDirection:"column",
+        justifyContent: 'center',
+        padding:"2rem"
+    },
+  }));
+
+const ResourcesList = ({room:{_id},getTeacherResources,resources,loading_resources,isTeacher,getSubmissionsByTeacher}) => {
     useEffect(()=>{
         getTeacherResources(_id)
     },[getTeacherResources,_id])
+    const classes = useStyles();
+    const [exp,setExp] = useState(false);
+    const handleChange = (panel) =>async (event, isExpanded) => {
+        if(isExpanded!==false){
+            await getSubmissionsByTeacher(_id,panel);
+        }
+        setExp(isExpanded ? panel : false);
+      };
     return (
         loading_resources ? <LoadingPage /> : 
-        <div>
+        <div className={classes.root}>
+        <Container className={classes.alignItemsAndJustifyContent} xs={12}>
+                <div className={classes.studentsContainer}>
+                <div style={{textAlign:"center"}}>
+                    <Typography variant="h2">
+                        Assignments
+                    </Typography>
+                </div>
             {
                 resources.length === 0 ?(
                     <h3>No Assignments</h3>
                 ) : (
                     resources.map((resource)=>(
-                        <ResorcesListItem key={resource._id} room_id={_id} resource={resource} isTeacher={isTeacher}/>
+                        <ResorcesListItem key={resource._id} room_id={_id} resource={resource} isTeacher={isTeacher} exp={exp} handleChange={handleChange}/>
                     ))
                 )
             }
-            {isTeacher && <h2>Add Assignments</h2>}
+            </div>
+            </Container>
             {isTeacher && <Uploader room_id={_id} isTeacher={isTeacher}/>}
         </div>
     )
@@ -34,4 +83,4 @@ const mapStateToProps= (state,props)=>({
     isTeacher:state.auth.user.isTeacher
 })
 
-export default connect(mapStateToProps,{getTeacherResources})(ResourcesList);
+export default connect(mapStateToProps,{getTeacherResources,getSubmissionsByTeacher})(ResourcesList);

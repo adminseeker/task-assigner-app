@@ -129,7 +129,7 @@ const Uploader = (props)=> {
               {
                 <div>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Add Materials</DialogTitle>
+                <DialogTitle id="form-dialog-title">{props.isTeacher ? ( props.isMaterial ? "Add Materials" : "Add Assignments") : "Add Submissions" }</DialogTitle>
                 <DialogContent>
                   <DialogContentText>
                   <input className={classes.input} type="file" id="contained-button-file" onChange={onFileChange} /> 
@@ -161,7 +161,7 @@ const Uploader = (props)=> {
               </Button>
                 </DialogActions>
               </Dialog>
-              <Tooltip title="Add Materials" aria-label="add" position="right" >
+              <Tooltip title={props.isTeacher ? ( props.isMaterial ? "Add Materials" : "Add Assignments") : "Add Submissions" } aria-label="add" position="right" >
                 <Fab color="primary" className={classes.fixed} onClick={handleClickOpen}>
                   <AddIcon />
                 </Fab>
