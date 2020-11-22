@@ -22,6 +22,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { joinStudent } from "../actions/auth";
+import { Icon } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -115,7 +116,8 @@ const RoomsList = (props) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button type="submit" color="primary" onClick={handleSubmit}>
+          <Button type="submit" color="primary" onClick={handleSubmit}
+          >
           {props.isTeacher ? "Create Classroom": "Join"}
           </Button>
         </DialogActions>

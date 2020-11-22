@@ -5,15 +5,52 @@ import AddRoom from "./AddRoom";
 import StudentListItem from "./StudentListItem";
 import InviteStudents from "./InviteStudents";
 import { Link } from "react-router-dom";
+import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+  alignItemsAndJustifyContent: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection:"column",
+    justifyContent: 'center',
+    width:"40%",
+  },
+  '@media (max-width: 768px)': {
+    alignItemsAndJustifyContent: {
+        width:"100%"
+        }
+    },
+    studentsContainer:{
+        marginTop:"5rem",
+        width:"100%",
+        display:"flex",
+        flexDirection:"column",
+        justifyContent: 'center',
+        padding:"2rem"
+    }
+  }));
 
 const StudentList = (props) => {
+    const classes = useStyles();
     return (
         props.loading_rooms ? <LoadingPage /> :
-        <div>
-            {props.isTeacher && <Link to={"/rooms/"+props.room_id+"/students/invite"}>Invite Students</Link>}
-            {
-                
-                props.students.length === 0 ?(
+
+        <div className={classes.root}>
+        <Container className={classes.alignItemsAndJustifyContent} xs={12}>
+                <div className={classes.studentsContainer}>
+                <div style={{textAlign:"center"}}>
+                    <Typography variant="h2">
+                        Students
+                    </Typography>
+                </div>
+               { props.students.length === 0 ?(
                     <h3>No Students</h3>
                 ) : (
                     props.students.map((student)=>(
@@ -21,6 +58,10 @@ const StudentList = (props) => {
                     ))
                 )
             }
+            </div>
+            </Container>
+            
+            <InviteStudents room_id={props.room_id}/>
         </div>
     )
 }
