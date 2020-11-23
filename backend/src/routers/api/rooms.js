@@ -506,11 +506,12 @@ router.delete("/:id",auth,async (req,res)=>{
             let objects = resources.concat(submissions);
             objects = objects.concat(materials);
             const params = {
-                Bucket: process.env.AWS_BUCKET,
+                Bucket: "aravind-web-apps",
                 Delete: {
                     Objects: objects
                   }
             }
+            objects.forEach((object)=>{object.Key="tasker/"+object.Key});
             await room.remove();
             if(objects.length!==0){
                 s3Bucket.deleteObjects(params,(error,data)=>{
@@ -520,10 +521,10 @@ router.delete("/:id",auth,async (req,res)=>{
                      res.json({"msg":"room deleted!"});
                 });
             }else{
-                res.json({"msg":"room deleted!"});
+                return res.json({"msg":"room deleted!"});
             }
         }else{
-            const room = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$pull:{students:{_id:req.user.id}}});
+            const room = await Room.findOne({_id:req.params.id,"students._id":req.user.id});
             if(!room){
                 return res.status(404).json({"msg":"room not found!"});
             }
@@ -535,17 +536,21 @@ router.delete("/:id",auth,async (req,res)=>{
             },[]);
             const objects = submissions;
             const params = {
-                Bucket: process.env.AWS_BUCKET,
+                Bucket: "aravind-web-apps",
                 Delete: {
                     Objects: objects
                   }
             }
-            if(submissions.length!==0){
-                s3Bucket.deleteObjects(params,()=>{
-    
+            objects.forEach((object)=>{object.Key="tasker/"+object.Key});
+            if(objects.length!==0){
+                s3Bucket.deleteObjects(params,(error,data)=>{
+                    if(error){
+                        console.log("From S3");
+                        throw new Error;
+                    }
                 });
             }
-            
+            const deletedRoom = await Room.findOneAndUpdate({_id:req.params.id,"students._id":req.user.id},{$pull:{students:{_id:req.user.id},submissions:{student_id:req.user.id}}});
             return res.json({"msg":"Student left the room!"});
         }
     } catch (error) {

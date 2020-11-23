@@ -56,6 +56,7 @@ const RegisterStudent = (props)=>{
 
 const [emailError,setEmailError] = useState("")
 const [passwordError,setPasswordError] = useState("")
+const [phoneError,setPhoneError] = useState("")
 
 if(props.isAuthenticated){
     return <Redirect to="/dashboard" />
@@ -74,7 +75,10 @@ const onSubmit = async (e)=>{
     e.preventDefault();
     if(password!==password2){
         setPasswordError("Passwords do not match");
-    }else{
+    }else if(!(/^[+]?(?:\d| ){10,}$/.test(phone))){
+        setPhoneError("Enter Valid phone number!")
+    }
+    else{
         const res = await props.dispatch(register({name:firstName+" "+lastName,email,password,isTeacher,phone}));
         if(res=="Email already registered!"){
             setEmailError(res);
@@ -134,6 +138,7 @@ const onSubmit = async (e)=>{
                 variant="outlined"
                 required
                 fullWidth
+                type="email"
                 id="email"
                 label="Email Address"
                 name="email"
@@ -193,6 +198,9 @@ const onSubmit = async (e)=>{
                 variant="outlined"
                 required
                 fullWidth
+                type="tel"
+                error={!!phoneError}
+                helperText={!!phoneError ? phoneError : ""}
                 id="phone"
                 label="Phone"
                 name="phone"

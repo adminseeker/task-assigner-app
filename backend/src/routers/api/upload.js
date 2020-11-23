@@ -191,23 +191,36 @@ router.delete("/:id1/resources/:id2",auth,async (req,res)=>{
             return res.status(500).json({ "msg":"error deleting file!" });
         }
 
-        const fileName = room.resources.map((resource)=>{
-            if(resource._id == req.params.id2){
-                return resource.resource;
-            }
-        }).toString().split("/").pop();
-        const params = {
-            Bucket: process.env.AWS_BUCKET,
-            Key: fileName
+        let objects=[];
+        let resources = room.resources.filter((resource)=>resource._id==req.params.id2);
+        resources = resources.map((resource)=>{
+            return {Key:resource.resource.toString().split("/").pop()};
+        });
+        objects= objects.concat(resources)
+        let submissions = room.submissions.filter((submission)=>submission.resource_id==req.params.id2);
+        if(submissions!==0){
+            submissions = submissions.map((submission)=>{
+                return {Key:submission.submission.toString().split("/").pop()};
+            });
+    
+            objects = objects.concat(submissions);
         }
-
-        s3Bucket.deleteObject(params,async(error,data)=>{
+        const params = {
+            Bucket: "aravind-web-apps",
+            Delete: {
+                Objects: objects
+              }
+        }
+        objects.forEach((object)=>{object.Key="tasker/"+object.Key});
+        s3Bucket.deleteObjects(params,async(error,data)=>{
             if(error){
-                return res.status(500).json({ "msg":"error deleting file!" });
+            console.log("from S3")
+            console.log(error)
+            throw new Error;
             }
-            res.json({"msg":"File Successfully Deleted!"});
+            
         })
-
+        res.json({"msg":"Assignment Successfully Deleted!"});
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);   
