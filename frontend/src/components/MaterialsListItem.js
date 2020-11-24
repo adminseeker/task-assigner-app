@@ -14,6 +14,12 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const useStyles = makeStyles({
     root: {
       maxWidth: 345,
@@ -21,6 +27,15 @@ const useStyles = makeStyles({
   });
 
 const MaterialsListItem = (props)=>{
+  const [open, setOpen] = useState(false);
+    const handleDelete = async (e)=>{
+      setOpen(false);
+      await props.dispatch(deleteMaterial(props.room_id,props.material._id))
+    }
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
     const classes = useStyles();
     return (
         <Card className={classes.root}>
@@ -44,8 +59,29 @@ const MaterialsListItem = (props)=>{
         </a>
       </CardActionArea>
       <CardActions>
-      {props.isTeacher && <Button size="small" color="secondary" onClick={async (e)=>{props.dispatch(deleteMaterial(props.room_id,props.material._id))}}>Remove</Button>}
+      {props.isTeacher && <Button size="small" color="secondary" onClick={async (e)=>{setOpen(true)}}>Remove</Button>}
       </CardActions>
+      <Dialog
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">{<Typography variant="h4">Are you sure you want to remove this material?</Typography>}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      {<Typography variant="h5">This material will be deleted permanently!</Typography>}
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose} color="primary">
+      No
+    </Button>
+    <Button onClick={handleDelete} color="secondary" autoFocus>
+      Yes
+    </Button>
+  </DialogActions>
+</Dialog>
     </Card>
     );
 }

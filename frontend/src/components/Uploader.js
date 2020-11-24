@@ -6,7 +6,7 @@ import { getTeacherResources, getMaterials } from "../actions/rooms";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { TextField, Typography, Container } from "@material-ui/core";
+import { TextField, Typography, Container, LinearProgress } from "@material-ui/core";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -18,6 +18,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +47,28 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(4),
   },
 }));
+
+const CircularProgressWithLabel = (props)=> {
+  return (
+    <Box position="relative" display="inline-flex"  style={{display:"flex",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
+      <CircularProgress variant="static" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
   
 const Uploader = (props)=> { 
     const classes = useStyles();
@@ -49,6 +76,7 @@ const Uploader = (props)=> {
     const [description,setDescription] = useState("");
     const [open, setOpen] = React.useState(false);
     const [className,setClassName] =useState("");
+    const [progress,setProgress] =useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -67,10 +95,10 @@ const Uploader = (props)=> {
     }; 
     
     const onFileUpload = async () => { 
-        setOpen(false);
+        
+        //
         const formData = new FormData();
         formData.append( "file",selectedFile);
-        console.log(formData)
         if(!selectedFile){
           alert("choose file!");
         }else{
@@ -78,37 +106,83 @@ const Uploader = (props)=> {
             alert("Enter Description!");
           }else{
             if(props.isMaterial){
+              setProgress(0);
               let config = {
                 headers: {
-                    "description": description
+                  "description": description
+              },
+                onUploadProgress: function(progressEvent) {
+                  let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                  setProgress(percentCompleted)
                 }
+                
             }
-              const result = await axios.post("/api/upload/"+props.room_id+"/materials", formData,config); 
-              alert(result.data.msg);
-              await props.dispatch(getMaterials(props.room_id));
+              
+              try{
+                  const result = await axios.post("/api/upload/"+props.room_id+"/materials", formData,config);
+                  setOpen(false);
+                  alert(result.data.msg);
+                  setProgress(0);
+                  await props.dispatch(getMaterials(props.room_id));
+              }catch(error){
+                  setOpen(false);
+                  alert("error occured in uploading!!!");
+                  setProgress(0);
+                  
+              }
+              
             }else{
 
             
               if(props.isTeacher){
+                setProgress(0);
                 let config = {
                   headers: {
                       "description": description
+                  },
+                  onUploadProgress: function(progressEvent) {
+                    let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    setProgress(percentCompleted)
                   }
               }
+              try{
                 const result = await axios.post("/api/upload/"+props.room_id, formData,config); 
+                setOpen(false);
                 alert(result.data.msg);
+                setProgress(0);
                 await props.dispatch(getTeacherResources(props.room_id));
+              }catch(error){
+                  setOpen(false);
+                  alert("error occured in uploading!!!");
+                  setProgress(0);
+                  
+              }
               }else{
+                setProgress(0);
                 let config = {
                   headers: {
                       "description": description,
                       "resource_id": props.resource_id
+                  },
+                  onUploadProgress: function(progressEvent) {
+                    let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    setProgress(percentCompleted)
                   }
               }
-                const result = await axios.post("/api/upload/"+props.room_id, formData,config);
-                alert(result.data.msg);
-                await props.dispatch(getSubmissionsByTeacher(props.room_id,props.resource_id));
-                await props.dispatch(getSubmittedStudents(props.room_id,props.submittedIDs));
+                try{
+                  const result = await axios.post("/api/upload/"+props.room_id, formData,config);
+                  setOpen(false);
+                  alert(result.data.msg);
+                  setProgress(0);
+                  await props.dispatch(getSubmissionsByTeacher(props.room_id,props.resource_id));
+                  await props.dispatch(getSubmittedStudents(props.room_id,props.submittedIDs));
+                }catch(error){
+                    setOpen(false);
+                    alert("error occured in uploading!!!");
+                    setProgress(0);
+                    
+                }
+                
               }
             }
           }
@@ -129,7 +203,8 @@ const Uploader = (props)=> {
               {
                 <div>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">{props.isTeacher ? ( props.isMaterial ? "Add Materials" : "Add Assignments") : "Add Submissions" }</DialogTitle>
+               {  <DialogTitle id="form-dialog-title">{props.isTeacher ? ( props.isMaterial ? "Add Materials" : "Add Assignments") : "Add Submissions" }</DialogTitle> }
+                {progress!==0 ? <CircularProgressWithLabel value={progress}/> : 
                 <DialogContent>
                   <DialogContentText>
                   <input className={classes.input} type="file" id="contained-button-file" onChange={onFileChange} /> 
@@ -145,21 +220,22 @@ const Uploader = (props)=> {
                 </label>
                   </DialogContentText>
                 <TextField type="text" value={description} placeholder="Enter description" fullWidth onChange={(e)=>(setDescription(e.target.value))}/>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose} color="primary">
-                    Cancel
+                </DialogContent>}
+                { <DialogActions>
+                  <Button onClick={handleClose} color="primary" disabled={progress!==0}>
+                  Cancel
                   </Button>
                   <Button
                 variant="contained"
                 color="default"
                 className={classes.button}
-                startIcon={<CloudUploadIcon />}
+                startIcon= {<CloudUploadIcon />}
+                disabled={progress!==0}
                 onClick={onFileUpload}
                 >
                 Upload
               </Button>
-                </DialogActions>
+                </DialogActions>}
               </Dialog>
               <Tooltip title={props.isTeacher ? ( props.isMaterial ? "Add Materials" : "Add Assignments") : "Add Submissions" } aria-label="add" position="right" >
                 <Fab color="primary" className={classes.fixed} onClick={handleClickOpen}>

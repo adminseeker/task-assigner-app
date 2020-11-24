@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import moment from "moment";
 import { connect } from "react-redux";
@@ -15,6 +15,12 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 
 const useStyles = makeStyles({
@@ -25,6 +31,16 @@ const useStyles = makeStyles({
 
 
 const RoomListItem = (props)=>{
+    const [open, setOpen] = useState(false);
+    const handleDelete = async (e)=>{
+      setOpen(false);
+      await deleteRoom(); 
+      await props.dispatch(getRooms());
+    }
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
     const classes = useStyles();
     const deleteRoom =async ()=>{
         await axios.delete("/api/rooms/"+props.room._id);
@@ -54,9 +70,29 @@ const RoomListItem = (props)=>{
         </Link>
       </CardActionArea>
       <CardActions>
-      {props.isTeacher && <Button size="small" color="secondary" onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Remove</Button>}
-      {!props.isTeacher && <Button size="small" color="secondary" onClick={async (e)=>{await deleteRoom(); await props.dispatch(getRooms());}}>Leave</Button>}
+      { <Button size="small" color="secondary" onClick={()=>setOpen(true)}>{props.isTeacher ? "Remove" : "Leave"}</Button>}
       </CardActions>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{props.isTeacher ? <Typography variant="h4">Are You sure you want to remove this classroom?</Typography> : <Typography variant="h4">Are you sure you want to leave this classroom?</Typography>}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {props.isTeacher ? <Typography variant="h5"> Along with this room all materials, assignments and submissions belonging to this classroom will be deleted permanently! </Typography>: <Typography variant="h5"> All your submissions of this classroom will be deleted permanently! </Typography>}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            No
+          </Button>
+          <Button onClick={handleDelete} color="secondary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
         </Card>
         
     )
