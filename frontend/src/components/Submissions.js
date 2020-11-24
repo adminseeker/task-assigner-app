@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import SubmissionsList from "./SubmissionsList";
 import { getSubmittedStudents } from "../actions/submissions";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import Uploader from "./Uploader";
 import StudentListItem from "./StudentListItem";
 import useSWR from "swr";
@@ -46,7 +46,7 @@ const Submissions = ({getSubmittedStudents, room_id,resource_id,submissions,load
     });
     const classes = useStyles();
     return (
-        loading_submittedStudents  ? <LoadingPage /> :
+        loading_submittedStudents  ? <FacebookCircularProgress /> :
         <div className={classes.root}>
             <Container className={classes.alignItemsAndJustifyContent} xs={12}>
                 <div className={classes.studentsContainer}>

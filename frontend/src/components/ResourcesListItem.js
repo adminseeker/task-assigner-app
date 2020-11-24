@@ -19,7 +19,7 @@ import { Delete } from "@material-ui/icons";
 import PageviewIcon from '@material-ui/icons/Pageview';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import AssignmentView from "./AssignmentView";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import { getSubmissionsByTeacher } from "../actions/submissions";
 
 const useStyles = makeStyles((theme) => ({

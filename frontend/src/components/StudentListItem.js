@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import axios from "axios";
 import { getRoomUsers } from "../actions/rooms";
 
@@ -50,7 +50,7 @@ const StudentListItem = (props)=>{
         console.log("deleted student!");
     }
     return(
-        props.loading_users ? <LoadingPage /> : 
+        props.loading_users ? <FacebookCircularProgress /> : 
         <div>
         {
       <Accordion>

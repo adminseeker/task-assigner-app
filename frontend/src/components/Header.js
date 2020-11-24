@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { logout } from "../actions/auth";
 import { getRooms } from "../actions/rooms";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import {useHistory} from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -76,7 +76,7 @@ const Header = ({user,isAuthenticated,logout,history}) => {
     setAnchorEl(null);
   };
 
-  return user==null && isAuthenticated ? <LoadingPage/> : (
+  return user==null && isAuthenticated ? <FacebookCircularProgress/> : (
     <div className={classes.root}>
       <AppBar position="static">
       <Container maxWidth="lg">

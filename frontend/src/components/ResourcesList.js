@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from "react";
 import ResorcesListItem from "./ResourcesListItem";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import { getTeacherResources } from "../actions/rooms";
 import { getSubmissionsByTeacher } from "../actions/submissions";
 import Uploader from "./Uploader";
@@ -51,7 +51,7 @@ const ResourcesList = ({room:{_id},getTeacherResources,resources,loading_resourc
         setExp(isExpanded ? panel : false);
       };
     return (
-        loading_resources ? <LoadingPage /> : 
+        loading_resources ? <FacebookCircularProgress /> : 
         <div className={classes.root}>
         <Container className={classes.alignItemsAndJustifyContent} xs={12}>
                 <div className={classes.studentsContainer}>

@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from "react";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import { getMaterials } from "../actions/rooms";
 import Uploader from "./Uploader";
 import MaterialsListItem from "./MaterialsListItem";
@@ -62,7 +62,7 @@ const MaterialsList = ({room:{_id},getMaterials,materials,loading_materials,isTe
   };
     const classes = useStyles();
     return (
-        loading_materials ? <LoadingPage /> :
+        loading_materials ? <FacebookCircularProgress /> :
         <div>
         <Typography variant="h2" align="center">
                 Materials

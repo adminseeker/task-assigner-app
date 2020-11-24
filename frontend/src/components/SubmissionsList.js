@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import SubmissionsListItem from "./SubmissionsListItem";
 
 const SubmissionsList = (props) => {
     return (
         props.isTeacher && 
-        props.loading_submissions ? <LoadingPage /> :
+        props.loading_submissions ? <FacebookCircularProgress /> :
         <div>
             {
                 props.submissions.length === 0 ?(

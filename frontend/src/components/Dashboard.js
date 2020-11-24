@@ -2,16 +2,18 @@ import React, { useEffect } from "react";
 import {connect} from "react-redux";
 import {getRooms} from "../actions/rooms";
 import RoomsList from "./RoomsList";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import useSWR from "swr";
 import { Grid, Container, Typography } from "@material-ui/core";
-
+ 
 const Dashboard = ({getRooms,user})=>{
     useEffect(()=>{
         getRooms();
+        
       },[getRooms,user]);
       return (
-      user==null ? <LoadingPage/>        
+      user==null ? 
+      <FacebookCircularProgress />        
     :(
         <div>
             <Typography variant="h2" align="center">

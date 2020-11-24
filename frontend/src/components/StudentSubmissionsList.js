@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import SubmissionsListItem from "./SubmissionsListItem";
 
 import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
@@ -39,7 +39,7 @@ const StudentSubmissionsList = (props) => {
     const classes = useStyles();
     return (
         !props.isTeacher && 
-        props.loading_submissions ? <LoadingPage /> :
+        props.loading_submissions ? <FacebookCircularProgress /> :
         <div className={classes.root}>
             <Container className={classes.alignItemsAndJustifyContent} xs={12}>
                 <div className={classes.studentsContainer}>

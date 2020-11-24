@@ -4,7 +4,7 @@ import moment from "moment";
 import {getSubmissionsByTeacher,getSubmittedStudents, getSubmissions} from "../actions/submissions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import StudentListItem from "./StudentListItem";
 import SubmissionsList from "./SubmissionsList";
 import StudentSubmissionsList from "./StudentSubmissionsList";

@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import AnnouncementListItem from "./AnnouncementListItem";
 import { getAnnouncements } from "../actions/rooms";
 
 const AnnouncementsList = ({loading_announcements,announcements,room_id,isTeacher,getAnnouncements}) => {
     return (
-        loading_announcements ? <LoadingPage /> :
+        loading_announcements ? <FacebookCircularProgress /> :
         <div>
             {
                 announcements.length === 0 ?(

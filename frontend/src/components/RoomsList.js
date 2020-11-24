@@ -1,7 +1,6 @@
 import React,{useState} from "react";
 import RoomListItem from "./RoomListItem";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
 import AddRoom from "./AddRoom";
 import axios from "axios";
 import {getRooms } from "../actions/rooms";
@@ -23,6 +22,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { joinStudent } from "../actions/auth";
 import { Icon } from "@material-ui/core";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +76,7 @@ const RoomsList = (props) => {
         await axios.post("/api/rooms/",body,config);
     }
     return (
-        props.loading_rooms ? <LoadingPage /> :
+        props.loading_rooms ? <FacebookCircularProgress /> :
         <div className={classes.root}>
         <Grid container xs={12} spacing={3}>
             {

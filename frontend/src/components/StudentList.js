@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import AddRoom from "./AddRoom";
 import StudentListItem from "./StudentListItem";
 import InviteStudents from "./InviteStudents";
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 const StudentList = (props) => {
     const classes = useStyles();
     return (
-        props.loading_rooms ? <LoadingPage /> :
+        props.loading_rooms ? <FacebookCircularProgress /> :
 
         <div className={classes.root}>
         <Container className={classes.alignItemsAndJustifyContent} xs={12}>

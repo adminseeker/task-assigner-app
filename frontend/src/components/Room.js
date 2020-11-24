@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {getRoomUsers,getAnnouncements,addAnnouncement} from "../actions/rooms";
 import StudentListItem from "./StudentListItem";
-import LoadingPage from "./LoadingPage";
+import FacebookCircularProgress from "./FacebookCircularProgress";
 import { Link as RouterLink } from "react-router-dom";
 import ResourcesList from "./ResourcesList";
 import Uploader from "./Uploader";
@@ -93,7 +93,7 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
       setValue(newValue);
     };  
     return (
-            loading_users ? <LoadingPage /> :
+            loading_users ? <FacebookCircularProgress /> :
              <div >
              <Container className={classes.alignItemsAndJustifyContent} xs={12}>
                 <Paper className={classes.paper1}>
