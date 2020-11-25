@@ -64,7 +64,8 @@ const Header = ({user,isAuthenticated,logout,history}) => {
   };
 
   const handleMyAccount = () => {
-    hist.push("/dashboard");
+    hist.push("/account");
+    setAnchorEl(null);
   };
 
   const handleJoinClassroom = () => {

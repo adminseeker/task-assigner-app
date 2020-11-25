@@ -58,6 +58,13 @@ router.post("/",async (req,res)=>{
     }
 });
 
+/* 
+    route : "/api/users",
+    desc : "Update profile",
+    auth : "Student,Teacher",
+    method: "PATCH"
+*/
+
 router.patch("/",auth,async (req,res)=>{
     try {
         const user = req.user;
@@ -77,6 +84,40 @@ router.patch("/",auth,async (req,res)=>{
     }
     const editUser = await User.findOneAndUpdate({_id:user.id},updates,{new:true}).select("-password")    
     res.json(editUser);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send();
+    }
+});
+
+/* 
+    route : "/api/users",
+    desc : "Update password",
+    auth : "Student,Teacher",
+    method: "PATCH"
+*/
+
+router.patch("/password",auth,async (req,res)=>{
+    try {
+    let newPassword = req.body.newPassword;
+    const password = req.body.password;
+    if(newPassword && password){
+        const user = await User.findOne({_id:req.user.id});
+        if(!user){
+            return res.status(400).json({errors:[{msg:"invalid user!"}]});
+        }
+        const isMatch = await bcrypt.compare(password,user.password);
+        if(!isMatch){
+            return res.json({code:"0",msg:"incorrect current password!"});
+        }
+        const salt = await bcrypt.genSalt(10);
+        newPassword = await bcrypt.hash(newPassword,salt);
+        user.password = newPassword;
+        await user.save();
+        return res.json({code:"1","msg":"Password Changed Successfully!"});
+    }
+        return res.json({code:"2","msg":"Error in changing password!"});
+
     } catch (error) {
         console.log(error);
         return res.status(500).send();
@@ -115,7 +156,7 @@ router.delete("/",auth,async(req,res)=>{
                 if(submissions.length!==0){
                     objects = objects.concat(submissions);
                 }
-                if(materials.length!==0){
+                if(materials.length!==0){password
                     objects = objects.concat(materials);
                 }
                 

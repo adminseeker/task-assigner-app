@@ -117,4 +117,47 @@ const loadUser= ()=>{
     }
 }
 
-export {register,loadUser,login,logout,joinStudent};
+const updateAccount = ({name,phone})=>{
+    return async (dispatch)=>{
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+
+        const body = JSON.stringify({name,phone});
+        try {
+            await axios.patch("/api/users",body,config);
+            await dispatch(loadUser());
+        } catch (err) {
+            console.log(err);
+              dispatch({
+                type:"AUTH_ERROR"
+            })
+        }
+    }
+}
+
+const changePassword = ({password,newPassword})=>{
+    return async (dispatch)=>{
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+
+        const body = JSON.stringify({password,newPassword});
+        try {
+            const res = await axios.patch("/api/users/password",body,config);
+            return res.data;
+            
+        } catch (err) {
+            console.log(err);
+              dispatch({
+                type:"ERROR"
+            })
+        }
+    }
+}
+
+export {register,loadUser,login,logout,joinStudent,updateAccount,changePassword};

@@ -20,6 +20,8 @@ import JoinStudents from "../components/JoinStudents";
 import MaterialsList from "../components/MaterialsList";
 import RegisterStudent from "../components/RegisterStudent";
 import RegisterTeacher from "../components/RegisterTeacher";
+import MyAccount from "../components/MyAccount";
+import ChangePassword from "../components/ChangePassword";
 
 
 
@@ -35,6 +37,8 @@ const AppRouter = ()=>{
                 <Route path="/register/student" component={RegisterStudent} exact={true}/>
                 <Route path="/register/teacher" component={RegisterTeacher} exact={true}/>
                 <Route path="/login" component={Login} exact={true}/>
+                <PrivateRoute path="/account" component={MyAccount} exact={true}/>
+                <PrivateRoute path="/changepassword" component={ChangePassword} exact={true}/>
                 <PrivateRoute path="/dashboard" component={Dashboard} exact={true}/>
                 <PrivateRoute path="/join" component={JoinStudents} exact={true}/>
                 <PrivateRoute path="/rooms/:id" component={Room} exact={true}/>
