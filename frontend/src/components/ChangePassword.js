@@ -18,12 +18,21 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },root2: {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2)
+    }
   },
   avatar: {
     margin: theme.spacing(1),
@@ -41,6 +50,38 @@ const useStyles = makeStyles((theme) => ({
 }
 }));
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const CustomizedAlert = (props) => {
+  const classes = useStyles();
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    props.setOpen(false);
+  };
+
+  return (
+    <div className={classes.root2}>
+      <Snackbar
+        open={props.open}
+        autoHideDuration={6000}
+        
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity={props.AlertType}>
+          <Typography variant="h5">
+            {props.msg}
+          </Typography>
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
+
 const ChangePassword = (props)=>{
   const classes = useStyles();
 
@@ -54,6 +95,9 @@ const [emailError,setEmailError] = useState("")
 const [passwordError,setPasswordError] = useState("")
 const [password2Error,setPassword2Error] = useState("")
 const [phoneError,setPhoneError] = useState("")
+const [openAlert, setOpenAlert] = useState(false);
+const [AlertMsg, setAlertMsg] = useState("");
+const [AlertType, setAlertType] = useState("");
 
 
 const {password,newPassword,newPassword2} = formData;
@@ -74,17 +118,21 @@ const onSubmit = async (e)=>{
         if(res.code=="0"){
             setPassword2Error("Incorrect Password")
         }else if(res.code=="2"){
-            alert(res.msg)
+          setOpenAlert(true);
+          setAlertType("error");
+          setAlertMsg(res.msg);
         }else if(res.code=="1"){
-            alert("Password Changed Successfully!")
-            await props.dispatch(logout())
+          setOpenAlert(true);
+          setAlertType("success");
+          setAlertMsg("Password Changed Successfully!");
+          await props.dispatch(logout())
         }
     }
 }
 
   return (
     <Container component="main" maxWidth="xs">
-
+    <CustomizedAlert open={openAlert} msg={AlertMsg} AlertType={AlertType} setOpen={setOpenAlert}/>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

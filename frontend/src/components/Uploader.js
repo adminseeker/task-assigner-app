@@ -22,12 +22,24 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1)
+    },
+    root2: {
+      width: "100%",
+      "& > * + *": {
+        marginTop: theme.spacing(2)
+      }
     }
   },
   input: {
@@ -47,6 +59,35 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(4),
   },
 }));
+
+const CustomizedAlert = (props) => {
+  const classes = useStyles();
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    props.setOpen(false);
+  };
+
+  return (
+    <div className={classes.root2}>
+      <Snackbar
+        open={props.open}
+        autoHideDuration={4000}
+        
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity={props.AlertType}>
+          <Typography variant="h5">
+            {props.msg}
+          </Typography>
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
+
 
 const CircularProgressWithLabel = (props)=> {
   return (
@@ -77,6 +118,10 @@ const Uploader = (props)=> {
     const [open, setOpen] = React.useState(false);
     const [className,setClassName] =useState("");
     const [progress,setProgress] =useState(0);
+    const [openAlert, setOpenAlert] = useState(false);
+    const [AlertMsg, setAlertMsg] = useState("");
+    const [AlertType, setAlertType] = useState("");
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -100,10 +145,14 @@ const Uploader = (props)=> {
         const formData = new FormData();
         formData.append( "file",selectedFile);
         if(!selectedFile){
-          alert("choose file!");
+          setOpenAlert(true);
+          setAlertType("error");
+          setAlertMsg("Choose File");
         }else{
           if(description==""){
-            alert("Enter Description!");
+            setOpenAlert(true);
+            setAlertType("error");
+            setAlertMsg("Enter Description!");
           }else{
             if(props.isMaterial){
               setProgress(0);
@@ -121,12 +170,22 @@ const Uploader = (props)=> {
               try{
                   const result = await axios.post("/api/upload/"+props.room_id+"/materials", formData,config);
                   setOpen(false);
-                  alert(result.data.msg);
+                  if(result.data.code=="1"){
+                    setOpenAlert(true);
+                    setAlertType("success");
+                    setAlertMsg("File Uploaded Successfully!");
+                  }else{
+                    setOpenAlert(true);
+                    setAlertType("error");
+                    setAlertMsg(result.data.msg);
+                  }
                   setProgress(0);
                   await props.dispatch(getMaterials(props.room_id));
               }catch(error){
                   setOpen(false);
-                  alert("error occured in uploading!!!");
+                  setOpenAlert(true);
+                  setAlertType("error");
+                  setAlertMsg("error occured in uploading!!!");
                   setProgress(0);
                   
               }
@@ -148,12 +207,22 @@ const Uploader = (props)=> {
               try{
                 const result = await axios.post("/api/upload/"+props.room_id, formData,config); 
                 setOpen(false);
-                alert(result.data.msg);
+                if(result.data.code=="1"){
+                  setOpenAlert(true);
+                  setAlertType("success");
+                  setAlertMsg("File Uploaded Successfully!");
+                }else{
+                  setOpenAlert(true);
+                  setAlertType("error");
+                  setAlertMsg(result.data.msg);
+                }
                 setProgress(0);
                 await props.dispatch(getTeacherResources(props.room_id));
               }catch(error){
                   setOpen(false);
-                  alert("error occured in uploading!!!");
+                  setOpenAlert(true);
+                  setAlertType("error");
+                  setAlertMsg("error occured in uploading!!!");
                   setProgress(0);
                   
               }
@@ -172,13 +241,23 @@ const Uploader = (props)=> {
                 try{
                   const result = await axios.post("/api/upload/"+props.room_id, formData,config);
                   setOpen(false);
-                  alert(result.data.msg);
+                  if(result.data.code=="1"){
+                    setOpenAlert(true);
+                    setAlertType("success");
+                    setAlertMsg("File Uploaded Successfully!");
+                  }else{
+                    setOpenAlert(true);
+                    setAlertType("error");
+                    setAlertMsg(result.data.msg);
+                  }
                   setProgress(0);
                   await props.dispatch(getSubmissionsByTeacher(props.room_id,props.resource_id));
                   await props.dispatch(getSubmittedStudents(props.room_id,props.submittedIDs));
                 }catch(error){
                     setOpen(false);
-                    alert("error occured in uploading!!!");
+                    setOpenAlert(true);
+                    setAlertType("error");
+                    setAlertMsg("error occured in uploading!!!");
                     setProgress(0);
                     
                 }
@@ -202,6 +281,7 @@ const Uploader = (props)=> {
                 
               {
                 <div>
+                <CustomizedAlert open={openAlert} msg={AlertMsg} AlertType={AlertType} setOpen={setOpenAlert}/>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                {  <DialogTitle id="form-dialog-title">{props.isTeacher ? ( props.isMaterial ? "Add Materials" : "Add Assignments") : "Add Submissions" }</DialogTitle> }
                 {progress!==0 ? <CircularProgressWithLabel value={progress}/> : 
