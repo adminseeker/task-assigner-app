@@ -59,8 +59,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 const SubmissionsListItem = (props)=>{
-  console.log(new Date(props.resource.deadline)<new Date(props.submission.createdAt));
-  console.log(props.resource);
   const [open, setOpen] = useState(false);
     const handleDelete = async (e)=>{
       setOpen(false);

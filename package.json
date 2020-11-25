@@ -18,7 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/adminseeker/task-assigner-app.git"
   },
-  "author": "",
+  "author": "Aravind A.",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/adminseeker/task-assigner-app/issues"
@@ -27,8 +27,5 @@
   "devDependencies": {
     "concurrently": "^5.2.0"
   },
-  "dependencies": {
-    "@date-io/date-fns": "^2.10.6",
-    "date-fns": "^2.16.1"
-  }
+  "dependencies": {}
 }

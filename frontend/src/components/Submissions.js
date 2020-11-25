@@ -6,9 +6,11 @@ import FacebookCircularProgress from "./FacebookCircularProgress";
 import Uploader from "./Uploader";
 import StudentListItem from "./StudentListItem";
 import useSWR from "swr";
+import moment from 'moment';
 import StudentSubmissionsList from "./StudentSubmissionsList";
-
-import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+import { ExportToCsv } from 'export-to-csv';
+import {Save} from '@material-ui/icons'
+import { makeStyles, Container, Paper, Typography ,Button} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     flexDirection:"column",
     justifyContent: 'center',
-    width:"40%",
+    width:"50%",
   },
-  '@media (max-width: 768px)': {
+  '@media (max-width: 1024px)': {
     alignItemsAndJustifyContent: {
         width:"100%"
         }
@@ -40,10 +42,45 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const Submissions = ({getSubmittedStudents, room_id,resource_id,submissions,loading_submittedStudents,isTeacher,submittedIDs,submittedStudents,user}) => {
+  const CSVOptions = { 
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true, 
+    showTitle: true,
+    title: 'My Awesome CSV',
+    useTextFile: false,
+    useBom: true,
+    useKeysAsHeaders: true,
+  };
+
+
+const Submissions = ({getSubmittedStudents,resource, room_id,resource_id,submissions,loading_submittedStudents,isTeacher,submittedIDs,submittedStudents,user}) => {
     useSWR("/rooms/"+room_id+"/assignments/"+resource_id+"/submissions",async ()=>{
             await getSubmittedStudents(room_id,submittedIDs);
     });
+
+    const clickHandler = ()=>{
+        // console.log(submissions);
+        const students = submissions.map(e=>{
+            const foundStudent = submittedStudents.find(f=>f._id===e.student_id);
+            const temp = String(e.createdAt);
+            return {
+                studentName:foundStudent.name,
+                phone:foundStudent.phone,
+                email:foundStudent.email,
+                description:e.description,
+                submission:e.submission,
+                
+                deadline:moment(resource.deadline).format('MMMM Do YYYY, h:mm:ss a'),
+                submitTime: moment(temp).format('MMMM Do YYYY, h:mm:ss a'),
+                onTime: new Date(resource.deadline)<new Date(e.created_on),
+                // deadline:resource.deadline,
+            }
+        })
+        console.log('Final',students);
+        console.log('csv',new ExportToCsv(CSVOptions).generateCsv(students))
+    }
     const classes = useStyles();
     return (
         loading_submittedStudents  ? <FacebookCircularProgress /> :
@@ -54,6 +91,15 @@ const Submissions = ({getSubmittedStudents, room_id,resource_id,submissions,load
                         <Typography variant="h2">
                             Submissions
                         </Typography>
+                        <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        disabled={submissions.length===0}
+        onClick={clickHandler}
+        className={classes.button}
+        startIcon={<Save />}
+      >Export as CSV</Button>
                     </div>
                     {isTeacher && submittedStudents.length===0 ? <h2>No submissions Yet</h2> : submittedStudents.map((student)=>(
                         <StudentListItem key={student._id} resource_id={resource_id} student={student} room_id={room_id} assignment={true} student_id={student._id}/>
@@ -76,7 +122,8 @@ const mapStateToProps = (state,props)=>({
     submittedIDs:state.submissions.submissions.reduce((result,submission)=>{result.push(submission.student_id); return result;},[]),
     submittedStudents:state.submissions.submittedStudents,
     submissions:state.submissions.submissions,
-    user:state.auth.user 
+    user:state.auth.user ,
+    resource:state.rooms.resources.find((resource)=>resource._id===String(props.match.params.id2))
 })
 
 export default connect(mapStateToProps,{getSubmittedStudents})(Submissions);

@@ -130,7 +130,7 @@ const Landing = (props) => {
                 <div
                     className={`${classes.fillIn} ${classes.whiteText} ${classes.italizer}`}
                 >
-                    Bite me&trade;
+                    “Online learning is not the next big thing, it is the new big thing.” ~ Donna J. Abernathy
                 </div>
                 <div className={`${classes.buttonContainer} ${classes.fillIn}`}>
                     <Button
