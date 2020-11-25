@@ -156,7 +156,7 @@ router.delete("/",auth,async(req,res)=>{
                 if(submissions.length!==0){
                     objects = objects.concat(submissions);
                 }
-                if(materials.length!==0){password
+                if(materials.length!==0){
                     objects = objects.concat(materials);
                 }
                 

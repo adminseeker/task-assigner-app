@@ -160,4 +160,28 @@ const changePassword = ({password,newPassword})=>{
     }
 }
 
-export {register,loadUser,login,logout,joinStudent,updateAccount,changePassword};
+const deleteAccount = ()=>{
+    return async (dispatch)=>{
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+        try {
+            const res = await axios.delete("/api/users/",config);
+            dispatch({
+                type:"LOGOUT"
+            });
+            return res.data;
+            
+        } catch (err) {
+            console.log(err);
+              dispatch({
+                type:"ERROR"
+            })
+        }
+    }
+
+}
+
+export {register,loadUser,login,logout,joinStudent,updateAccount,changePassword,deleteAccount};

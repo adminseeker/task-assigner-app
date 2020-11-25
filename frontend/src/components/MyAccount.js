@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {register,updateAccount} from "../actions/auth";
+import {register,updateAccount, deleteAccount} from "../actions/auth";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
 import {setAlert} from "../actions/alert";
@@ -18,6 +18,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,6 +49,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MyAccount = (props)=>{
+    const [open, setOpen] = useState(false);
+    const handleDelete = async (e)=>{
+    setOpen(false);
+    const res = await props.dispatch(deleteAccount());
+    alert(res.msg);
+    hist.push("/");
+    }
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
   const classes = useStyles();
   const hist = useHistory();
 
@@ -202,6 +219,7 @@ const handleChangePassword = (e)=>{
           variant="contained"
           color="secondary"
           className={classes.submit}
+          onClick={(e)=>setOpen(true)}
           
         >
         <Box fontSize={16}>
@@ -210,6 +228,27 @@ const handleChangePassword = (e)=>{
         </Button>
         </form>
       </div>
+      <Dialog
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">{<Typography variant="h4">Are you sure you want to delete this account?</Typography>}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      {<Typography variant="h5">{props.user.isTeacher ? "All the assignments, materials and student submissions will be deleted with this account permanently!" : "All your submissions will be deleted with this account permanently!"}</Typography>}
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose} color="primary">
+      No
+    </Button>
+    <Button onClick={handleDelete} color="secondary" autoFocus>
+      Yes
+    </Button>
+  </DialogActions>
+</Dialog>
     </Container>
   );
 }
