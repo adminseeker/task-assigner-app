@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     flexDirection:"column",
     justifyContent: 'center',
-    width:"40%",
+    width:"50%",
   },
-  '@media (max-width: 768px)': {
+  '@media (max-width: 1024px)': {
     alignItemsAndJustifyContent: {
         width:"100%"
         }
@@ -53,7 +53,7 @@ const ResourcesList = ({room:{_id},getTeacherResources,resources,loading_resourc
     return (
         loading_resources ? <FacebookCircularProgress /> : 
         <div className={classes.root}>
-        <Container className={classes.alignItemsAndJustifyContent} xs={12}>
+        <Container className={classes.alignItemsAndJustifyContent} xs={12} >
                 <div className={classes.studentsContainer}>
                 <div style={{textAlign:"center"}}>
                     <Typography variant="h2">

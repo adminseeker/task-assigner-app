@@ -13,7 +13,7 @@ const SubmissionsList = (props) => {
                     <h3>No Submissions!!!</h3>
                 ) : (
                     props.submissions.map((submission)=>(
-                        <SubmissionsListItem key={submission._id} room_id={props.room_id} resource_id={props.resource_id} submission={submission} isTeacher={props.isTeacher} student_id={props.student_id} assignment={true}/>
+                        <SubmissionsListItem key={submission._id} room_id={props.room_id} resource_id={props.resource_id} submission={submission} isTeacher={props.isTeacher} student_id={props.student_id} assignment={true} />
                     ))
                 )
             }

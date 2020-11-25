@@ -59,6 +59,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 const SubmissionsListItem = (props)=>{
+  console.log(new Date(props.resource.deadline)<new Date(props.submission.createdAt));
+  console.log(props.resource);
   const [open, setOpen] = useState(false);
     const handleDelete = async (e)=>{
       setOpen(false);
@@ -93,17 +95,20 @@ const SubmissionsListItem = (props)=>{
     </div>
     </AccordionSummary>
     <AccordionDetails>
-    {
-        <div style={{display:"flex",flexDirection:"column",justifyContent:"center"}}>
+    
+      <div style={{display:"flex",flexDirection:"column",justifyContent:"center"}}>
       <Typography>
         File : <a href={props.submission.submission} target="_blank" rel="noopener noreferrer">{props.submission.submission.split("/").pop().slice(25)}</a>
       </Typography>
       <Typography>
         Submitted On: {moment(props.submission.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
       </Typography>
+      {(new Date(props.resource.deadline) < new Date(props.submission.createdAt)) && <Typography variant="h5" color="secondary">
+        Deadline Exceeded!
+      </Typography>}
       
       </div>
-    }
+    
     </AccordionDetails>
   </Accordion>
   <Dialog
@@ -139,6 +144,9 @@ const SubmissionsListItem = (props)=>{
         File : <a href={props.submission.submission} target="_blank" rel="noopener noreferrer">{props.submission.submission.split("/").pop().slice(25)}</a>
       </Typography>
     <Typography variant="h5">Submitted On {moment(props.submission.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</Typography>
+    {(new Date(props.resource.deadline) < new Date(props.submission.createdAt)) && <Typography variant="h5" color="secondary">
+        Deadline Exceeded!
+      </Typography>}
     <Dialog
   open={open}
   onClose={handleClose}
@@ -163,8 +171,12 @@ const SubmissionsListItem = (props)=>{
     </div>)
 }
 
+const mapStateToProps = (state,props)=>({
+  resource_id:props.resource_id,
+  resource:state.rooms.resources.find((resource)=>resource._id===String(props.resource_id))
+})
 
-export default connect()(SubmissionsListItem);
+export default connect(mapStateToProps)(SubmissionsListItem);
 
 // <div className="flex-child">
         

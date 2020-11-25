@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "UNDER DEVELOPMENT",
   "main": "index.js",
-  "prettier":{
+  "prettier": {
     "tabWidth": 4
   },
   "scripts": {
@@ -26,5 +26,9 @@
   "homepage": "https://github.com/adminseeker/task-assigner-app#readme",
   "devDependencies": {
     "concurrently": "^5.2.0"
+  },
+  "dependencies": {
+    "@date-io/date-fns": "^2.10.6",
+    "date-fns": "^2.16.1"
   }
 }
