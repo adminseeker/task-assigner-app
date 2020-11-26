@@ -12,7 +12,7 @@ const Room = require("../../models/Room");
 
 const mailer = require("../../mailer/mailer");
 
-const upload = multer({storage:multer.memoryStorage(),limits:{fileSize:1000000000}});
+const upload = multer({storage:multer.memoryStorage(),limits:{fileSize:50000000}});
 
 const router = express.Router();
 
