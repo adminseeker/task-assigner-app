@@ -184,4 +184,65 @@ const deleteAccount = ()=>{
 
 }
 
-export {register,loadUser,login,logout,joinStudent,updateAccount,changePassword,deleteAccount};
+const sendOtp = (email) =>{
+    return async(dispatch)=>{
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+        const body = JSON.stringify({email});
+        try {
+            const res = await axios.post("/api/auth/sendotp",body,config);
+            dispatch({
+                type:"FORGOT_PASSWORD",
+                email:email
+            });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+              dispatch({
+                type:"FORGOT_PASSWORD_ERROR"
+            })
+        }
+    }
+}
+
+const resetPassword = (email,otp,newPassword)=>{
+    return async(dispatch)=>{
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+        const body = JSON.stringify({email,otp,newPassword});
+        try {
+            const res = await axios.post("/api/auth/resetpassword",body,config);
+            dispatch({
+                type:"FORGOT_PASSWORD",
+                email:""
+            });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+              dispatch({
+                type:"FORGOT_PASSWORD_ERROR"
+            })
+        }
+    }
+}
+
+const logoutAll = ()=>{
+    return async (dispatch)=>{
+        try {
+            await axios.post("/api/auth/logoutAll");
+            dispatch({
+                type:"LOGOUT"
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+export {register,loadUser,login,logout,joinStudent,updateAccount,changePassword,deleteAccount,sendOtp,resetPassword,logoutAll};

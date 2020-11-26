@@ -147,6 +147,13 @@ if(props.isAuthenticated){
 
             </Box>
             </Button>
+            <Grid container>
+            <Grid item xs>
+              <Link href="/forgotpassword" variant="body2" style={{fontSize:16}}>
+                Forgot password?
+              </Link>
+            </Grid>
+            </Grid>
           </form>
         </div>
       </Grid>

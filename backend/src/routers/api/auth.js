@@ -118,7 +118,7 @@ router.post("/sendotp",async (req,res)=>{
         const email = req.body.email;
         const user = await User.findOne({email})
         if(!user){
-            return res.json({"msg":"No user exists with that email!"});
+            return res.json({"code":"0","msg":"No user exists with that email!"});
         }
         let emailHTML = "<h2>You have requested for changing the password. Here is your OTP. Don't share with anyone.</h2>\n <p>Your OTP is:</p> ";
         let subject = "OTP for changing Tasker Password";
@@ -126,7 +126,7 @@ router.post("/sendotp",async (req,res)=>{
         const forgotPasswordrequest = new ForgotPassword({email,otp});
         await forgotPasswordrequest.save();
         await mailer(email,text="",html=emailHTML+"<h1>"+otp+"</h1>",subject);
-        res.json({"msg":"OTP sent to "+email});
+        res.json({"code":"1","msg":"OTP sent to "+email});
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);
@@ -147,16 +147,16 @@ router.post("/resetpassword",async (req,res)=>{
         let newPassword = req.body.newPassword;
         const forgotPasswordrequest = await ForgotPassword.findOne({email})
         if(!forgotPasswordrequest){
-            return res.json({"msg":"invalid otp!"});
+            return res.json({"code":"0","msg":"invalid otp!"});
         }
         if(otp==forgotPasswordrequest.otp){
            const salt = await bcrypt.genSalt(10);
            newPassword = await bcrypt.hash(newPassword,salt);
            const user = await User.findOneAndUpdate({email},{password:newPassword},{new:true});
            await ForgotPassword.deleteMany({email});
-           return res.json({"msg":"Password Reset Completed Successfully!"}) 
+           return res.json({"code":"1","msg":"Password Reset Completed Successfully!"}) 
         }else{
-            return res.json({"msg":"invalid otp!"});
+            return res.json({"code":"0","msg":"invalid otp!"});
         }
         
     } catch (error) {

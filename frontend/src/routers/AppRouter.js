@@ -22,6 +22,7 @@ import RegisterStudent from "../components/RegisterStudent";
 import RegisterTeacher from "../components/RegisterTeacher";
 import MyAccount from "../components/MyAccount";
 import ChangePassword from "../components/ChangePassword";
+import ForgotPassword from "../components/ForgotPassword";
 
 
 
@@ -37,6 +38,7 @@ const AppRouter = ()=>{
                 <Route path="/register/student" component={RegisterStudent} exact={true}/>
                 <Route path="/register/teacher" component={RegisterTeacher} exact={true}/>
                 <Route path="/login" component={Login} exact={true}/>
+                <Route path="/forgotpassword" component={ForgotPassword} exact={true}/>
                 <PrivateRoute path="/account" component={MyAccount} exact={true}/>
                 <PrivateRoute path="/changepassword" component={ChangePassword} exact={true}/>
                 <PrivateRoute path="/dashboard" component={Dashboard} exact={true}/>

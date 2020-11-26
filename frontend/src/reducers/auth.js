@@ -3,7 +3,8 @@ const initialState = {
     token:localStorage.getItem("token"),
     isAuthenticated:null,
     loading:true,
-    user:null
+    user:null,
+    forgotPasswordEmail:""
 };
 
 const authReducer = (state=initialState,action)=>{
@@ -26,6 +27,17 @@ const authReducer = (state=initialState,action)=>{
                 isAuthenticated:true,
                 loading:false
             }
+        case "FORGOT_PASSWORD":
+            return{
+                ...state,
+                forgotPasswordEmail:action.email
+            }
+        case "FORGOT_PASSWORD_ERROR":
+            return{
+                ...state,
+                forgotPasswordEmail:""
+            }
+            
         case "REGISTER_FAIL":
         case "AUTH_ERROR":
         case "LOGIN_FAIL":
@@ -35,7 +47,8 @@ const authReducer = (state=initialState,action)=>{
                 ...state,
                 token:null,
                 isAuthenticated:false,
-                loading:false
+                loading:false,
+                forgotPasswordEmail:""
             }
         default:
             return state;
