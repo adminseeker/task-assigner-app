@@ -95,6 +95,9 @@ router.post("/:id/students/invite",auth,async (req,res)=>{
             res.status(404).json({"msg":"Room not found!"})
         }
         const studentEmails = req.body.studentEmails.splice(",").map((studentEmail)=>studentEmail.trim());
+        if(studentEmails.length==0){
+            return res.json({"msg":"No emails!"})
+        }
         // let emailString = studentEmails.join();
         // let room_id = String(room._id);
         let emailHTML = "<h2>Teacher "+req.user.name+" is inviting you to join classroom "+room.className+".</h2>\n <p>Your invite code is:</p> ";
