@@ -23,10 +23,54 @@ import {
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import AlarmIcon from '@material-ui/icons/Alarm';
-import { IconButton } from "@material-ui/core";
+import { IconButton, makeStyles, Typography } from "@material-ui/core";
+
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const useStyles = makeStyles((theme) => ({
+  root2: {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2)
+    }
+  }
+}));
+
+const CustomizedAlert = (props) => {
+  const classes = useStyles();
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    props.setOpen(false);
+  };
+
+  return (
+    <div className={classes.root2}>
+      <Snackbar
+        open={props.open}
+        autoHideDuration={4000}
+        
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity={props.AlertType}>
+          <Typography variant="h5">
+            {props.msg}
+          </Typography>
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
 
 const  MaterialUIPickers = (props) => {
-  // The first commit of Material-UI
 
   const handleDateChange = (date) => {
     props.setSelectedDate(date);
@@ -64,18 +108,26 @@ const  MaterialUIPickers = (props) => {
 const AssignmentView = ({resource:{_id,resource,createdAt,deadline,description},loading_submissions,isTeacher,room_id,updateDeadline,submissions,getSubmissionsByTeacher,students,user})=>{
     const [clickedTime,setClickedTime] = useState(false);
     const [selectedDate, setSelectedDate] = useState(deadline);
+    const [openAlert, setOpenAlert] = useState(false);
+    const [AlertMsg, setAlertMsg] = useState("");
+    const [AlertType, setAlertType] = useState("");
     const handleDeadline =async (e)=>{
         setClickedTime(false);
         e.preventDefault();
         await updateDeadline(room_id,_id,selectedDate);
-        alert("Deadline Updated And sent Mail to students of this classroom!")
+        setOpenAlert(true);
+        setAlertType("success");
+        setAlertMsg("Deadline Updated And sent Mail to students of this classroom!");
 
     }
     // useEffect(()=>{
     //     getSubmissionsByTeacher(room_id,_id);
     // },[room_id,_id,getSubmissions]);
+    const classes = useStyles();
     return (   
         <div>
+           <CustomizedAlert open={openAlert} msg={AlertMsg} AlertType={AlertType} setOpen={setOpenAlert}/>
+
             <p>Added On {moment(createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
             <p>Deadline {moment(deadline).format('MMMM Do YYYY, h:mm:ss a')} 
             <IconButton color="secondary" aria-label="add an alarm" onClick={(e)=>setClickedTime(!clickedTime)}>

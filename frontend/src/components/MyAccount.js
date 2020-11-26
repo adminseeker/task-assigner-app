@@ -25,12 +25,20 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },root2: {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2)
+    }
   },
   avatar: {
     margin: theme.spacing(1),
@@ -48,12 +56,49 @@ const useStyles = makeStyles((theme) => ({
 }
 }));
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const CustomizedAlert = (props) => {
+  const classes = useStyles();
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    props.setOpen(false);
+  };
+
+  return (
+    <div className={classes.root2}>
+      <Snackbar
+        open={props.open}
+        autoHideDuration={6000}
+        
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity={props.AlertType}>
+          <Typography variant="h5">
+            {props.msg}
+          </Typography>
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
+
 const MyAccount = (props)=>{
     const [open, setOpen] = useState(false);
+    const [openAlert, setOpenAlert] = useState(false);
+    const [AlertMsg, setAlertMsg] = useState("");
+    const [AlertType, setAlertType] = useState("");
     const handleDelete = async (e)=>{
     setOpen(false);
     const res = await props.dispatch(deleteAccount());
-    alert(res.msg);
+    setOpenAlert(true);
+    setAlertType("info");
+    setAlertMsg(res.msg);
     hist.push("/");
     }
     
@@ -89,8 +134,13 @@ const onSubmit = async (e)=>{
     }
     else{
         await props.dispatch(updateAccount({name:firstName+" "+lastName,phone}));
-        alert("Updated Account Details!");
-        hist.push("/dashboard");       
+        
+        setAlertType("success");
+        setAlertMsg("Updated Account Details!");
+        setOpenAlert(true);
+        setTimeout(()=>{
+          hist.push("/dashboard");
+        },4000)       
     }
 }
 
@@ -101,6 +151,7 @@ const handleChangePassword = (e)=>{
 
   return (
     <Container component="main" maxWidth="xs">
+    <CustomizedAlert open={openAlert} msg={AlertMsg} AlertType={AlertType} setOpen={setOpenAlert}/>
 
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

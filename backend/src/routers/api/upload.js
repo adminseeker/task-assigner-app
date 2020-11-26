@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const moment = require("moment");
 const multer = require("multer");
 const AWS = require("aws-sdk");
+const { v1: uuidv1 } = require('uuid');
 
 const auth = require("../../middleware/auth");
 
@@ -35,7 +36,7 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
         const description = req.header("description");
         const params = {
             Bucket: process.env.AWS_BUCKET,
-            Key: req.user.id+"_"+file.originalname,
+            Key: uuidv1().slice(-24).replace(/-/g,Math.floor(Math.random()*10))+"_"+file.originalname,
             Body: file.buffer,
             ContentType: file.mimetype,
             ACL: "public-read"
@@ -47,7 +48,7 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
             }
             let result = room.resources.filter((resource)=>(resource.resource.split("/").pop()==params.Key));
             if(result.length!==0){
-                return res.json({"msg":"File already exists with that name!"});
+                return res.json({"code":"0","msg":"File already exists with that name!"});
             }
         }else{
             const room = await Room.findOne({_id:req.params.id,"students._id":req.user.id});
@@ -56,7 +57,7 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
             }   
             let result = room.submissions.filter((submission)=>(submission.submission.split("/").pop()==params.Key));
             if(result.length!==0){
-                return res.json({"msg":"File already exists with that name!"});
+                return res.json({"code":"0","msg":"File already exists with that name!"});
             }
         }
 
@@ -75,7 +76,7 @@ router.post("/:id",[auth,upload.single("file")],async(req,res)=>{
                         return res.status(404).json({"msg":"No room found!"});
                     }   
                 }
-                res.json({"msg":"File uploaded Successfully!",location:data.Location});
+                res.json({"code":"1","msg":"File uploaded Successfully!",location:data.Location});
             }
         })
     } catch (error) {
@@ -113,7 +114,7 @@ router.post("/:id1/:id2/deadline",auth,async (req,res)=>{
         let HTMLText = "<h2>classroom "+room.className+"</h2>"+"\n<h3>Deadline for "+resource.description+" set to "+moment(deadline).format('MMMM Do YYYY, h:mm:ss a')+"</h3>";
         let subject = "Tasker Deadline details from Instructor "+user.name;
         await mailer(Emails,"",HTMLText,subject);
-        return res.json({"msg":"deadline updated"});
+        return res.json({"code":"1","msg":"deadline updated"});
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);
@@ -134,7 +135,7 @@ router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
         const description = req.header("description");
         const params = {
             Bucket: process.env.AWS_BUCKET,
-            Key: req.user.id+"_m_"+file.originalname,
+            Key: uuidv1().slice(-24).replace(/-/g,Math.floor(Math.random()*10))+"_m_"+file.originalname,
             Body: file.buffer,
             ContentType: file.mimetype,
             ACL: "public-read"
@@ -147,11 +148,11 @@ router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
             }
             let result = room.materials.filter((material)=>(material.material.split("/").pop()==params.Key));
             if(result.length!==0){
-                return res.json({"msg":"File already exists with that name!"});
+                return res.json({"code":"0","msg":"File already exists with that name!"});
             }
             s3Bucket.upload(params,async (error,data)=>{
                 if (error) {
-                    res.status(500).json({ "msg":"error uploading file!" });
+                    res.status(500).json({"code":"0", "msg":"error uploading file!" });
                 } else {
                     
                         const room = await Room.findOneAndUpdate({_id:req.params.id,teacher:req.user.id},{$addToSet:{materials:{material:data.Location,description:description}}},{new:true});
@@ -159,7 +160,7 @@ router.post("/:id/materials",[auth,upload.single("file")],async(req,res)=>{
                             return res.status(404).json({"msg":"No room found!"});
                         }
                     
-                    res.json({"msg":"File uploaded Successfully!",location:data.Location});
+                    res.json({"code":"1","msg":"File uploaded Successfully!",location:data.Location});
                 }
             })
         }else{

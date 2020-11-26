@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     decimalSeparator: '.',
     showLabels: true, 
     showTitle: true,
-    title: 'My Awesome CSV',
+    title: 'Student Submissions',
     useTextFile: false,
     useBom: true,
     useKeysAsHeaders: true,
@@ -91,7 +91,7 @@ const Submissions = ({getSubmittedStudents,resource, room_id,resource_id,submiss
                         <Typography variant="h2">
                             Submissions
                         </Typography>
-                        <Button
+                        {isTeacher && <Button
         variant="contained"
         color="primary"
         size="small"
@@ -99,7 +99,7 @@ const Submissions = ({getSubmittedStudents,resource, room_id,resource_id,submiss
         onClick={clickHandler}
         className={classes.button}
         startIcon={<Save />}
-      >Export as CSV</Button>
+      >Export as CSV</Button>}
                     </div>
                     {isTeacher && submittedStudents.length===0 ? <h2>No submissions Yet</h2> : submittedStudents.map((student)=>(
                         <StudentListItem key={student._id} resource_id={resource_id} student={student} room_id={room_id} assignment={true} student_id={student._id}/>

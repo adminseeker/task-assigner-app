@@ -20,9 +20,18 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Send} from '@material-ui/icons';
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import { Typography } from "@material-ui/core";
+
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
+    },root2: {
+      width: "100%",
+      "& > * + *": {
+        marginTop: theme.spacing(2)
+      }
     },
     paper: {
       padding: theme.spacing(1), //grid padding
@@ -42,10 +51,45 @@ const useStyles = makeStyles((theme) => ({
       },
   }));
 
+  const Alert = (props) => {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const CustomizedAlert = (props) => {
+    const classes = useStyles();
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      props.setOpen(false);
+    };
+  
+    return (
+      <div className={classes.root2}>
+        <Snackbar
+          open={props.open}
+          autoHideDuration={6000}
+          
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={handleClose} severity={props.AlertType}>
+            <Typography variant="h5">
+              {props.msg}
+            </Typography>
+          </Alert>
+        </Snackbar>
+      </div>
+    );
+  }
+
 const InviteStudents = (props) => {
     const [students,setStudents] =useState("");
     const [open, setOpen] = React.useState(false);
     const [className,setClassName] =useState("");
+    const [openAlert, setOpenAlert] = useState(false);
+    const [AlertMsg, setAlertMsg] = useState("");
+    const [AlertType, setAlertType] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -58,7 +102,17 @@ const InviteStudents = (props) => {
   const handleSubmit = async () => {
       setOpen(false);
       const msg = await inviteStudents(students);
-      alert(msg);
+      if(msg=="-1"){
+        setOpenAlert(true);
+        setAlertType("error");
+        setAlertMsg("Invite Failed!");
+      }else if(msg!==""){
+        setOpenAlert(true);
+        setAlertType("success");
+        setAlertMsg(msg);
+      }else if(msg==""){
+        setOpen(true);
+      }
   };
     const classes = useStyles();
     const inviteStudents = async (students)=>{
@@ -69,17 +123,29 @@ const InviteStudents = (props) => {
                 "Content-Type":"application/json"
             }
         }
+        if(students==""){
+          setOpenAlert(true);
+          setAlertType("error");
+          setAlertMsg("Enter Emails to invite!");
+          
+        }
         const res = await axios.post("/api/rooms/"+props.room_id+"/students/invite",body,config);
-        console.log(res.data);
+        
         props.dispatch(getRoomUsers(props.room_id));
-        if(res.data.msg=="Invite Sent"){
+        
+        if(students==""){
+          return "";
+        }
+        else if(res.data.msg=="Invite Sent"){
             return "Invite sent to "+studentEmails.join();
-        }else{
-            return "Invite failed!";
+        }
+        else{
+            return "-1";
         }
     }
     return (
         <div className={classes.root}>
+        <CustomizedAlert open={openAlert} msg={AlertMsg} AlertType={AlertType} setOpen={setOpenAlert}/>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Invite Students</DialogTitle>
         <DialogContent>
