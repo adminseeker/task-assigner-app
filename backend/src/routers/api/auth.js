@@ -107,9 +107,9 @@ router.post("/logoutAll",auth,async (req,res)=>{
 });
 
 /* 
-    route : "/api/rooms/room_id/students/invite",
-    desc : "Teacher Invites Students",
-    auth : "Teacher",
+    route : "/api/auth/sendotp",
+    desc : "sends otp",
+    auth : "PUBLIC",
     method: "POST"
 */
 
@@ -133,7 +133,14 @@ router.post("/sendotp",async (req,res)=>{
     }
 });
 
-router.post("/newpassword",async (req,res)=>{
+/* 
+    route : "/api/auth/resetpassword",
+    desc : "resets password",
+    auth : "PUBLIC",
+    method: "POST"
+*/
+
+router.post("/resetpassword",async (req,res)=>{
     try{
         const email = req.body.email;
         const otp = req.body.otp;
