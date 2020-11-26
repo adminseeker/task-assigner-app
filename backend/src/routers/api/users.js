@@ -124,6 +124,13 @@ router.patch("/password",auth,async (req,res)=>{
     }
 });
 
+/* 
+    route : "/api/users",
+    desc : "Delete User Account",
+    auth : "Student,Teacher",
+    method: "DELETE"
+*/
+
 router.delete("/",auth,async(req,res)=>{
     try {
         const user = req.user;
