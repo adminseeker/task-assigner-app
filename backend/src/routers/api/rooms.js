@@ -133,7 +133,7 @@ router.post("/students/join",auth,async (req,res)=>{
         const invite_id = req.body.invite_id;
         const invites = await Invite.find({user_email:user.email,invite_id});
         if(invites.length===0){
-            return res.json({"msg":"Invalid invite id or you are not invited!!"});
+            return res.json({"code":"0","msg":"Invalid invite id or you are not invited!!"});
         }
         let found=false;
         let students = [{_id:user._id}];
@@ -142,15 +142,15 @@ router.post("/students/join",auth,async (req,res)=>{
                 found=true;
                 const room = await Room.findOneAndUpdate({_id:invite.classroom_id},{$addToSet:{students}},{new:true});
                 if(!room){
-                    res.json({"msg":"No classroom Found!"});
+                    res.json({"code":"0","msg":"No classroom Found!"});
                 }
                 await Invite.deleteMany({user_email:user.email,classroom_id:room.id});
             }
         })
         if(!found){
-            return res.json({"msg":"Invalid invite id or you are not invited!"});
+            return res.json({"code":"0","msg":"Invalid invite id or you are not invited!"});
         }
-        return res.json({"msg":"join successfull!"});
+        return res.json({"code":"1","msg":"join successfull!"});
     } catch (error) {
         res.status(500).send("Server Error!");
         console.log(error);

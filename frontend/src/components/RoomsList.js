@@ -21,9 +21,20 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { joinStudent } from "../actions/auth";
 import FacebookCircularProgress from "./FacebookCircularProgress";
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import { Typography } from "@material-ui/core";
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+  },root2: {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2)
+    }
   },
   paper: {
     padding: theme.spacing(1), //grid padding
@@ -40,9 +51,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const CustomizedAlert = (props) => {
+  const classes = useStyles();
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    props.setOpen(false);
+  };
+
+  return (
+    <div className={classes.root2}>
+      <Snackbar
+        open={props.open}
+        autoHideDuration={6000}
+        
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity={props.AlertType}>
+          <Typography variant="h5">
+            {props.msg}
+          </Typography>
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
+
 const RoomsList = (props) => {
     const [open, setOpen] = React.useState(false);
     const [className,setClassName] =useState("");
+    const [openAlert, setOpenAlert] = useState(false);
+    const [AlertMsg, setAlertMsg] = useState("");
+    const [AlertType, setAlertType] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -57,7 +103,15 @@ const RoomsList = (props) => {
         await addRoom();
       }else{
         const res = await props.dispatch(joinStudent({invite_id:className}));
-        console.log(res);
+        if(String(res.code==="1")){
+          setAlertType("success");
+          setAlertMsg("Joined Classroom!");
+          setOpenAlert(true);
+        }else{
+          setAlertType("error");
+          setAlertMsg(res.msg);
+          setOpenAlert(true);
+        }
       }
     await props.dispatch(getRooms());
     setOpen(false);
@@ -75,6 +129,7 @@ const RoomsList = (props) => {
     return (
         props.loading_rooms ? <FacebookCircularProgress /> :
         <div className={classes.root}>
+    <CustomizedAlert open={openAlert} msg={AlertMsg} AlertType={AlertType} setOpen={setOpenAlert}/>
         <Grid container xs={12} spacing={3}>
             {
                 props.rooms.length === 0 ?(

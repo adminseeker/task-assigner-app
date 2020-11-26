@@ -7,6 +7,9 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import {  Link } from "react-router-dom";
 import { AccessAlarm ,MenuBook, Announcement} from "@material-ui/icons";
+import { connect } from "react-redux";
+import FacebookCircularProgress from "./FacebookCircularProgress";
+
 
 const styles = (theme) => ({
     background: {
@@ -118,6 +121,7 @@ const content = [
 const Landing = (props) => {
     const { classes } = props;
     return (
+        props.loading ? <FacebookCircularProgress /> :
         <>
             <div className={classes.background}>
                 <div className={classes.rempad}></div>
@@ -134,24 +138,36 @@ const Landing = (props) => {
                     “Online learning is not the next big thing, it is the new big thing.” ~ Donna J. Abernathy
                 </div>
                 <div className={`${classes.buttonContainer} ${classes.fillIn}`}>
-                    <Button
+                   {!props.isAuthenticated && <Button
                         className={classes.button}
                         variant="contained"
                         color="secondary"
                         component={Link}
                         to="/register/teacher"
+                       
                     >
                         Register (Teacher){" "}
-                    </Button>
-                    <Button
+                    </Button>}
+                    {!props.isAuthenticated && <Button
                         className={classes.button}
                         variant="contained"
                         color="secondary"
                         component={Link}
                         to="/register/student"
+                       
                     >
                         Register (Student){" "}
-                    </Button>
+                    </Button>}
+                    {props.isAuthenticated && <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        component={Link}
+                        to="/logout"
+                       
+                    >
+                        Logout{" "}
+                    </Button>}
                 </div>
                 <div
                     className={`${classes.fillIn} ${classes.whiteText} ${classes.bigText}`}
@@ -189,7 +205,12 @@ const Landing = (props) => {
 };
 
 Landing.propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Landing);
+const mapStateToProps = (state,props)=>({
+    isAuthenticated:state.auth.isAuthenticated,
+    loading:state.auth.loading
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(Landing));

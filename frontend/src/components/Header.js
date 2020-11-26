@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({user,isAuthenticated,logout,history}) => {
+const Header = ({user,isAuthenticated,logout,history,loading}) => {
     useEffect(()=>{
         getRooms()
     },[]);
@@ -70,7 +70,7 @@ const Header = ({user,isAuthenticated,logout,history}) => {
     setAnchorEl(null);
   };
 
-  return user==null && isAuthenticated ? <FacebookCircularProgress/> : (
+  return loading ? <FacebookCircularProgress/> : (
     <div className={classes.root}>
       <AppBar position="static">
       <Container maxWidth="lg">
@@ -179,7 +179,8 @@ const Header = ({user,isAuthenticated,logout,history}) => {
 
 const mapStateToProps = (state)=>({
     isAuthenticated:state.auth.isAuthenticated,
-    user:state.auth.user
+    user:state.auth.user,
+    loading:state.auth.loading
 })
 
 export default connect(mapStateToProps,{logout})(Header);
