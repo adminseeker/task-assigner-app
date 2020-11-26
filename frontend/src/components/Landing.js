@@ -91,6 +91,9 @@ const styles = (theme) => ({
         textAlign: "center",
         width:'100%',
         fontSize: "6rem"
+    },
+    centerer:{
+        textAlign: "center"
     }
 });
 
@@ -128,7 +131,7 @@ const Landing = (props) => {
                 <div className={classes.underliner}></div>
                 <div className={classes.rempad}></div>
                 <div
-                    className={`${classes.fillIn} ${classes.whiteText} ${classes.italizer}`}
+                    className={`${classes.fillIn} ${classes.whiteText} ${classes.italizer} ${classes.centerer}`}
                 >
                     “Online learning is not the next big thing, it is the new big thing.” ~ Donna J. Abernathy
                 </div>
