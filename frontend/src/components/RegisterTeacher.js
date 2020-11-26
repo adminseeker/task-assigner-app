@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import {register} from "../actions/auth";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
-import {setAlert} from "../actions/alert";
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -80,7 +76,7 @@ const onSubmit = async (e)=>{
     }
     else{
         const res = await props.dispatch(register({name:firstName+" "+lastName,email,password,isTeacher,phone}));
-        if(res=="Email already registered!"){
+        if(String(res)==="Email already registered!"){
             setEmailError(res);
         }
     }

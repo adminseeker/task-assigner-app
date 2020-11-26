@@ -22,7 +22,7 @@ const SubmissionsList = (props) => {
 }
 
 const mapStateToProps= (state,props)=>({
-    submissions:state.submissions.submissions.filter((submission)=>(submission.resource_id==props.resource_id && submission.student_id==props.student_id)),
+    submissions:state.submissions.submissions.filter((submission)=>(String(submission.resource_id)===String(props.resource_id) && String(submission.student_id)===String(props.student_id))),
     loading_submissions:state.submissions.loading_submissions,
     isTeacher:state.auth.user.isTeacher,
     room_id:props.room_id,

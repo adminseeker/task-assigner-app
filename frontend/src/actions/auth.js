@@ -52,7 +52,7 @@ const login = ({email,password})=>{
              dispatch(loadUser());
             
         } catch (err) {
-            if(err.response.status=="400"){
+            if(String(err.response.status)==="400"){
                 return "error"
             }
             console.log(err);

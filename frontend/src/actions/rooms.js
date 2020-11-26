@@ -9,7 +9,7 @@ const addAnnouncement = (contentString,id)=>{
                     "Content-Type":"application/json"
                 }
             }
-            const res = await axios.post("/api/rooms/"+id+"/announcements",body,config);
+            await axios.post("/api/rooms/"+id+"/announcements",body,config);
             await dispatch(getAnnouncements(id));
         } catch (error) {
             console.log(error);
@@ -30,7 +30,7 @@ const updateDeadline = (id1,id2,deadline)=>{
                     "Content-Type":"application/json"
                 }
             }
-            const res = await axios.post("/api/upload/"+id1+"/"+id2+"/deadline",body,config);
+            await axios.post("/api/upload/"+id1+"/"+id2+"/deadline",body,config);
             await dispatch(getTeacherResources(id1));
         } catch (error) {
             console.log(error);

@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import {register, changePassword, logout,sendOtp,resetPassword,logoutAll} from "../actions/auth";
+import {sendOtp,resetPassword,logoutAll} from "../actions/auth";
 import {connect} from "react-redux";
-import {Redirect,useHistory} from "react-router-dom";
-import {setAlert} from "../actions/alert";
+import {useHistory} from "react-router-dom";
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -93,10 +88,7 @@ const ForgotPassword = (props)=>{
     newPassword2:""
 });
 
-const [emailError,setEmailError] = useState("")
 const [passwordError,setPasswordError] = useState("")
-const [password2Error,setPassword2Error] = useState("")
-const [phoneError,setPhoneError] = useState("")
 const [openAlert, setOpenAlert] = useState(false);
 const [AlertMsg, setAlertMsg] = useState("");
 const [AlertType, setAlertType] = useState("");
@@ -114,7 +106,7 @@ const onChange = (e)=>{
 const handleSendOtp =async (e) =>{
     e.preventDefault();
     const res = await props.dispatch(sendOtp(email));
-    if(res.code=="1"){
+    if(String(res.code)==="1"){
         setOpenAlert(true);
         setAlertType("success");
         setAlertMsg(res.msg);
@@ -133,7 +125,7 @@ const onSubmit = async (e)=>{
     }
     else{
         const res = await props.dispatch(resetPassword(email,otp,newPassword));
-        if(res.code=="1"){
+        if(String(res.code)==="1"){
             setOpenAlert(true);
             setAlertType("success");
             setAlertMsg("Password Reset Successfull!");

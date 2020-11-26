@@ -25,7 +25,7 @@ const submissionsReducer = (state=initialState,action)=>{
             return{
                 ...state,
                 error:action.error,
-                loading_submittedStudents:false,
+                // loading_submittedStudents:false,
                 loading_submittedStudents:true               
             }
         case "GET_SUBMITTED_STUDENTS_ERROR":

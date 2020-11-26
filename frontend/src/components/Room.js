@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {getRoomUsers,getAnnouncements,addAnnouncement} from "../actions/rooms";
-import StudentListItem from "./StudentListItem";
 import FacebookCircularProgress from "./FacebookCircularProgress";
 import { Link as RouterLink } from "react-router-dom";
-import ResourcesList from "./ResourcesList";
-import Uploader from "./Uploader";
 import AnnouncementsList from "./AnnouncementsList";
 import { Container, Paper, Typography,Link, Toolbar, TextField, Button } from "@material-ui/core";
 
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles'
 import { Add } from "@material-ui/icons";
 
@@ -89,12 +84,8 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
         getAnnouncements(_id);
     },[getRoomUsers,getAnnouncements,_id]);
     const [content, setContent] = useState("");
-    const [value, setValue] = React.useState(0);
     const [mailClick,setMailClick] = useState(false)
 
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };  
     return (
             loading_users ? <FacebookCircularProgress /> :
              <div >

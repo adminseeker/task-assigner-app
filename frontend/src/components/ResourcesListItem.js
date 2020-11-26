@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import moment from "moment";
-import { deleteResource,updateDeadline } from "../actions/rooms";
+import { deleteResource} from "../actions/rooms";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
@@ -13,14 +11,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange, deepPurple,green } from '@material-ui/core/colors';
-import { IconButton, Container, Button } from "@material-ui/core";
+import { IconButton, Button } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 
-import PageviewIcon from '@material-ui/icons/Pageview';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import AssignmentView from "./AssignmentView";
-import FacebookCircularProgress from "./FacebookCircularProgress";
-import { getSubmissionsByTeacher } from "../actions/submissions";
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -59,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const ResourcesListItem = (props)=>{
-    const [deadline,setDeadline] = useState("");
     const [open, setOpen] = useState(false);
     const handleDelete = async (e)=>{
       setOpen(false);
@@ -142,27 +136,3 @@ const mapStateToProps=(state,props)=>({
 export default connect(mapStateToProps)(ResourcesListItem);
 
 
-// <Link to={"/rooms/"+props.room_id+"/assignments/"+props.resource._id}>{props.resource.description}</Link>
-//         <p>Deadline:{moment(props.resource.deadline).format('MMMM Do YYYY, h:mm:ss a')}</p>
-//         <div>
-//         {
-//             props.isTeacher &&
-//             <button onClick={(e)=>{
-//                 props.dispatch(deleteResource(props.room_id,props.resource._id))
-//             }}>
-//                     Delete
-//             </button> }
-//         { props.isTeacher && <input type="text" placeholder="Update deadline" value={deadline} onChange={(e)=>{
-//             setDeadline(e.target.value);
-//         }}/>   }
-//         {
-         
-//             props.isTeacher && <button onClick={async (e)=>{
-//                 await props.dispatch(updateDeadline(props.room_id,props.resource._id,deadline));
-//                 setDeadline("");
-//                 alert("deadline updated");
-//              }}>Update Deadline</button>
-        
-//         }
-          
-//         </div>

@@ -1,12 +1,12 @@
 import React,{useState} from "react"; 
 import axios from "axios"; 
 import { connect } from "react-redux";
-import { getSubmissions, getSubmissionsByTeacher, getSubmittedStudents } from "../actions/submissions";
+import { getSubmissionsByTeacher, getSubmittedStudents } from "../actions/submissions";
 import { getTeacherResources, getMaterials } from "../actions/rooms";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { TextField, Typography, Container, LinearProgress } from "@material-ui/core";
+import { TextField, Typography, Container } from "@material-ui/core";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -116,7 +116,6 @@ const Uploader = (props)=> {
     const [selectedFile,setSelectedFile] = useState(null);
     const [description,setDescription] = useState("");
     const [open, setOpen] = React.useState(false);
-    const [className,setClassName] =useState("");
     const [progress,setProgress] =useState(0);
     const [openAlert, setOpenAlert] = useState(false);
     const [AlertMsg, setAlertMsg] = useState("");
@@ -131,9 +130,7 @@ const Uploader = (props)=> {
     setOpen(false);
   };
 
-  const handleSubmit = async () => {
-    setOpen(false);
-  };
+
     
     const onFileChange = (e) => { 
         setSelectedFile(e.target.files[0]);
@@ -149,7 +146,7 @@ const Uploader = (props)=> {
           setAlertType("error");
           setAlertMsg("Choose File");
         }else{
-          if(description==""){
+          if(String(description)===""){
             setOpenAlert(true);
             setAlertType("error");
             setAlertMsg("Enter Description!");
@@ -170,7 +167,7 @@ const Uploader = (props)=> {
               try{
                   const result = await axios.post("/api/upload/"+props.room_id+"/materials", formData,config);
                   setOpen(false);
-                  if(result.data.code=="1"){
+                  if(String(result.data.code)==="1"){
                     setOpenAlert(true);
                     setAlertType("success");
                     setAlertMsg("File Uploaded Successfully!");
@@ -207,7 +204,7 @@ const Uploader = (props)=> {
               try{
                 const result = await axios.post("/api/upload/"+props.room_id, formData,config); 
                 setOpen(false);
-                if(result.data.code=="1"){
+                if(String(result.data.code)==="1"){
                   setOpenAlert(true);
                   setAlertType("success");
                   setAlertMsg("File Uploaded Successfully!");
@@ -241,7 +238,7 @@ const Uploader = (props)=> {
                 try{
                   const result = await axios.post("/api/upload/"+props.room_id, formData,config);
                   setOpen(false);
-                  if(result.data.code=="1"){
+                  if(String(result.data.code)==="1"){
                     setOpenAlert(true);
                     setAlertType("success");
                     setAlertMsg("File Uploaded Successfully!");
@@ -331,16 +328,3 @@ const Uploader = (props)=> {
      
 export default connect()(Uploader); 
 
-
-// <input className={classes.input} type="file" id="contained-button-file" onChange={onFileChange} /> 
-//                 <label htmlFor="contained-button-file">
-//                 <Container>
-//                 <div>
-//                 <Button variant="contained" color="primary" component="span">
-//                   Choose File
-//                 </Button>
-//                 {fileData()}
-//                 </div>
-//                 </Container>
-//                 </label>
-//                 <TextField type="text" value={description} placeholder="Enter description" onChange={(e)=>(setDescription(e.target.value))}/>

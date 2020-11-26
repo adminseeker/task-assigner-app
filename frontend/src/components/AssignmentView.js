@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import React, {  useState } from "react";
 import moment from "moment";
-import {getSubmissionsByTeacher,getSubmittedStudents, getSubmissions} from "../actions/submissions";
+import {getSubmissionsByTeacher,getSubmittedStudents} from "../actions/submissions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import FacebookCircularProgress from "./FacebookCircularProgress";
-import StudentListItem from "./StudentListItem";
-import SubmissionsList from "./SubmissionsList";
-import StudentSubmissionsList from "./StudentSubmissionsList";
-import Uploader from "./Uploader";
+
 import {updateDeadline} from "../actions/rooms"
 
 import 'date-fns';
@@ -120,10 +115,7 @@ const AssignmentView = ({resource:{_id,resource,createdAt,deadline,description},
         setAlertMsg("Deadline Updated And sent Mail to students of this classroom!");
 
     }
-    // useEffect(()=>{
-    //     getSubmissionsByTeacher(room_id,_id);
-    // },[room_id,_id,getSubmissions]);
-    const classes = useStyles();
+    
     return (   
         <div>
            <CustomizedAlert open={openAlert} msg={AlertMsg} AlertType={AlertType} setOpen={setOpenAlert}/>

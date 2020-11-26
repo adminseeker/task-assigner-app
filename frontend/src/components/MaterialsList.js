@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import FacebookCircularProgress from "./FacebookCircularProgress";
 import { getMaterials } from "../actions/rooms";
@@ -6,21 +6,9 @@ import Uploader from "./Uploader";
 import MaterialsListItem from "./MaterialsListItem";
 
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+
 import Grid from '@material-ui/core/Grid';
 
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { joinStudent } from "../actions/auth";
 import { Container, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -46,20 +34,7 @@ const MaterialsList = ({room:{_id},getMaterials,materials,loading_materials,isTe
     useEffect(()=>{
         getMaterials(_id)
     },[getMaterials,_id])
-    const [open, setOpen] = React.useState(false);
-    const [className,setClassName] =useState("");
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSubmit = async () => {
-    setOpen(false);
-  };
+    
     const classes = useStyles();
     return (
         loading_materials ? <FacebookCircularProgress /> :

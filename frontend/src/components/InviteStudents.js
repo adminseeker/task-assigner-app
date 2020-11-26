@@ -4,8 +4,7 @@ import axios from "axios";
 import { getRoomUsers } from "../actions/rooms";
 
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+
 
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
@@ -86,7 +85,6 @@ const useStyles = makeStyles((theme) => ({
 const InviteStudents = (props) => {
     const [students,setStudents] =useState("");
     const [open, setOpen] = React.useState(false);
-    const [className,setClassName] =useState("");
     const [openAlert, setOpenAlert] = useState(false);
     const [AlertMsg, setAlertMsg] = useState("");
     const [AlertType, setAlertType] = useState("");
@@ -102,15 +100,15 @@ const InviteStudents = (props) => {
   const handleSubmit = async () => {
       setOpen(false);
       const msg = await inviteStudents(students);
-      if(msg=="-1"){
+      if(String(msg)==="-1"){
         setOpenAlert(true);
         setAlertType("error");
         setAlertMsg("Invite Failed!");
-      }else if(msg!==""){
+      }else if(String(msg)!==""){
         setOpenAlert(true);
         setAlertType("success");
         setAlertMsg(msg);
-      }else if(msg==""){
+      }else if(String(msg)===""){
         setOpen(true);
       }
   };
@@ -123,7 +121,7 @@ const InviteStudents = (props) => {
                 "Content-Type":"application/json"
             }
         }
-        if(students==""){
+        if(String(students)===""){
           setOpenAlert(true);
           setAlertType("error");
           setAlertMsg("Enter Emails to invite!");
@@ -133,10 +131,10 @@ const InviteStudents = (props) => {
         
         props.dispatch(getRoomUsers(props.room_id));
         
-        if(students==""){
+        if(String(students)===""){
           return "";
         }
-        else if(res.data.msg=="Invite Sent"){
+        else if(String(res.data.msg)==="Invite Sent"){
             return "Invite sent to "+studentEmails.join();
         }
         else{

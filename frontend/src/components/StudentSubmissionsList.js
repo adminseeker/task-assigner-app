@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import FacebookCircularProgress from "./FacebookCircularProgress";
 import SubmissionsListItem from "./SubmissionsListItem";
 
-import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+import { makeStyles, Container } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {

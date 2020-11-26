@@ -1,5 +1,4 @@
 import React,{useState} from "react";
-import {Link} from "react-router-dom";
 import { connect } from "react-redux";
 import FacebookCircularProgress from "./FacebookCircularProgress";
 import axios from "axios";
@@ -14,7 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
-import { IconButton, Container, Button } from "@material-ui/core";
+import { IconButton, Button } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import SubmissionsList from "./SubmissionsList";
 

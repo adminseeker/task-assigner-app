@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import moment from "moment";
 import { connect } from "react-redux";
 import { deleteAnnouncement} from "../actions/rooms";
-import { Typography, Button, IconButton, makeStyles } from "@material-ui/core";
+import { Typography, Button, makeStyles } from "@material-ui/core";
 import {Delete} from "@material-ui/icons"
 
 import Dialog from '@material-ui/core/Dialog';

@@ -29,13 +29,10 @@ const Header = ({user,isAuthenticated,logout,history}) => {
     },[]);
   const hist = useHistory(); 
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
+ 
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -66,10 +63,6 @@ const Header = ({user,isAuthenticated,logout,history}) => {
   const handleMyAccount = () => {
     hist.push("/account");
     setAnchorEl(null);
-  };
-
-  const handleJoinClassroom = () => {
-    hist.push("/join");
   };
 
   const handleLogout = () => {

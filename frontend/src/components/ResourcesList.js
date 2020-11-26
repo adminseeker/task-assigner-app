@@ -6,7 +6,7 @@ import { getTeacherResources } from "../actions/rooms";
 import { getSubmissionsByTeacher } from "../actions/submissions";
 import Uploader from "./Uploader";
 
-import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+import { makeStyles, Container, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {

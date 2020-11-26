@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {joinStudent} from "../actions/auth";
 import {connect} from "react-redux";
-import { Redirect } from "react-router-dom";
 import GeneralModal from "./GeneralModal";
 
 const Join = (props)=>{
@@ -24,7 +23,7 @@ const Join = (props)=>{
         setModalText("Joining Classroom");
         const res = await props.dispatch(joinStudent({invite_id}));
         setShowModal(false); 
-        if(res.msg=="join successfull!"){
+        if(String(res.msg)==="join successfull!"){
            props.history.push("/dashboard");
         }
         else{

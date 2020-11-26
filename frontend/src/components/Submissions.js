@@ -1,5 +1,4 @@
-import React, { useEffect } from "react"
-import SubmissionsList from "./SubmissionsList";
+import React from "react"
 import { getSubmittedStudents } from "../actions/submissions";
 import { connect } from "react-redux";
 import FacebookCircularProgress from "./FacebookCircularProgress";
@@ -10,7 +9,7 @@ import moment from 'moment';
 import StudentSubmissionsList from "./StudentSubmissionsList";
 import { ExportToCsv } from 'export-to-csv';
 import {Save} from '@material-ui/icons'
-import { makeStyles, Container, Paper, Typography ,Button} from "@material-ui/core";
+import { makeStyles, Container, Typography ,Button} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {

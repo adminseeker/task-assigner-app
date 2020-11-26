@@ -12,14 +12,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange, deepPurple,green } from '@material-ui/core/colors';
-import { IconButton, Container, Button } from "@material-ui/core";
+import { IconButton, Button } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 
-import PageviewIcon from '@material-ui/icons/Pageview';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import AssignmentView from "./AssignmentView";
-import FacebookCircularProgress from "./FacebookCircularProgress";
-import { getSubmissionsByTeacher } from "../actions/submissions";
+
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';

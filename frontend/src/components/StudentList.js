@@ -1,11 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import FacebookCircularProgress from "./FacebookCircularProgress";
-import AddRoom from "./AddRoom";
 import StudentListItem from "./StudentListItem";
 import InviteStudents from "./InviteStudents";
-import { Link } from "react-router-dom";
-import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+import { makeStyles, Container, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {

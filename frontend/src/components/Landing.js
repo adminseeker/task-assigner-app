@@ -3,11 +3,10 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Container } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import { Redirect, Link } from "react-router-dom";
-import { AccessAlarm, Book ,MenuBook, Announcement} from "@material-ui/icons";
+import {  Link } from "react-router-dom";
+import { AccessAlarm ,MenuBook, Announcement} from "@material-ui/icons";
 
 const styles = (theme) => ({
     background: {
@@ -118,7 +117,6 @@ const content = [
 
 const Landing = (props) => {
     const { classes } = props;
-    const bull = <span className={classes.bullet}>•</span>;
     return (
         <>
             <div className={classes.background}>

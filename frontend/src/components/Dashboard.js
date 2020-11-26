@@ -3,8 +3,7 @@ import {connect} from "react-redux";
 import {getRooms} from "../actions/rooms";
 import RoomsList from "./RoomsList";
 import FacebookCircularProgress from "./FacebookCircularProgress";
-import useSWR from "swr";
-import { Grid, Container, Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
  
 const Dashboard = ({getRooms,user})=>{
     useEffect(()=>{

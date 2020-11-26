@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { getSubmissionsByTeacher } from "../actions/submissions";
-import SubmissionsList from "./SubmissionsList";
 
 const Student = ({student,getSubmissionsByTeacher,room_id,isTeacher,phone}) => {
     return (

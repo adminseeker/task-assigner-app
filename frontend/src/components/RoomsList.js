@@ -1,12 +1,10 @@
 import React,{useState} from "react";
 import RoomListItem from "./RoomListItem";
 import { connect } from "react-redux";
-import AddRoom from "./AddRoom";
 import axios from "axios";
 import {getRooms } from "../actions/rooms";
 
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -21,7 +19,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { joinStudent } from "../actions/auth";
-import { Icon } from "@material-ui/core";
 import FacebookCircularProgress from "./FacebookCircularProgress";
 
 const useStyles = makeStyles((theme) => ({
