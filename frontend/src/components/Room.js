@@ -15,6 +15,8 @@ import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles'
 import { Add } from "@material-ui/icons";
 
+import EmailIcon from '@material-ui/icons/Email';
+
 const useStyles = makeStyles(theme => ({
   marginAutoContainer: {
     width: 500,
@@ -88,6 +90,7 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
     },[getRoomUsers,getAnnouncements,_id]);
     const [content, setContent] = useState("");
     const [value, setValue] = React.useState(0);
+    const [mailClick,setMailClick] = useState(false)
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -100,9 +103,13 @@ const Room = ({getRoomUsers,room:{className,_id},teacher,students,isTeacher,load
                 <Typography variant="h3" className={classes.heading}>
                 {className}
                 </Typography>
-                <Typography variant="p">
-                <Link to={"/profile/teacher/"+teacher._id} className={classes.teacherLink} component={RouterLink}>{teacher.name}</Link>
+                <Typography variant="p" style={{fontSize:"2rem",color:"#abf"}}>
+                {teacher.name}
+                <Button onClick={(e)=>setMailClick(!mailClick)}> {<EmailIcon style={{fontSize:"1.75rem",color:"#abf",marginBottom:"0.70rem"}}/>} </Button>
                 </Typography>
+                {mailClick && <Typography variant="p" style={{fontSize:"2rem",color:"#abf"}}>
+                  {teacher.email}
+                </Typography>}
                 </Paper>
                 <div className={classes.linkBar}>
                     <AppBar position="static" color="default" >
