@@ -73,7 +73,7 @@ const Submissions = ({getSubmittedStudents,resource, room_id,resource_id,submiss
                 
                 deadline:moment(resource.deadline).format('MMMM Do YYYY, h:mm:ss a'),
                 submitTime: moment(temp).format('MMMM Do YYYY, h:mm:ss a'),
-                onTime: new Date(resource.deadline)<new Date(e.created_on),
+                onTime: new Date(resource.deadline)>new Date(e.created_on),
                 // deadline:resource.deadline,
             }
         })

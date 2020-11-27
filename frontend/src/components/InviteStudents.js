@@ -174,11 +174,11 @@ const InviteStudents = (props) => {
           >Send</Button>
         </DialogActions>
       </Dialog>
-      <Tooltip title="Invite" aria-label="Invite" position="right" >
+      {props.isTeacher && <Tooltip title="Invite" aria-label="Invite" position="right" >
         <Fab color="primary" className={classes.fixed} onClick={handleClickOpen}>
           <AddIcon />
         </Fab>
-      </Tooltip>
+      </Tooltip>}
             
         </div>
     )
