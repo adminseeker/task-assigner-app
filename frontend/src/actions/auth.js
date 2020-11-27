@@ -49,13 +49,14 @@ const login = ({email,password})=>{
                 token:res.data.token
             });
 
-             dispatch(loadUser());
+            dispatch(loadUser());
             
         } catch (err) {
-            if(String(err.response.status)==="400"){
+            console.log(err);
+            if(err && err.response && err.response.status===400){
                 return "error"
             }
-            console.log(err);
+            
             dispatch({
                 type:"LOGIN_FAIL"
             })

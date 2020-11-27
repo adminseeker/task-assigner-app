@@ -145,7 +145,7 @@ router.post("/resetpassword",async (req,res)=>{
         const email = req.body.email;
         const otp = req.body.otp;
         let newPassword = req.body.newPassword;
-        const forgotPasswordrequest = await ForgotPassword.findOne({email})
+        const forgotPasswordrequest = await ForgotPassword.findOne({email,otp})
         if(!forgotPasswordrequest){
             return res.json({"code":"0","msg":"invalid otp!"});
         }

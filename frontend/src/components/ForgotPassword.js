@@ -125,6 +125,8 @@ const onSubmit = async (e)=>{
     }
     else{
         const res = await props.dispatch(resetPassword(email,otp,newPassword));
+        console.log("fpdetails",email,otp,newPassword)
+        console.log("fp",res)
         if(String(res.code)==="1"){
             setOpenAlert(true);
             setAlertType("success");

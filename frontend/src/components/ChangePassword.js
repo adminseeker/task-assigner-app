@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { changePassword, logout} from "../actions/auth";
+import { changePassword,logoutAll} from "../actions/auth";
 import {connect} from "react-redux";
 
 import Avatar from '@material-ui/core/Avatar';
@@ -117,7 +117,7 @@ const onSubmit = async (e)=>{
           setOpenAlert(true);
           setAlertType("success");
           setAlertMsg("Password Changed Successfully!");
-          await props.dispatch(logout())
+          await props.dispatch(logoutAll())
         }
     }
 }

@@ -58,7 +58,7 @@ const Login = (props)=> {
   const [formData,setFormData] = useState({
     email:"",
     password:"",
-    error:""
+    error:false
 });
 
 

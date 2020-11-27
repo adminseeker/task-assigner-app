@@ -101,20 +101,23 @@ const RoomsList = (props) => {
   const handleSubmit = async () => {
       if(props.isTeacher){
         await addRoom();
+        await props.dispatch(getRooms());
+        setOpen(false);
       }else{
         const res = await props.dispatch(joinStudent({invite_id:className}));
-        if(String(res.code==="1")){
+        if(String(res.code)==="1"){
+          setOpenAlert(true);
           setAlertType("success");
           setAlertMsg("Joined Classroom!");
-          setOpenAlert(true);
+          await props.dispatch(getRooms());
+          setOpen(false);
         }else{
+          setOpenAlert(true);
           setAlertType("error");
           setAlertMsg(res.msg);
-          setOpenAlert(true);
         }
       }
-    await props.dispatch(getRooms());
-    setOpen(false);
+    
   };
     const classes = useStyles();
     const addRoom = async ()=>{

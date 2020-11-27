@@ -133,7 +133,7 @@ router.post("/students/join",auth,async (req,res)=>{
         const invite_id = req.body.invite_id;
         const invites = await Invite.find({user_email:user.email,invite_id});
         if(invites.length===0){
-            return res.json({"code":"0","msg":"Invalid invite id or you are not invited!!"});
+            return res.json({"code":"0","msg":"Invalid invite code"});
         }
         let found=false;
         let students = [{_id:user._id}];
@@ -148,7 +148,7 @@ router.post("/students/join",auth,async (req,res)=>{
             }
         })
         if(!found){
-            return res.json({"code":"0","msg":"Invalid invite id or you are not invited!"});
+            return res.json({"code":"0","msg":"Invalid invite code or you are not invited!"});
         }
         return res.json({"code":"1","msg":"join successfull!"});
     } catch (error) {

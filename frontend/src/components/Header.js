@@ -144,7 +144,7 @@ const Header = ({user,isAuthenticated,logout,history,loading}) => {
                 color="inherit"
               >
               <Box fontSize={12}>
-                {user.name}
+                {user && user.name}
                 </Box>
                 
               </Button>
