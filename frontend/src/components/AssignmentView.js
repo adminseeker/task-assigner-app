@@ -122,11 +122,11 @@ const AssignmentView = ({resource:{_id,resource,createdAt,deadline,description},
 
             <p>Added On {moment(createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
             <p>Deadline {moment(deadline).format('MMMM Do YYYY, h:mm:ss a')} 
-            <IconButton color="secondary" aria-label="add an alarm" onClick={(e)=>setClickedTime(!clickedTime)}>
+            {isTeacher && <IconButton color="secondary" aria-label="add an alarm" onClick={(e)=>setClickedTime(!clickedTime)}>
                 <AlarmIcon />
-            </IconButton>
+            </IconButton>}
             </p>
-            {clickedTime &&<div style={{display:"flex",flexDirection:"row",alignItems:"center",justifyContent:"center"}}> <MaterialUIPickers selectedDate={selectedDate} setSelectedDate={setSelectedDate}/> <IconButton style={{color:"green",marginBottom:"-2.75rem"}} aria-label="add an alarm" onClick={handleDeadline}>
+            {isTeacher && clickedTime &&<div style={{display:"flex",flexDirection:"row",alignItems:"center",justifyContent:"center"}}> <MaterialUIPickers selectedDate={selectedDate} setSelectedDate={setSelectedDate}/> <IconButton style={{color:"green",marginBottom:"-2.75rem"}} aria-label="add an alarm" onClick={handleDeadline}>
             <CheckCircleOutlineIcon />
         </IconButton> </div>}
              
