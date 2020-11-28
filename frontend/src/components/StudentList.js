@@ -59,7 +59,7 @@ const StudentList = (props) => {
             </div>
             </Container>
             
-            <InviteStudents room_id={props.room_id}/>
+            <InviteStudents room_id={props.room_id} isTeacher={props.isTeacher}/>
         </div>
     )
 }
